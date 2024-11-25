@@ -1,7 +1,6 @@
 import * as PlantaService from "../services/PlantaService";
 
 export const getAllPlantas = async(req, res)=>{
-
     try {
         const plantas = await PlantaService.getAllPlantas();
         res.status(200).json(plantas);
@@ -51,6 +50,27 @@ export const createMultiplePlantas=async(req, res)=>{
     }
 }
 
-export const updatePlanta = async(req, res)=>{
-    
+export const updatePlantaTamaño = async(req, res)=>{
+    const {codigo_planta} = req.params;
+    const { tamaño } = req.body;
+    try{
+        await PlantaService.updatePlantaTamano(codigo_planta, tamaño);
+        res.status(200).json({message: "Tamaño de la planta actualizado"});
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Error al actualizar el tamaño de la planta"});
+    }
+}
+
+export const deletePlanta = async(req, res)=>{
+    const { codigo_planta } = req.params;
+    try{
+        await PlantaService.deletePlanta(codigo_planta);
+        res.status(200).json({message: "Planta eliminada"});
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Error al eliminar la planta"});
+    }
 }
