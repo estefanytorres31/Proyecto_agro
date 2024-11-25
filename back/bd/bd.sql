@@ -6,14 +6,14 @@ use db_agro;
 create table tb_fundo(
 	codigo_fundo char(8) primary key not null,
     nombre_fundo varchar(255) not null,
-    hectareas float not null,
+    hectarea float not null,
     estado boolean not null default true
 );
 
 create table tb_sector(
 	codigo_sector char(8) primary key not null,
     nombre_sector varchar(255) not null,
-    hectareas float not null,
+    hectarea float not null,
     cultivado enum('Baldío','Cultivado'),
     estado boolean not null default true,
     sector_codigo_fundo char(8) not null,

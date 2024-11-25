@@ -6,7 +6,7 @@ const path = require('path');
 export const getAllPlantas = async () => {
     const db = await connect();
     try {
-        const plants = await db.execute('SELECT * FROM tb_planta');
+        const plants = await db.execute('SELECT * FROM tb_planta where estado=true');
         return plants;
     } catch (error) {
         throw new Error("Error al obtener plantas: " + error.message);
@@ -27,6 +27,7 @@ export const getPlantaById = async (codigo_planta) => {
     }
 };
 
+/*
 export const createPlanta = async (codigo_planta, planta_codigo_sector) => {
     const db = await connect();
     try {
@@ -46,7 +47,7 @@ export const createPlanta = async (codigo_planta, planta_codigo_sector) => {
     } finally {
         db.end();
     }
-}
+}*/
 
 export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
     const db = await connect();
@@ -86,7 +87,7 @@ export const updatePlantaTamano=async(codigo_planta, tamaño)=>{
     const db = await connect();
     try {
         const [planta]=await db.execute('UPDATE tb_planta SET tamaño=? where codigo_planta=?',
-            [codigo_planta, tamaño]
+            [tamaño, codigo_planta]
         )
         return planta;
     } catch (error) {
@@ -107,4 +108,15 @@ export const deletePlanta = async (codigo_planta) => {
     }
 }
 
+export const getInformationByQR= async()=>{
+    const db = await connect();
+    try {
+        const [plant] = await db.execute('SELECT * FROM tb_planta WHERE estado=true LIMIT 1');
+        return plant[0];
+    } catch (error) {
+        throw new Error("Error al obtener información por código QR: " + error.message);
+    } finally {
+        db.end();
+    }
+}
 

@@ -23,7 +23,7 @@ export const getPlantaById = async(req, res)=>{
         res.status(500).json({message: "Error al obtener la planta"});
     }
 }
-
+/*
 export const createPlanta = async(req, res)=>{
     const {codigo_planta, planta_codigo_sector} = req.body;
     try{
@@ -36,7 +36,7 @@ export const createPlanta = async(req, res)=>{
         res.status(500).json({message: "Error al crear la planta"});
     }
 
-}
+}*/
 
 export const createMultiplePlantas=async(req, res)=>{
     const {cantidad, sectorCodigo}= req.body;
