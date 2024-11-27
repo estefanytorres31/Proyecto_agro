@@ -1,13 +1,14 @@
 import { connect } from "../database";
 const QRCode = require ('qrcode');
+const fs = require('fs');
 const path = require('path');
 
 
 export const getAllPlantas = async () => {
     const db = await connect();
     try {
-        const plants = await db.execute('SELECT * FROM tb_planta where estado=true');
-        return plants;
+        const [plants] = await db.execute('SELECT * FROM tb_planta where estado=true');
+        return [plants];
     } catch (error) {
         throw new Error("Error al obtener plantas: " + error.message);
     } finally {
@@ -50,15 +51,26 @@ export const createPlanta = async (codigo_planta, planta_codigo_sector) => {
 }*/
 
 export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
+    if (!cantidad || cantidad <= 0 || !sectorCodigo) {
+        throw new Error("Cantidad y sectorCodigo son requeridos y deben ser válidos.");
+    }
+
     const db = await connect();
     try {
+        const qrDir = path.join(__dirname, '../qrcodes');
+        if (!fs.existsSync(qrDir)) {
+            fs.mkdirSync(qrDir);
+        }
+
+        const [lastPlanta] = await db.execute('SELECT codigo_planta FROM tb_planta ORDER BY codigo_planta DESC LIMIT 1');
+        const lastCode = lastPlanta.length > 0 ? parseInt(lastPlanta[0].codigo_planta.slice(1)) : 0;
+
         await db.beginTransaction();
 
         for (let i = 1; i <= cantidad; i++) {
+            const codigo_planta = `P${String(lastCode + i).padStart(5, "0")}`;
+            const qrPath = path.join(qrDir, `${codigo_planta}.png`);
 
-            const codigo_planta = `P${String(i).padStart(5, "0")}`;
-
-            const qrPath = path.join(__dirname, `../qrcodes/${codigo_planta}.png`);
             await QRCode.toFile(qrPath, codigo_planta);
 
             const qrRelativePath = `/qrcodes/${codigo_planta}.png`;
@@ -67,21 +79,19 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
                 `INSERT INTO tb_planta (codigo_planta, codigo_qr, planta_codigo_sector) VALUES (?, ?, ?)`,
                 [codigo_planta, qrRelativePath, sectorCodigo]
             );
-            if (!sectorCodigo) {
-                throw new Error("El código del sector es requerido.");
-            }
         }
-        
 
         await db.commit();
         console.log(`${cantidad} plantas registradas con éxito en el sector ${sectorCodigo}`);
     } catch (error) {
         await db.rollback();
+        console.error("Error:", error);
         throw new Error("Error al crear múltiples plantas: " + error.message);
     } finally {
         db.end();
     }
 };
+
 
 export const updatePlantaTamano=async(codigo_planta, tamaño)=>{
     const db = await connect();

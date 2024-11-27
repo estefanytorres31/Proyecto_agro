@@ -23,7 +23,7 @@ create table tb_sector(
 create table tb_planta(
 	codigo_planta char(8) primary key not null,
     codigo_qr varchar(255) not null,
-    tamaño enum('Grande','Mediano','Pequeño'),
+    tamaño enum('Grande','Mediano','Pequeño','No hay palma'),
     fecha_registro timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fecha_siembra datetime,
     estado boolean not null default true,
@@ -31,9 +31,12 @@ create table tb_planta(
     foreign key (planta_codigo_sector) references tb_sector(codigo_sector)
 );
 
-insert into tb_fundo(codigo_fundo, nombre_fundo, area) values
+insert into tb_fundo(codigo_fundo, nombre_fundo, hectarea) values
 	('F00001', 'Scorpius 1', 40),
     ('F00002', 'Scorpius 2', 38);
 
-insert into tb_sector(codigo_sector, nombre_sector, area, cultivado, sector_codigo_fundo) values
-	('S00001', 'A', 10, 'Cultivado','F00001');
+insert into tb_sector(codigo_sector, nombre_sector, hectarea, cultivado, sector_codigo_fundo) values
+	('S00001', 'A', 10, 'Cultivado','F00001'),
+    ('S00002', 'B', 10, 'Cultivado','F00001'),
+    ('S00003', 'C', 10, 'Cultivado','F00001'),
+    ('S0000a', 'D', 10, 'Baldío','F00001');
