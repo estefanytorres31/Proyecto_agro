@@ -118,15 +118,18 @@ export const deletePlanta = async (codigo_planta) => {
     }
 }
 
-export const getInformationByQR= async()=>{
+export const getInformationByQR = async (codigo_planta) => {
     const db = await connect();
     try {
-        const [plant] = await db.execute('SELECT * FROM tb_planta WHERE estado=true LIMIT 1');
+        const [plant] = await db.execute('SELECT * FROM tb_planta WHERE codigo_planta = ? AND estado = true', [codigo_planta]);
+        if (plant.length === 0) {
+            throw new Error("Planta no encontrada o inactiva");
+        }
         return plant[0];
     } catch (error) {
         throw new Error("Error al obtener información por código QR: " + error.message);
     } finally {
         db.end();
     }
-}
+};
 
