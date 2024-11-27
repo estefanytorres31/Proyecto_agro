@@ -2,7 +2,7 @@ import * as PlantaService from "../services/PlantaService";
 
 export const getAllPlantas = async(req, res)=>{
     try {
-        const plantas = await PlantaService.getAllPlantas();
+        const [plantas] = await PlantaService.getAllPlantas();
         res.status(200).json(plantas);
     } catch (error) {
         console.error(error);
