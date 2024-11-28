@@ -2,24 +2,26 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-const QRScreen = () => {
+const Scanner = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>Escanee código QR</Text>
-        <Text style={styles.subtitle}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Escanee código QR</Text>
+        <Text style={styles.headerSubtitle}>
           Para poder obtener información de la palma, debe escanear el código QR
         </Text>
       </View>
 
       <Image
-        style={styles.qrImage}
-        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }} // Cambia por la imagen del QR
+        style={styles.qrCode}
+        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }} // Cambia esto a la URL de tu código QR
       />
 
-      {/* Botón Escanear */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}> <MaterialCommunityIcons name="scan-helper" size={20} color="#708090" /> Escanear</Text>
+    <TouchableOpacity
+        style={styles.scanButton}
+        onPress={() => navigation.navigate('QRScann')} // Navegar a la pantalla de escaneo
+      >
+        <Text style={styles.scanButtonText}>📷 Escanear</Text>
       </TouchableOpacity>
     </View>
   );
@@ -30,45 +32,47 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#ffffff',
+  },
+  header: {
+    width: '70%',
+    backgroundColor: '#e3f2fd',
+    borderRadius: 10,
     padding: 20,
-  },
-  textContainer: {
     alignItems: 'center',
-    marginBottom: 30,
-    color: '#CDDCE2',
+    marginBottom: 60,
+    marginTop: 5,
   },
-  title: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 10,
+    marginBottom: 8,
   },
-  subtitle: {
+  headerSubtitle: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
-    paddingHorizontal: 20,
   },
-  qrImage: {
-    width: 150,
-    height: 150,
-    marginBottom: 30,
+  qrCode: {
+    width: 200,
+    height: 200,
+    marginBottom: 80,
   },
-  button: {
-    flexDirection: 'row',
+  scanButton: {
+    width: '80%',
+    backgroundColor: '#e3f2fd', 
+    paddingVertical: 15,
+    borderRadius: 10,
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: '#dce8f0',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
   },
-  buttonText: {
+  scanButtonText: {
     fontSize: 16,
-    color: '#000',
     fontWeight: '600',
+    color: '#000',
   },
 });
 
-export default QRScreen;
+export default Scanner;
