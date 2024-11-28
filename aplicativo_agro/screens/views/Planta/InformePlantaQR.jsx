@@ -29,6 +29,9 @@ const QRInfo = ({ route }) => {
                 />
             </View>
 
+
+            
+
       {/* Contenedor de opciones */}
       <View style={styles.optionsContainer}>
       <View style={styles.qrCodeContainer}>
