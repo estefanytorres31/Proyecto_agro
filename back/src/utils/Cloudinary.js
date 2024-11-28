@@ -11,7 +11,7 @@ cloudinary.config({
 
 export async function uploadImage(filePath) {
     return await cloudinary.uploader.upload(filePath, {
-        folder: 'codigos_qr'
+        folder: 'qr'
     })
 }
 
