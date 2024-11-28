@@ -34,11 +34,11 @@ const PlantaProvider =({children})=>{
         fetchPlantas();
     })
 
-    const handleEditPlanta=async(codigo_planta, updatePlanta)=>{
+    const handleEditPlanta=async(qrData, updatePlanta)=>{
         try{
-            const updatedPlanta=await updatePlantaTamano(codigo_planta, updatePlanta);
+            const updatedPlanta=await updatePlantaTamano(qrData, updatePlanta);
             if(updatedPlanta.status===200){
-                const updatedPlantas=plantas.map(planta=>planta.codigo_planta===codigo_planta? updatedPlanta: planta);
+                const updatedPlantas=plantas.map(planta=>planta.qrData===qrData? updatedPlanta: planta);
                 setPlantas(updatedPlantas);
                 return updatedPlanta;
             }else{

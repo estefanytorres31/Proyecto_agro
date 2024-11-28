@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import QRCode from 'react-native-qrcode-svg'; 
@@ -6,16 +6,26 @@ import usePlanta from "../../hooks/Planta/usePlanta";
 
 
 const QRInfo = ({ route }) => {
-    const { qrData } = route.params;
+  const { qrData } = route.params;
   const [selectedOption, setSelectedOption] = useState("");
+  const {handleEditPlanta} = usePlanta();
+  console.log("handleEditPlanta:", handleEditPlanta);  
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedOption) {
-      Alert.alert("Opción seleccionada", `Has seleccionado: ${selectedOption}`);
+      const updatedPlanta = {
+        tamaño: selectedOption, 
+      };
+      const result = await handleEditPlanta(qrData, updatedPlanta);
+      if (result) {
+        Alert.alert("Éxito", `Tamaño actualizado a: ${selectedOption}`);
+      } else {
+        Alert.alert("Error", "No se pudo actualizar el tamaño.");
+      }
     } else {
       Alert.alert("Error", "Por favor, selecciona una opción.");
     }

@@ -31,7 +31,7 @@ export const getPlantas=async ()=>{
     }
 }
 
-export const updatePlantaTamano=async (id, updatedPlanta)=>{
+export const updatePlantaTamano=async (codigo_planta, updatedPlanta)=>{
     try{
         const {data, status}=await apiClient.put(
             `/api/planta/qr/${codigo_planta}`,
@@ -69,7 +69,7 @@ export const deletePlanta=async (codigo_planta)=>{
 export const getPlantaById=async (codigo_planta)=>{
     try{
         const response=await apiClient.get(
-            `/api/planta/${codigo_planta}`
+            `/api/planta/qr/${codigo_planta}`
         )
         return response.data
     }catch(error){
