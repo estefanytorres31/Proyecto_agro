@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import QRCode from 'react-native-qrcode-svg'; 
+import usePlanta from "../../hooks/Planta/usePlanta";
+
 
 const QRInfo = ({ route }) => {
     const { qrData } = route.params;
@@ -23,14 +25,11 @@ const QRInfo = ({ route }) => {
     <View style={styles.container}>
       {/* Código QR */}
       <View style={styles.qrCodeContainer}>
-                <QRCode 
-                    value={qrData}
-                    size={150}
-                />
-            </View>
-
-
-            
+        <QRCode 
+        value={qrData}
+        size={150}
+         />
+    </View>
 
       {/* Contenedor de opciones */}
       <View style={styles.optionsContainer}>
@@ -62,7 +61,6 @@ const QRInfo = ({ route }) => {
         </View>
       </View>
 
-      {/* Botón Guardar */}
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>GUARDAR</Text>
       </TouchableOpacity>
