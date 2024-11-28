@@ -31,11 +31,11 @@ export const getPlantas=async ()=>{
     }
 }
 
-export const updatePlantaTamano=async (id, updatedPlantaTamano)=>{
+export const updatePlantaTamano=async (id, updatedPlanta)=>{
     try{
         const {data, status}=await apiClient.put(
-            `/api/planta/${codigo_planta}`,
-            updatedPlantaTamano
+            `/api/planta/qr/${codigo_planta}`,
+            updatedPlanta
         )
         return {
             data,
