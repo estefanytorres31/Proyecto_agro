@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 
+
 const QRInfo = ({ route }) => {
-    const { qrData } = route.params;
+  const { qrData } = route.params; // QR data passed from navigation
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleOptionChange = (option) => {
@@ -13,9 +13,10 @@ const QRInfo = ({ route }) => {
 
   const handleSave = () => {
     if (selectedOption) {
-      Alert.alert("Opción seleccionada", `Has seleccionado: ${selectedOption}`);
+      Alert.alert(
+      );
     } else {
-      Alert.alert("Error", "Por favor, selecciona una opción.");
+      Alert.alert("Error", "Por favor, selecciona un tamaño de fruto.");
     }
   };
 
@@ -23,20 +24,15 @@ const QRInfo = ({ route }) => {
     <View style={styles.container}>
       {/* Código QR */}
       <View style={styles.qrCodeContainer}>
-                <QRCode 
-                    value={qrData}
-                    size={150}
-                />
-            </View>
+        <QRCode value={qrData} size={150} />
+        <Text style={styles.qrDataText}>{qrData}</Text>
+      </View>
 
       {/* Contenedor de opciones */}
       <View style={styles.optionsContainer}>
-      <View style={styles.qrCodeContainer}>
-        <Text style={styles.qrDataText}>{qrData}</Text>
-      </View>
-        <Text style={styles.subtitle}>Seleccione el tamaño de la palma:</Text>
+        <Text style={styles.subtitle}>Seleccione el tamaño de fruto:</Text>
         <View style={styles.options}>
-          {["Grande", "Mediano", "Pequeño", "No hay palma"].map((option) => (
+          {["Grande", "Mediano", "Pequeño", "No hay fruto"].map((option) => (
             <TouchableOpacity
               key={option}
               style={[
@@ -74,23 +70,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 40,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
   qrCodeContainer: {
     alignItems: "center",
     marginBottom: 20,
   },
-  qrCode: {
-    width: 150,
-    height: 150,
+  qrDataText: {
+    fontSize: 16,
+    color: "#333",
+    marginTop: 8,
   },
   optionsContainer: {
     backgroundColor: "#E3F2FD",
@@ -98,11 +85,6 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     marginBottom: 20,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
@@ -127,28 +109,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#007bff",
     borderColor: "#007bff",
   },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: "#333",
-    borderRadius: 4,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  checked: {
-    width: 12,
-    height: 12,
-    backgroundColor: "#007bff",
-  },
   optionText: {
     fontSize: 14,
     color: "#333",
   },
-  /*optionTextActive: {
+  optionTextActive: {
     color: "#fff",
-  },*/
+  },
+  switchContainer: {
+    marginBottom: 20,
+  },
+  switchWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  switchLabel: {
+    fontSize: 14,
+    color: "#333",
+    marginHorizontal: 10,
+  },
   button: {
     backgroundColor: "#30C81E",
     paddingVertical: 14,
