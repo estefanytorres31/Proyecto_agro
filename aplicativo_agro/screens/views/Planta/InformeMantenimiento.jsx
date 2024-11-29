@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 
-const QRInfo = ({ route }) => {
+const Mantenimiento = ({ route }) => {
   const { qrData } = route.params; // QR data passed from navigation
   const [mantenimientoSeleccionado, setMantenimientoSeleccionado] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalStyle, setModalStyle] = useState(estilos.modalSuccess);
 
   const manejarCambioMantenimiento = (mantenimiento) => {
     setMantenimientoSeleccionado(mantenimiento);
@@ -12,9 +15,13 @@ const QRInfo = ({ route }) => {
 
   const manejarGuardar = () => {
     if (mantenimientoSeleccionado) {
-      Alert.alert("Éxito", `Mantenimiento seleccionado: ${mantenimientoSeleccionado}`);
+      setModalMessage("¡Mantenimiento guardado correctamente!");
+      setModalStyle(estilos.modalSuccess);
+      setModalVisible(true);
     } else {
-      Alert.alert("Error", "Por favor, selecciona un mantenimiento.");
+      setModalMessage("Error: Selecciona un ¡mantenimiento.");
+      setModalStyle(estilos.modalError);
+      setModalVisible(true);
     }
   };
 
@@ -57,6 +64,25 @@ const QRInfo = ({ route }) => {
       <TouchableOpacity style={estilos.boton} onPress={manejarGuardar}>
         <Text style={estilos.textoBoton}>GUARDAR</Text>
       </TouchableOpacity>
+      {/* Modal Personalizado */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={estilos.modalOverlay}>
+          <View style={[estilos.modalContent, modalStyle]}>
+            <Text style={estilos.modalText}>{modalMessage}</Text>
+            <TouchableOpacity
+              style={estilos.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={estilos.modalButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -125,6 +151,45 @@ const estilos = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalSuccess: {
+    backgroundColor: "#d4edda",
+    borderColor: "#155724",
+    borderWidth: 2,
+  },
+  modalError: {
+    backgroundColor: "#f8d7da",
+    borderColor: "#721c24",
+    borderWidth: 2,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  modalButton: {
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
 });
 
-export default QRInfo;
+
+export default Mantenimiento;

@@ -35,7 +35,7 @@ const QRScann = ({ navigation }) => {
     if (!qrCodeLock.current) {
       qrCodeLock.current = true; 
       setScanning(true);
-      navigation.navigate('QRInfo', { qrData: data });
+      navigation.navigate('Menu', { qrData: data });
       setTimeout(() => {
         qrCodeLock.current = false;
         setScanning(false);

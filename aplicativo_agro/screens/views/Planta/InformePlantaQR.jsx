@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
-import QRCode from 'react-native-qrcode-svg'; 
-
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+} from "react-native";
+import QRCode from "react-native-qrcode-svg";
 
 const QRInfo = ({ route }) => {
   const { qrData } = route.params; // QR data passed from navigation
   const [selectedOption, setSelectedOption] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalStyle, setModalStyle] = useState(styles.modalSuccess);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
@@ -13,10 +21,13 @@ const QRInfo = ({ route }) => {
 
   const handleSave = () => {
     if (selectedOption) {
-      Alert.alert(
-      );
+      setModalMessage("¡Tamaño de fruto guardado correctamente!");
+      setModalStyle(styles.modalSuccess);
+      setModalVisible(true);
     } else {
-      Alert.alert("Error", "Por favor, selecciona un tamaño de fruto.");
+      setModalMessage("Error: Selecciona un tamaño de fruto.");
+      setModalStyle(styles.modalError);
+      setModalVisible(true);
     }
   };
 
@@ -59,6 +70,26 @@ const QRInfo = ({ route }) => {
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>GUARDAR</Text>
       </TouchableOpacity>
+
+      {/* Modal Personalizado */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, modalStyle]}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -116,19 +147,6 @@ const styles = StyleSheet.create({
   optionTextActive: {
     color: "#fff",
   },
-  switchContainer: {
-    marginBottom: 20,
-  },
-  switchWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  switchLabel: {
-    fontSize: 14,
-    color: "#333",
-    marginHorizontal: 10,
-  },
   button: {
     backgroundColor: "#30C81E",
     paddingVertical: 14,
@@ -138,6 +156,44 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
+    fontWeight: "600",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalSuccess: {
+    backgroundColor: "#d4edda",
+    borderColor: "#155724",
+    borderWidth: 2,
+  },
+  modalError: {
+    backgroundColor: "#f8d7da",
+    borderColor: "#721c24",
+    borderWidth: 2,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  modalButton: {
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 14,
     fontWeight: "600",
   },
 });
