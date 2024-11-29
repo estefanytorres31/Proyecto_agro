@@ -23,7 +23,7 @@ const PlantaProvider =({children})=>{
     const fetchPlantas=async()=>{
         try{
             const planta=await getPlantas();
-            console.log(res);
+            console.log(planta);
             setPlanta(planta);
         }catch(error){
             console.error(error);

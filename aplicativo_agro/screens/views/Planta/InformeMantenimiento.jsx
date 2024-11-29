@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 
 const Mantenimiento = ({ route }) => {
-  const { qrData } = route.params; // QR data passed from navigation
+  const { qrData } = route.params; 
   const [mantenimientoSeleccionado, setMantenimientoSeleccionado] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
