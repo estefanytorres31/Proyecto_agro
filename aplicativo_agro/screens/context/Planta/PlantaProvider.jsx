@@ -34,22 +34,20 @@ const PlantaProvider =({children})=>{
         fetchPlantas();
     })
 
-    const handleEditPlanta=async(qrData, updatePlanta)=>{
-        try{
-            const updatedPlanta=await updatePlantaTamano(qrData, updatePlanta);
-            if(updatedPlanta.status===200){
-                const updatedPlantas=plantas.map(planta=>planta.qrData===qrData? updatedPlanta: planta);
-                setPlantas(updatedPlantas);
-                return updatedPlanta;
-            }else{
-                return null;
-            }
-
-        }catch(error){
+    const handleEditPlanta = async (qrData, updatePlanta) => {
+        try {
+            const updatedPlanta = await updatePlantaTamano(qrData, updatePlanta);
+            const updatedPlantas = plantas.map((planta) =>
+                planta.qrData === qrData ? updatedPlanta : planta
+            );
+            setPlantas(updatedPlantas);
+            return updatedPlanta;
+        } catch (error) {
             console.error(error);
-            return null;
+            return null; 
         }
-    }
+    };
+    
     return(
         <PlantaContext.Provider value={{
             plantas,

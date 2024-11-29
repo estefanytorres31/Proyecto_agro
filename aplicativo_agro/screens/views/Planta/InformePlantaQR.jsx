@@ -8,14 +8,14 @@ import usePlanta from "../../hooks/Planta/usePlanta";
 const QRInfo = ({ route }) => {
   const { qrData } = route.params;
   const [selectedOption, setSelectedOption] = useState("");
-  const {handleEditPlanta} = usePlanta();
-  console.log("handleEditPlanta:", handleEditPlanta);  
+  const {handleEditPlanta} = usePlanta(); 
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
 
   const handleSave = async () => {
+
     if (selectedOption) {
       const updatedPlanta = {
         tamaño: selectedOption, 
@@ -23,8 +23,10 @@ const QRInfo = ({ route }) => {
       const result = await handleEditPlanta(qrData, updatedPlanta);
       if (result) {
         Alert.alert("Éxito", `Tamaño actualizado a: ${selectedOption}`);
+        console.log(result.tamaño);
       } else {
         Alert.alert("Error", "No se pudo actualizar el tamaño.");
+        console.log(result)
       }
     } else {
       Alert.alert("Error", "Por favor, selecciona una opción.");

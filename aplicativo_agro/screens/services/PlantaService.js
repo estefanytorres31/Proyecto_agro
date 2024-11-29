@@ -31,23 +31,16 @@ export const getPlantas=async ()=>{
     }
 }
 
-export const updatePlantaTamano=async (codigo_planta, updatedPlanta)=>{
-    try{
-        const {data, status}=await apiClient.put(
-            `/api/planta/qr/${codigo_planta}`,
-            updatedPlanta
-        )
-        return {
-            data,
-            status
-        }
-    }catch(error){
+export const updatePlantaTamano = async (codigo_planta, updatedPlanta) => {
+    try {
+        const { data } = await apiClient.put(`/api/planta/qr/${codigo_planta}`, updatedPlanta);
+        return data; 
+    } catch (error) {
         console.error(error);
-        return {
-            error: error.message
-        }
+        throw new Error(error.message);
     }
 };
+
 
 export const deletePlanta=async (codigo_planta)=>{
     try{

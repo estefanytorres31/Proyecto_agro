@@ -3,7 +3,7 @@ import { connect } from "../database";
 export const getAllFundos=async()=>{
     const db = await connect();
     try {
-        const fundos = await db.execute('SELECT * FROM tb_fundo');
+        const fundos = await db.execute('SELECT * FROM tb_fundo where estado=true');
         return fundos;
     } catch (error) {
         throw new Error("Error al obtener plantas: " + error.message);

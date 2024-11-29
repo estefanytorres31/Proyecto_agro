@@ -54,7 +54,7 @@ export const updatePlantaTamaño = async(req, res)=>{
     const {codigo_planta} = req.params;
     const { tamaño } = req.body;
     try{
-        await PlantaService.updatePlantaTamano(codigo_planta, tamaño);
+        await PlantaService.updatePlantaTamano(tamaño, codigo_planta);
         res.status(200).json({message: "Tamaño de la planta actualizado"});
         
     } catch (error) {

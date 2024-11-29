@@ -5,9 +5,7 @@ import PlantaProvider from "./screens/context/Planta/PlantaProvider.jsx";
 export default function App() {
   return (
     <PlantaProvider>
-      <NavigationContainer>
-      </NavigationContainer>
+      <Navigation /> 
     </PlantaProvider>
   );
 }
-
