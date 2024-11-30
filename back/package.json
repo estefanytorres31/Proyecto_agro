@@ -19,6 +19,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.11.4",
     "qrcode": "^1.5.4",
+    "sharp": "^0.33.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },

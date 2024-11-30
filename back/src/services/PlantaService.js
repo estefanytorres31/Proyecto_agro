@@ -3,6 +3,7 @@ const QRCode = require ('qrcode');
 const fs = require('fs');
 const path = require('path');
 import { uploadImage } from "../utils/Cloudinary";
+const sharp=require('sharp');
 
 
 export const getAllPlantas = async () => {
@@ -64,12 +65,37 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
         const uploadPromises = [];
 
         for (let i = 1; i <= cantidad; i++) {
-            const codigo_planta = `P${String(lastCode + i).padStart(5, "0")}`;
+            const codigo_planta = `P${String(lastCode + i).padStart(6, "0")}`;
             const tempFilePath = path.join(__dirname, `../qrcodes/${codigo_planta}.png`);
 
-            await QRCode.toFile(tempFilePath, codigo_planta);
+            const qrBuffer = await QRCode.toBuffer(codigo_planta);
+            const resizedQRBuffer = await sharp(qrBuffer)
+                .resize(200, 200) 
+                .toBuffer();
+            const textBuffer = Buffer.from(
+                `<svg width="400" height="50" xmlns="http://www.w3.org/2000/svg">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-family="Arial" fill="black">
+                        ${codigo_planta}
+                    </text>
+                </svg>`
+            );
 
-            const uploadPromise = uploadImage(tempFilePath)
+            await sharp({
+                create: {
+                    width: 400,  
+                    height: 450, 
+                    channels: 4,
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }, 
+                },
+            })
+                .composite([
+                    { input: resizedQRBuffer, top: 100, left: 90 },
+                    { input: textBuffer, top: 300, left: 0 },
+                ])
+                .toFile(tempFilePath);
+
+
+            const uploadPromise = uploadImage(tempFilePath, codigo_planta)
                 .then(async (result) => {
                     fs.unlinkSync(tempFilePath);
 
@@ -96,6 +122,7 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
         db.end();
     }
 };
+
 
 
 

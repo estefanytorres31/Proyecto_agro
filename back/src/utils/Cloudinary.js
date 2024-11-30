@@ -9,10 +9,11 @@ cloudinary.config({
     secure: true
   });
 
-export async function uploadImage(filePath) {
+  export async function uploadImage(filePath, codigo_planta) {
     return await cloudinary.uploader.upload(filePath, {
-        folder: 'qr'
-    })
+        folder: 'sector C/sector C-2',
+        public_id: codigo_planta 
+    });
 }
 
 export async function deleteImage(secure_url) {
