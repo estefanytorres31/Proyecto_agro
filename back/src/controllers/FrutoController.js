@@ -2,7 +2,15 @@ import * as FrutoService from "../services/FrutoService";
 
 export const getAllFrutos = async (req, res) => {
     try {
-        const frutos = await FrutoService.getAllFrutos();
+        const {tamaño_fruto, fecha_registro, orderBy, sortOrder}=req.query
+
+        const queryParams={};
+        if(tamaño_fruto) queryParams.tamaño_fruto=tamaño_fruto;
+        if(fecha_registro) queryParams.fecha_registro=fecha_registro;
+        if(orderBy) queryParams.orderBy=orderBy;
+        if(sortOrder) queryParams.sortOrder=sortOrder;
+
+        const frutos = await FrutoService.getAllFrutos(queryParams);
         res.status(200).json(frutos);
     } catch (error) {
         console.error(error);

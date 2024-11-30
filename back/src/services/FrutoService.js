@@ -66,10 +66,28 @@ export const getFrutoById=async(codigo_fruto)=>{
     }
 }
 
-export const getAllFrutos=async()=>{
+export const getAllFrutos=async({tamaño_fruto='', fecha_registro='', orderBy = 'fecha_registro', sortOrder = 'ASC'})=>{
     const db= await connect();
     try{
-        const [frutos]=await db.execute('SELECT * FROM tb_fruto WHERE estado=true');
+        let query = 'SELECT * FROM tb_fruto WHERE estado=true';
+        let params = [];
+        if (tamaño_fruto) {
+            query += ' AND tamaño_fruto = ?';
+            params.push(tamaño_fruto);
+        }
+
+        if (fecha_registro) {
+            query += ' AND fecha_registro = ?';
+            params.push(fecha_registro);
+        }
+
+        const validOrderByFields = ['tamaño_fruto', 'fecha_registro'];
+        if (validOrderByFields.includes(orderBy)) {
+            query += ` ORDER BY tamaño_fruto ASC`;
+        } else {
+            query += ' ORDER BY fecha_registro ASC';
+        }
+        const [frutos]=await db.execute(query, params);
         return frutos;
     }catch(error){
         throw new Error("Error al obtener todos los frutos: " + error.message);
