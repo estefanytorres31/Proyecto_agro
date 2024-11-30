@@ -25,7 +25,7 @@ export const updateFrutoTamaño = async (req, res) => {
     const { codigo_fruto} = req.params;
     const {tamaño_fruto} = req.body;
     try{
-        const fruto = await FrutoService.updateFrutoTamaño(tamaño_fruto, codigo_fruto);
+        const fruto = await FrutoService.updateFrutoTamaño(codigo_fruto,tamaño_fruto);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }

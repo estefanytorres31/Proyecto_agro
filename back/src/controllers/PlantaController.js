@@ -2,7 +2,7 @@ import * as PlantaService from "../services/PlantaService";
 
 export const getAllPlantas = async(req, res)=>{
     try {
-        const [plantas] = await PlantaService.getAllPlantas();
+        const plantas = await PlantaService.getAllPlantas();
         res.status(200).json(plantas);
     } catch (error) {
         console.error(error);
@@ -10,19 +10,6 @@ export const getAllPlantas = async(req, res)=>{
     }
 }
 
-export const getPlantaById = async(req, res)=>{
-    const { codigo_planta } = req.params;
-    try{
-        const planta = await PlantaService.getPlantaById(codigo_planta);
-        if(!planta){
-            return res.status(404).json({message: "Planta no encontrada"});
-        }
-        res.status(200).json(planta);
-    }catch (error) {
-        console.error(error);
-        res.status(500).json({message: "Error al obtener la planta"});
-    }
-}
 /*
 export const createPlanta = async(req, res)=>{
     const {codigo_planta, planta_codigo_sector} = req.body;
@@ -54,7 +41,7 @@ export const updatePlantaTamaño = async(req, res)=>{
     const {codigo_planta} = req.params;
     const { tamaño } = req.body;
     try{
-        await PlantaService.updatePlantaTamano(tamaño, codigo_planta);
+        await PlantaService.updatePlantaTamano(codigo_planta,tamaño);
         res.status(200).json({message: "Tamaño de la planta actualizado"});
         
     } catch (error) {
@@ -80,7 +67,7 @@ export const getAndUpdatePlanta = async (req, res) => {
     const { tamaño } = req.body; 
     
     try {
-        const planta = await PlantaService.getInformationByQR(codigo_planta);
+        const planta = await PlantaService.getPlantaById(codigo_planta);
         if (!planta) {
             return res.status(404).json({ message: "Planta no encontrada" });
         }
