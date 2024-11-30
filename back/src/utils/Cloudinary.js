@@ -11,7 +11,7 @@ cloudinary.config({
 
   export async function uploadImage(filePath, codigo_planta) {
     return await cloudinary.uploader.upload(filePath, {
-        folder: 'sector C/sector C-2',
+        folder: '',
         public_id: codigo_planta 
     });
 }
