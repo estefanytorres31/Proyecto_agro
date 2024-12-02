@@ -49,7 +49,7 @@ export const createMantenimiento=async(mantenimiento, mantenimiento_codigo_plant
     try {
         const [result] = await db.execute('INSERT INTO tb_mantenimiento (mantenimiento,  mantenimiento_codigo_planta) VALUES (?,?)',
         [mantenimiento, mantenimiento_codigo_planta]);
-
+        return result
 
     } catch (error) {
         throw new Error("Error al crear mantenimiento: " + error.message);

@@ -32,7 +32,11 @@ export const updateFrutoTamaño=async(codigo_cosecha,tamaño_fruto)=>{
     try{
         const [fruto]=await db.execute('UPDATE tb_cosecha SET tamaño_fruto=? where codigo_cosecha=?',
         [tamaño_fruto,codigo_cosecha]);
-        return fruto;
+        
+        const [updatedFruto]=await db.execute('select codigo_cosecha, tamaño_fruto from tb_cosecha where codigo_cosecha=?',
+            [codigo_cosecha]
+        )
+        return {message: 'Mantenimiento actualizado con éxito.',affectedRows:fruto.affectedRows ,Fruto: updatedFruto[0]}
     }catch(error){
         throw new Error("Error al actualizar tamaño de fruto: " + error.message);
     }finally{

@@ -38,9 +38,9 @@ export const getMantenimientoById = async (req, res) => {
 }
 
 export const createMantenimiento = async (req, res) => {
-    const {mantenimiento}=req.body;
+    const {mantenimiento, mantenimiento_codigo_planta}=req.body;
     try{
-        const createdMantenimiento = await MantenimientoService.createMantenimiento(mantenimiento);
+        const createdMantenimiento = await MantenimientoService.createMantenimiento(mantenimiento, mantenimiento_codigo_planta);
         res.status(201).json(createdMantenimiento);
     }
     catch (error) {
@@ -51,9 +51,9 @@ export const createMantenimiento = async (req, res) => {
 
 export const updateMantenimiento = async (req, res) => {
     const { codigo_mantenimiento } = req.params;
-    const {mantenimiento}=req.body;
+    const {mantenimiento, mantenimiento_codigo_planta}=req.body;
     try{
-        const updatedMantenimiento = await MantenimientoService.updateMantenimiento(codigo_mantenimiento, mantenimiento);
+        const updatedMantenimiento = await MantenimientoService.updateMantenimiento(codigo_mantenimiento, mantenimiento, mantenimiento_codigo_planta);
         if(!updatedMantenimiento){
             return res.status(404).json({ message: "Mantenimiento no encontrado" });
         }
