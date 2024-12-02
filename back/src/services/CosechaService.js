@@ -1,6 +1,6 @@
 import { connect } from "../database";
 
-export const createFruto= async (tamaño_fruto, cosecha_codigo_planta)=>{
+export const createCosecha= async (tamaño_fruto, cosecha_codigo_planta)=>{
     const db= await connect();
     try{
         const [fruto]=await db.execute('INSERT INTO tb_cosecha (tamaño_fruto, cosecha_codigo_planta) values (?,?)',
@@ -13,7 +13,7 @@ export const createFruto= async (tamaño_fruto, cosecha_codigo_planta)=>{
     }
 }
 
-export const getFrutoByPlanta=async (cosecha_codigo_planta)=>{
+export const getCosechaByPlanta=async (cosecha_codigo_planta)=>{
     const db= await connect();
     try{
         const [fruto]=await db.execute('SELECT * FROM tb_cosecha WHERE cosecha_codigo_planta=?',
@@ -40,7 +40,7 @@ export const updateFrutoTamaño=async(codigo_cosecha,tamaño_fruto)=>{
     }
 }
 
-export const deleteFruto=async(codigo_cosecha)=>{
+export const deleteCosecha=async(codigo_cosecha)=>{
     const db= await connect();
     try{
         const [fruto]=await db.execute('UPDATE tb_cosecha SET estado=false WHERE codigo_cosecha=?',
@@ -53,7 +53,7 @@ export const deleteFruto=async(codigo_cosecha)=>{
     }
 }
 
-export const getFrutoById=async(codigo_cosecha)=>{
+export const getCosechaById=async(codigo_cosecha)=>{
     const db= await connect();
     try{
         const [fruto]=await db.execute('SELECT * FROM tb_cosecha WHERE codigo_cosecha=?',
@@ -66,7 +66,7 @@ export const getFrutoById=async(codigo_cosecha)=>{
     }
 }
 
-export const getAllFrutos = async ({ tamaño_fruto = '', fecha_registro = '', orderBy = 'fecha_registro', orderDirection = 'ASC' }) => {
+export const getAllCosechas = async ({ tamaño_fruto = '', fecha_registro = '', orderBy = 'fecha_registro', orderDirection = 'ASC' }) => {
     const db = await connect();
     try {
         let query = 'SELECT * FROM tb_cosecha WHERE estado = true';

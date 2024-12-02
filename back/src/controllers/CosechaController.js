@@ -1,6 +1,6 @@
 import * as CosechaService from "../services/CosechaService";
 
-export const getAllFrutos = async (req, res) => {
+export const getAllCosechas = async (req, res) => {
     try {
         const {tamaño_fruto, fecha_registro, orderBy, orderDirection }=req.query
 
@@ -10,7 +10,7 @@ export const getAllFrutos = async (req, res) => {
         if(orderBy) queryParams.orderBy=orderBy;
         if(orderDirection) queryParams.orderDirection=orderDirection;
 
-        const frutos = await CosechaService.getAllFrutos(queryParams);
+        const frutos = await CosechaService.getAllCosechas(queryParams);
         res.status(200).json(frutos);
     } catch (error) {
         console.error(error);
@@ -18,10 +18,10 @@ export const getAllFrutos = async (req, res) => {
     }
 }
 
-export const createFruto= async (req, res) => {
+export const createCosecha= async (req, res) => {
     const {tamaño_fruto, cosecha_codigo_planta} = req.body;
     try{
-        const fruto = await CosechaService.createFruto(tamaño_fruto, cosecha_codigo_planta);
+        const fruto = await CosechaService.createCosecha(tamaño_fruto, cosecha_codigo_planta);
         res.status(201).json(fruto);
     }catch(error){
         console.error(error);
@@ -44,10 +44,10 @@ export const updateFrutoTamaño = async (req, res) => {
     }
 }
 
-export const deleteFruto = async (req, res) => {
+export const deleteCosecha = async (req, res) => {
     const { codigo_cosecha} = req.params;
     try{
-        await CosechaService.deleteFruto(codigo_cosecha);
+        await CosechaService.deleteCosecha(codigo_cosecha);
         res.status(200).json({message: "Fruto eliminado"});
     }catch(error){
         console.error(error);
@@ -55,10 +55,10 @@ export const deleteFruto = async (req, res) => {
     }
 }
 
-export const getFrutoById = async (req, res) => {
+export const getCosechaById = async (req, res) => {
     const { codigo_cosecha} = req.params;
     try{
-        const fruto = await CosechaService.getFrutoById(codigo_cosecha);
+        const fruto = await CosechaService.getCosechaById(codigo_cosecha);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }
@@ -69,10 +69,10 @@ export const getFrutoById = async (req, res) => {
     }
 }
 
-export const getFrutoByPlanta = async (req, res) => {
+export const getCosechaByPlanta = async (req, res) => {
     const { fruto_codigo_planta} = req.params;
     try{
-        const fruto = await CosechaService.getFrutoByPlantar(fruto_codigo_planta);
+        const fruto = await CosechaService.getCosechaByPlanta(fruto_codigo_planta);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }

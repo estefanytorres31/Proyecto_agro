@@ -1,13 +1,13 @@
-import { getAllFrutos, createFruto, updateFrutoTamaño, deleteFruto, getFrutoById, getFrutoByPlanta } from "../controllers/CosechaController";
+import { getAllCosechas, createCosecha, updateFrutoTamaño, deleteCosecha, getCosechaById, getCosechaByPlanta } from "../controllers/CosechaController";
 import {Router} from "express"
 
 const FrutoRouter = Router();
 
-FrutoRouter.get('/api/fruto', getAllFrutos);
-FrutoRouter.get('/api/fruto/:codigo_fruto', getFrutoById);
-FrutoRouter.post('/api/fruto', createFruto);
-FrutoRouter.put('/api/fruto/:codigo_fruto/size', updateFrutoTamaño);
-FrutoRouter.delete('/api/fruto/:codigo_fruto', deleteFruto);
-FrutoRouter.get('/api/fruto/planta/:fruto_codigo_planta', getFrutoByPlanta);
+FrutoRouter.get('/api/cosecha', getAllCosechas);
+FrutoRouter.get('/api/cosecha/:codigo_cosecha', getCosechaById);
+FrutoRouter.post('/api/cosecha', createCosecha);
+FrutoRouter.put('/api/cosecha/:codigo_cosecha/size', updateFrutoTamaño);
+FrutoRouter.delete('/api/cosecha/:codigo_cosecha', deleteCosecha);
+FrutoRouter.get('/api/cosecha/planta/:cosecha_codigo_planta', getCosechaByPlanta);
 
 export default FrutoRouter;
