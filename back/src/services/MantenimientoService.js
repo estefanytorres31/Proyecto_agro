@@ -44,12 +44,13 @@ export const getMantenimientoById=async(codigo_mantenimiento)=>{
     }
 }
 
-export const createMantenimiento=async(mantenimiento)=>{
+export const createMantenimiento=async(mantenimiento, mantenimiento_codigo_planta)=>{
     const db = await connect();
     try {
-        const [result] = await db.execute('INSERT INTO tb_mantenimiento (mantenimiento, fecha_mantenimiento, mantenimiento_codigo_planta) VALUES (?,?,?)',
-        [mantenimiento.mantenimiento, mantenimiento.fecha_mantenimiento, mantenimiento.mantenimiento_codigo_planta]);
-        return {...mantenimiento, codigo_mantenimiento: result.insertId };
+        const [result] = await db.execute('INSERT INTO tb_mantenimiento (mantenimiento,  mantenimiento_codigo_planta) VALUES (?,?)',
+        [mantenimiento, mantenimiento_codigo_planta]);
+
+
     } catch (error) {
         throw new Error("Error al crear mantenimiento: " + error.message);
     } finally {
@@ -57,12 +58,16 @@ export const createMantenimiento=async(mantenimiento)=>{
     }
 }
 
-export const updateMantenimiento=async(codigo_mantenimiento, mantenimiento)=>{
+export const updateMantenimiento=async(codigo_mantenimiento, mantenimiento, mantenimiento_codigo_planta)=>{
     const db = await connect();
     try {
-        const [result] = await db.execute('UPDATE tb_mantenimiento SET mantenimiento=?, fecha_mantenimiento=? WHERE codigo_mantenimiento=?',
-        [mantenimiento.mantenimiento, mantenimiento.fecha_mantenimiento, codigo_mantenimiento]);
-        return result.affectedRows > 0;
+        const [result] = await db.execute('UPDATE tb_mantenimiento SET mantenimiento=?, mantenimiento_codigo_planta=? WHERE codigo_mantenimiento=?',
+        [mantenimiento, mantenimiento_codigo_planta, codigo_mantenimiento]);
+
+        const [updatedMantenimiento]=await db.execute('SELECT codigo_mantenimiento, mantenimiento, mantenimiento_codigo_planta from tb_mantenimiento where codigo_mantenimiento=?',
+            [codigo_mantenimiento]
+        );
+        return { message: 'Mantenimiento actualizado con éxito.', affectedRows: result.affectedRows, Mantenimiento: updatedMantenimiento[0]};
     } catch (error) {
         throw new Error("Error al actualizar mantenimiento: " + error.message);
     } finally {

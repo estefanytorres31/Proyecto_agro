@@ -128,5 +128,3 @@ src/qrcodes/
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-.env

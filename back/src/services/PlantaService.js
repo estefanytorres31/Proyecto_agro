@@ -105,20 +105,6 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
     }
 };
 
-export const updatePlantaTamano=async(codigo_planta, tamaño)=>{
-    const db = await connect();
-    try {
-        const [planta]=await db.execute('UPDATE tb_planta SET tamaño=? where codigo_planta=?',
-            [tamaño, codigo_planta]
-        )
-        return planta;
-    } catch (error) {
-        throw new Error("Error al actualizar tamaños de códigos QR: " + error.message);
-    } finally {
-        db.end();
-    }
-}
-
 export const deletePlanta = async (codigo_planta) => {
     const db = await connect();
     try {
@@ -130,3 +116,21 @@ export const deletePlanta = async (codigo_planta) => {
     }
 }
 
+export const updatePlanta = async (codigo_planta, planta_codigo_sector) => {
+    const db = await connect();
+    try {
+        const [result] = await db.execute(
+            'UPDATE tb_planta SET planta_codigo_sector = ?, fecha_actualizacion = NOW() WHERE codigo_planta = ?',
+            [planta_codigo_sector, codigo_planta]
+        );
+        const [updatedPlanta] = await db.execute(
+            'SELECT codigo_planta, planta_codigo_sector, fecha_actualizacion FROM tb_planta WHERE codigo_planta = ?',
+            [codigo_planta]
+        );
+        return { message: 'Planta actualizada con éxito.', affectedRows: result.affectedRows, Planta: updatedPlanta[0]};
+    } catch (error) {
+        throw new Error("Error al actualizar planta: " + error.message);
+    } finally {
+        db.end();
+    }
+};

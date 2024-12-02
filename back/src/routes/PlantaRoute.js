@@ -1,4 +1,4 @@
-import { getAllPlantas, createPlanta, createMultiplePlantas, deletePlanta,  getAndUpdatePlanta} from "../controllers/PlantaController";
+import { getAllPlantas, createMultiplePlantas, deletePlanta, getPlantaById, updatePlanta} from "../controllers/PlantaController";
 import { Router } from "express";
 
 const Plantarouter = Router();
@@ -6,7 +6,8 @@ const Plantarouter = Router();
 Plantarouter.get('/api/planta',getAllPlantas);
 Plantarouter.post('/api/planta', createMultiplePlantas);
 Plantarouter.delete('/api/planta/:codigo_planta', deletePlanta);
-Plantarouter.get("/api/planta/qr/:codigo_planta", getAndUpdatePlanta);
-Plantarouter.put("/api/planta/qr/:codigo_planta", getAndUpdatePlanta); 
+Plantarouter.get("/api/planta/qr/:codigo_planta", getPlantaById);
+Plantarouter.put("/api/planta/qr/:codigo_planta", updatePlanta); 
+ 
 
 export default Plantarouter;
