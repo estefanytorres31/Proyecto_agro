@@ -33,27 +33,6 @@ export const getPlantaById = async (codigo_planta) => {
     }
 };
 
-/*
-export const createPlanta = async (codigo_planta, planta_codigo_sector) => {
-    const db = await connect();
-    try {
-        const qrPath = path.join(__dirname, `../qrcodes/${codigo_planta}.png`);
-        
-        await QRCode.toFile(qrPath, codigo_planta);
-
-        const qrRelativePath = `/qrcodes/${codigo_planta}.png`;
-
-        const planta = await db.execute(
-            `INSERT INTO tb_planta (codigo_planta, codigo_qr, planta_codigo_sector) VALUES (?, ?, ?)`,
-            [codigo_planta, qrRelativePath, planta_codigo_sector]
-        );
-        return planta;
-    } catch (error) {
-        throw new Error("Error al crear planta: " + error.message);
-    } finally {
-        db.end();
-    }
-}*/
 
 export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
     if (!cantidad || cantidad <= 0 || !sectorCodigo) {

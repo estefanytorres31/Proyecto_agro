@@ -10,21 +10,6 @@ export const getAllPlantas = async(req, res)=>{
     }
 }
 
-/*
-export const createPlanta = async(req, res)=>{
-    const {codigo_planta, planta_codigo_sector} = req.body;
-    try{
-        const planta = await PlantaService.createPlanta(codigo_planta, planta_codigo_sector);
-        res.status(201).json(planta);
-        
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({message: "Error al crear la planta"});
-    }
-
-}*/
-
 export const createMultiplePlantas=async(req, res)=>{
     const {cantidad, sectorCodigo}= req.body;
     try{

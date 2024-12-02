@@ -2,8 +2,6 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-// Importa tus pantallas
 import Scanner from './screens/views/Scan/Scanner';
 import QRScann from './screens/views/Scan/QRScann';
 import QRInfo from './screens/views/Planta/InformePlantaQR';

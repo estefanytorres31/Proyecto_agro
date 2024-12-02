@@ -1,4 +1,4 @@
-import { getAllFrutos, createFruto, updateFrutoTamaño, deleteFruto, getFrutoById, getFrutoByPlanta } from "../controllers/FrutoController";
+import { getAllFrutos, createFruto, updateFrutoTamaño, deleteFruto, getFrutoById, getFrutoByPlanta } from "../controllers/CosechaController";
 import {Router} from "express"
 
 const FrutoRouter = Router();

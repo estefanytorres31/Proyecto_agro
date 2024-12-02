@@ -1,16 +1,16 @@
-import * as FrutoService from "../services/FrutoService";
+import * as CosechaService from "../services/CosechaService";
 
 export const getAllFrutos = async (req, res) => {
     try {
-        const {tamaño_fruto, fecha_registro, orderBy, sortOrder}=req.query
+        const {tamaño_fruto, fecha_registro, orderBy, orderDirection }=req.query
 
         const queryParams={};
         if(tamaño_fruto) queryParams.tamaño_fruto=tamaño_fruto;
         if(fecha_registro) queryParams.fecha_registro=fecha_registro;
         if(orderBy) queryParams.orderBy=orderBy;
-        if(sortOrder) queryParams.sortOrder=sortOrder;
+        if(orderDirection) queryParams.orderDirection=orderDirection;
 
-        const frutos = await FrutoService.getAllFrutos(queryParams);
+        const frutos = await CosechaService.getAllFrutos(queryParams);
         res.status(200).json(frutos);
     } catch (error) {
         console.error(error);
@@ -19,9 +19,9 @@ export const getAllFrutos = async (req, res) => {
 }
 
 export const createFruto= async (req, res) => {
-    const {tamaño_fruto, fruto_codigo_plantar} = req.body;
+    const {tamaño_fruto, cosecha_codigo_planta} = req.body;
     try{
-        const fruto = await FrutoService.createFruto(tamaño_fruto, fruto_codigo_plantar);
+        const fruto = await CosechaService.createFruto(tamaño_fruto, cosecha_codigo_planta);
         res.status(201).json(fruto);
     }catch(error){
         console.error(error);
@@ -30,10 +30,10 @@ export const createFruto= async (req, res) => {
 }
 
 export const updateFrutoTamaño = async (req, res) => {
-    const { codigo_fruto} = req.params;
+    const { codigo_cosecha} = req.params;
     const {tamaño_fruto} = req.body;
     try{
-        const fruto = await FrutoService.updateFrutoTamaño(codigo_fruto,tamaño_fruto);
+        const fruto = await CosechaService.updateFrutoTamaño(codigo_cosecha,tamaño_fruto);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }
@@ -45,9 +45,9 @@ export const updateFrutoTamaño = async (req, res) => {
 }
 
 export const deleteFruto = async (req, res) => {
-    const { codigo_fruto} = req.params;
+    const { codigo_cosecha} = req.params;
     try{
-        await FrutoService.deleteFruto(codigo_fruto);
+        await CosechaService.deleteFruto(codigo_cosecha);
         res.status(200).json({message: "Fruto eliminado"});
     }catch(error){
         console.error(error);
@@ -56,9 +56,9 @@ export const deleteFruto = async (req, res) => {
 }
 
 export const getFrutoById = async (req, res) => {
-    const { codigo_fruto} = req.params;
+    const { codigo_cosecha} = req.params;
     try{
-        const fruto = await FrutoService.getFrutoById(codigo_fruto);
+        const fruto = await CosechaService.getFrutoById(codigo_cosecha);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }
@@ -72,7 +72,7 @@ export const getFrutoById = async (req, res) => {
 export const getFrutoByPlanta = async (req, res) => {
     const { fruto_codigo_planta} = req.params;
     try{
-        const fruto = await FrutoService.getFrutoByPlantar(fruto_codigo_planta);
+        const fruto = await CosechaService.getFrutoByPlantar(fruto_codigo_planta);
         if(!fruto){
             return res.status(404).json({message: "Fruto no encontrado"});
         }
