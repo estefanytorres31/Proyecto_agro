@@ -7,9 +7,11 @@ import {
   Modal,
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
+import useCosecha from "../../hooks/Cosecha/useCosecha"; // Asegúrate de que la ruta sea correcta
 
 const QRInfo = ({ route }) => {
-  const { qrData } = route.params; // QR data passed from navigation
+  const { qrData } = route.params;
+  const { createCosecha } = useCosecha(); // Obtén la función desde el contexto
   const [selectedOption, setSelectedOption] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -19,10 +21,21 @@ const QRInfo = ({ route }) => {
     setSelectedOption(option);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedOption) {
-      setModalMessage("¡Tamaño de fruto guardado correctamente!");
-      setModalStyle(styles.modalSuccess);
+      try {
+        const response = await createCosecha(qrData, selectedOption); 
+        if (response) {
+          setModalMessage("¡Cosecha guardada correctamente!");
+          setModalStyle(styles.modalSuccess);
+        } else {
+          setModalMessage("Error al guardar la cosecha.");
+          setModalStyle(styles.modalError);
+        }
+      } catch (error) {
+        setModalMessage("Error al guardar la cosecha.");
+        setModalStyle(styles.modalError);
+      }
       setModalVisible(true);
     } else {
       setModalMessage("Error: Selecciona un tamaño de fruto.");
