@@ -35,7 +35,7 @@ const QRInfo = ({ route }) => {
         }
       } catch (error) {
         console.log(error)
-        setModalMessage("Error al interno.");
+        setModalMessage("Error interno.");
         setModalStyle(styles.modalError);
       }
       setModalVisible(true);

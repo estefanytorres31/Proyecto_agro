@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
+import useMantenimiento from "../../hooks/Mantenimiento/useMantenimiento";
 
 const Mantenimiento = ({ route }) => {
   const { qrData } = route.params; 
+  const { addMantenimiento } = useMantenimiento();
   const [mantenimientoSeleccionado, setMantenimientoSeleccionado] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -13,13 +15,26 @@ const Mantenimiento = ({ route }) => {
     setMantenimientoSeleccionado(mantenimiento);
   };
 
-  const manejarGuardar = () => {
+  const manejarGuardar = async () => {
     if (mantenimientoSeleccionado) {
-      setModalMessage("¡Mantenimiento guardado correctamente!");
-      setModalStyle(estilos.modalSuccess);
+      try {
+        const response = await addMantenimiento(qrData, mantenimientoSeleccionado); 
+        console.log(response);
+        if (response) {
+          setModalMessage("¡Mantenimiento guardado correctamente!");
+          setModalStyle(estilos.modalSuccess);
+        } else {
+          setModalMessage("Error al guardar la mantenimiento.");
+          setModalStyle(estilos.modalError);
+        }
+      } catch (error) {
+        console.log(error)
+        setModalMessage("Error interno.");
+        setModalStyle(estilos.modalError);
+      }
       setModalVisible(true);
     } else {
-      setModalMessage("Error: Selecciona un ¡mantenimiento.");
+      setModalMessage("Error: Selecciona un mantenimiento.");
       setModalStyle(estilos.modalError);
       setModalVisible(true);
     }
