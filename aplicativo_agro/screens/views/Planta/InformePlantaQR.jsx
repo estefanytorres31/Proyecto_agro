@@ -11,7 +11,7 @@ import useCosecha from "../../hooks/Cosecha/useCosecha"; // Asegúrate de que la
 
 const QRInfo = ({ route }) => {
   const { qrData } = route.params;
-  const { createCosecha } = useCosecha(); // Obtén la función desde el contexto
+  const { addCosecha } = useCosecha(); // Obtén la función desde el contexto
   const [selectedOption, setSelectedOption] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -24,7 +24,8 @@ const QRInfo = ({ route }) => {
   const handleSave = async () => {
     if (selectedOption) {
       try {
-        const response = await createCosecha(qrData, selectedOption); 
+        const response = await addCosecha(qrData, selectedOption); 
+        console.log(response);
         if (response) {
           setModalMessage("¡Cosecha guardada correctamente!");
           setModalStyle(styles.modalSuccess);
@@ -33,7 +34,8 @@ const QRInfo = ({ route }) => {
           setModalStyle(styles.modalError);
         }
       } catch (error) {
-        setModalMessage("Error al guardar la cosecha.");
+        console.log(error)
+        setModalMessage("Error al interno.");
         setModalStyle(styles.modalError);
       }
       setModalVisible(true);
