@@ -46,17 +46,18 @@ const MantenimientoProvider = ({ children }) => {
   };
 
   // Function to add a new mantenimiento
-  const addMantenimiento = async (mantenimiento, mantenimiento_codigo_planta) => {
+  const addMantenimiento = async (mantenimiento_codigo_planta, mantenimiento) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await createMantenimiento(mantenimiento, mantenimiento_codigo_planta);
-      if (response && response.data) {
-        setMantenimientos(prev => [...prev, response.data]);
-        return response;
+      const newMantenimiento = await createMantenimiento(mantenimiento_codigo_planta, mantenimiento);
+      if (newMantenimiento) {
+        setMantenimientos(prev => [...prev, newMantenimiento]);
+        return newMantenimiento;
       }
     } catch (err) {
       setError('Error creating mantenimiento');
+      return null;
     } finally {
       setLoading(false);
     }

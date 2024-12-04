@@ -24,15 +24,13 @@ export const getMantenimientoById= async(codigo_mantenimiento)=>{
     }
 }
 
-export const createMantenimiento= async(mantenimiento, mantenimiento_codigo_planta)=>{
+export const createMantenimiento= async(mantenimiento_codigo_planta, mantenimiento)=>{
     try{
-        const {data, status}=await apiClient.post('/api/mantenimiento', {mantenimiento, mantenimiento_codigo_planta})
-        return {
-            data,
-            status
-        }
+        const response=await apiClient.post('/api/mantenimiento', {mantenimiento_codigo_planta, mantenimiento})
+        return response.data;
     }catch(error){
         console.log(error)
+        return null;
     }
 }
 
