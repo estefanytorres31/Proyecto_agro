@@ -1,64 +1,80 @@
-import React, {useEffect,useState,useContext} from "react";
-import { createPlanta, getPlantaById,getPlantas, updatePlantaTamano, deletePlanta } from "../../services/PlantaService";
+import React, { useEffect, useState } from "react";
+import { createPlanta, getPlantas, updatePlantaTamano, deletePlanta } from "../../services/PlantaService";
 import PlantaContext from "./PlantaContext";
 
-const PlantaProvider =({children})=>{
+const PlantaProvider = ({ children }) => {
     const [plantas, setPlantas] = useState([]);
     const [planta, setPlanta] = useState(null);
 
-    const handleCreatePlanta =async(newPlanta)=>{
-        try{
-            const res=await createPlanta(newPlanta);
-            if(res.status===200||res.status===201){
+    const handleCreatePlanta = async (newPlanta) => {
+        try {
+            const res = await createPlanta(newPlanta);
+            if (res.status === 200 || res.status === 201) {
+                setPlantas((prevPlantas) => [...prevPlantas, res.data]);
                 return res.data;
-            }else{
+            } else {
                 return null;
             }
-        }catch(error){
+        } catch (error) {
             console.error(error);
             return null;
         }
     }
 
-    const fetchPlantas=async()=>{
-        try{
-            const planta=await getPlantas();
-            console.log(planta);
-            setPlanta(planta);
-        }catch(error){
+    const fetchPlantas = async () => {
+        try {
+            const plantas = await getPlantas();
+            setPlantas(plantas);  
+        } catch (error) {
             console.error(error);
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchPlantas();
-    })
+    }, []);  
 
-    const handleEditPlanta = async (qrData, updatePlanta) => {
+    const handleEditPlanta = async (qrData, updatedPlanta) => {
         try {
-            const updatedPlanta = await updatePlantaTamano(qrData, updatePlanta);
-            const updatedPlantas = plantas.map((planta) =>
-                planta.qrData === qrData ? updatedPlanta : planta
+            const updatedPlantaData = await updatePlantaTamano(qrData, updatedPlanta);
+            setPlantas((prevPlantas) =>
+                prevPlantas.map((planta) =>
+                    planta.qrData === qrData ? updatedPlantaData : planta
+                )
             );
-            setPlantas(updatedPlantas);
-            return updatedPlanta;
+            return updatedPlantaData;
         } catch (error) {
             console.error(error);
-            return null; 
+            return null;
         }
     };
-    
-    return(
+
+    const handleDeletePlanta = async (codigo_planta) => {
+        try {
+            const res = await deletePlanta(codigo_planta);
+            if (res.status === 200 || res.status === 204) {
+                setPlantas((prevPlantas) => prevPlantas.filter((planta) => planta.qrData !== codigo_planta));
+                return res.data;
+            }
+            return null;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    };
+
+    return (
         <PlantaContext.Provider value={{
             plantas,
             planta,
             handleCreatePlanta,
             fetchPlantas,
             handleEditPlanta,
-            deletePlanta
+            handleDeletePlanta
         }}>
             {children}
         </PlantaContext.Provider>
-    )
+    );
 }
+
 export default PlantaProvider;
