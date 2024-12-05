@@ -82,3 +82,21 @@ export const getCosechaByPlanta = async (req, res) => {
         res.status(500).json({message: "Error al obtener el fruto por plantar"});
     }
 }
+
+export const rankingFrutosGrandes = async (req, res) => {
+    try {
+        const ranking = await CosechaService.rankingfrutosgrandes();
+        return res.status(200).json({
+            success: true,
+            message: 'Ranking de frutos grandes obtenido exitosamente',
+            data: ranking
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error al obtener el ranking de frutos grandes',
+            error: error.message
+            
+        });
+    }
+};

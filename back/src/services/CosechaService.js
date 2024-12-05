@@ -102,8 +102,30 @@ export const getAllCosechas = async ({ tamaño_fruto = '', fecha_registro = '', 
     } catch (error) {
         throw new Error("Error al obtener todos los frutos: " + error.message);
     } finally {
+        db.end();
+    }
+};
+
+export const rankingfrutosgrandes = async () => {
+    const db = await connect();
+    try {
+        const [ranking] = await db.execute('CALL GetTop10PlantasPorFundo()');
+        return ranking[0]; 
+    } catch (e) {
+        throw new Error("Error al obtener ranking de frutos grandes: " + e.message);
+    } finally {
         await db.end();
     }
 };
 
-
+export const rankingfrutosmedianos = async () => {
+    const db = await connect();
+    try {
+        const [ranking] = await db.execute('CALL GetTop10PlantasPorFundo()');
+        return ranking[0]; 
+    } catch (e) {
+        throw new Error("Error al obtener ranking de frutos grandes: " + e.message);
+    } finally {
+        await db.end();
+    }
+};
