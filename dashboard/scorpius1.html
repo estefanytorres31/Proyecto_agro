@@ -358,43 +358,47 @@ chartsData.forEach(chart => {
     }
 });
 
-
-/// DIAGRAMA CIRCULAR 
-const createPieChart = (ctx, labels, data) => {
+//Grafico dona
+const createDoughnutChart = (ctx, labels, data) => {
     new Chart(ctx, {
-        type: 'pie', // Tipo de gráfico
+        type: 'doughnut', // Cambiado a tipo dona
         data: {
             labels: labels, // Etiquetas de las categorías
             datasets: [{
                 data: data, // Valores dinámicos
                 backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'], // Colores para las porciones
-                borderColor: ['#3fda12', '#ff8001', '#e30808', '#c1baba'], // Bordes
+                borderColor: ['#ffffff'], // Bordes blancos para mejor contraste
                 borderWidth: 2, // Ancho del borde
-                hoverBackgroundColor: ['#52d32c', '#ff8001', '#e30808', '#c4c4c4'], // Colores al pasar el mouse
-                hoverBorderColor: ['#3fda12', '#ff8001', '#f40606', '#c1baba'], // Bordes al pasar el mouse
+                hoverBackgroundColor: ['#4eb829', '#e57a00', '#d90505', '#b3b3b3'], // Colores al pasar el mouse
+                hoverBorderColor: ['#ffffff'], // Bordes blancos al pasar el mouse
                 hoverBorderWidth: 3 // Grosor del borde al hacer hover
             }]
         },
         options: {
             responsive: true, // Ajuste responsivo
             maintainAspectRatio: false, // Permitir ajustar al tamaño del contenedor
+            cutout: '60%', // Grosor de la dona (porcentaje del área interna)
             plugins: {
                 legend: {
                     display: true, // Mostrar leyenda
-                    position: 'top',
+                    position: 'right', // Cambiar posición a la derecha
                     labels: {
                         font: {
-                            size: 16, // Tamaño de la fuente
+                            size: 14, // Tamaño de la fuente
                             weight: 'bold', // Negrita para la leyenda
-                            color: '#FFFFFF' // Color blanco para la leyenda
-                        }
+                        },
+                        color: '#333333', // Color negro para la leyenda
+                        boxWidth: 20, // Ancho del recuadro de color en la leyenda
+                        boxHeight: 15, // Alto del recuadro
                     }
                 },
                 tooltip: {
                     callbacks: {
                         label: (tooltipItem) => {
                             const value = tooltipItem.raw;
-                            return ` ${tooltipItem.label}: ${value} (${((value / data.reduce((a, b) => a + b, 0)) * 100).toFixed(2)}%)`;
+                            const total = data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(2);
+                            return ` ${tooltipItem.label}: ${value} (${percentage}%)`;
                         }
                     }
                 }
@@ -415,7 +419,7 @@ const combinedData = chartsData.reduce((totals, chart) => {
 const pieLabels = ['Grande', 'Mediano', 'Pequeño', 'No hay']; // Categorías
 const pieCtx = document.getElementById('chartPie')?.getContext('2d');
 if (pieCtx) {
-    createPieChart(pieCtx, pieLabels, combinedData);
+    createDoughnutChart(pieCtx, pieLabels, combinedData);
 } else {
     console.warn('El elemento con ID "chartPie" no existe en el DOM.');
 }
