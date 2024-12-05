@@ -8,136 +8,132 @@
     <!-- Estilos y fuentes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Estilos generales */
+        /* ESTILOS DE BARRA DE NAVEGACIÓN */
+        /* General Body Styles */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f2f2f2;
         }
 
-   /*ESTILOS DE BARRA DE NAVEGACIÓN*/
-    /* General Body Styles */
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-    }
+        /* Sidebar Wrapper */
+        .sidebar-wrapper {
+            width: 70px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
 
-    /* Sidebar Wrapper */
-    .sidebar-wrapper {
-        width: 70px;
-        height: 100vh;
-        background-color: #2c3e50;
-        color: white;
-        position: fixed;
-        left: 0;
-        top: 0;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden; /* Ocultar scroll */
-        transition: width 0.3s ease;
-    }
+        .sidebar-wrapper.expanded {
+            width: 250px;
+        }
 
-    .sidebar-wrapper.expanded {
-        width: 250px;
-    }
+        .sidebar-header {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #34495e;
+            border-bottom: 1px solid #1abc9c;
+        }
 
-    .sidebar-header {
-        padding: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #34495e;
-        border-bottom: 1px solid #1abc9c;
-    }
+        .sidebar-header .logo-icon {
+            max-width: 40px;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
 
-    .sidebar-header .logo-icon {
-        max-width: 40px;
-        display: block;
-        transition: opacity 0.3s ease;
-    }
+        .sidebar-wrapper:not(.expanded) .logo-icon {
+            opacity: 0;
+        }
 
-    .sidebar-wrapper:not(.expanded) .logo-icon {
-        opacity: 0;
-    }
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-    .toggle-btn {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-    }
+        /* Navigation Menu */
+        .metismenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 20px;
+            flex-grow: 1;
+            white-space: nowrap;
+        }
 
-    /* Navigation Menu */
-    .metismenu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        margin-top: 20px;
-        flex-grow: 1;
-        white-space: nowrap; /* Evita que los textos se desborden */
-    }
+        .metismenu li {
+            border-bottom: 1px solid #34495e;
+        }
 
-    .metismenu li {
-        border-bottom: 1px solid #34495e;
-    }
+        .metismenu li a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
 
-    .metismenu li a {
-        text-decoration: none;
-        color: white;
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        transition: background 0.3s ease, transform 0.3s ease;
-    }
+        .metismenu li a .menu-title {
+            flex-grow: 1;
+            text-align: left;
+            transition: opacity 0.3s ease;
+        }
 
-    .metismenu li a .menu-title {
-        flex-grow: 1; /* Asegura que los textos estén alineados */
-        text-align: left; /* Alinea los textos al lado izquierdo */
-        transition: opacity 0.3s ease;
-    }
+        .sidebar-wrapper:not(.expanded) .menu-title {
+            opacity: 0;
+        }
 
-    .sidebar-wrapper:not(.expanded) .menu-title {
-        opacity: 0;
-    }
+        .metismenu li a:hover {
+            background-color: #1abc9c;
+            transform: translateX(5px);
+        }
 
-    .metismenu li a:hover {
-        background-color: #1abc9c;
-        transform: translateX(5px);
-    }
+        .parent-icon {
+            font-size: 18px;
+            margin-right: 10px;
+        }
 
-    .parent-icon {
-        font-size: 18px;
-        margin-right: 10px;
-    }
+        /* Submenu Styles */
+        .submenu {
+            display: none;
+            padding-left: 30px;
+            background-color: #34495e;
+        }
 
-    /* Submenu Styles */
-    .submenu {
-        display: none;
-        padding-left: 30px;
-        background-color: #34495e;
-    }
+        .submenu li a {
+            padding-left: 10px;
+        }
 
-    .submenu li a {
-        padding-left: 10px;
-    }
+        .has-arrow.open > .submenu {
+            display: block;
+        }
 
-    .has-arrow.open > .submenu {
-        display: block;
-    }
+        /* Arrow Icon */
+        .arrow-icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
 
-    /* Arrow Icon */
-    .arrow-icon {
-        font-size: 14px;
-        transition: transform 0.3s ease;
-    }
+        .has-arrow.open > a .arrow-icon {
+            transform: rotate(90deg);
+        }
 
-    .has-arrow.open > a .arrow-icon {
-        transform: rotate(90deg);
-    }
-    /*FIN DE ESTILOS DE BARRA DE NAVEGACIÓN*/
+        /* FIN DE ESTILOS DE BARRA DE NAVEGACIÓN */
 
         /* Contenedor principal */
         .contenedor {
@@ -162,7 +158,7 @@
     <div class="sidebar-wrapper">
         <div class="sidebar-header">
             <button class="toggle-btn"><i class="fa-solid fa-bars"></i></button>
-            <img src="./logo.png" alt="Logo" class="logo-icon" style="width: 50px;">
+            <!--<img src="./logo.png" alt="Logo" class="logo-icon" style="width: 50px;">-->
         </div>
         <ul class="metismenu">
             <li>
@@ -200,65 +196,357 @@
             </div>
             <div class="row g-3">
                 <div class="col-12 col-md-6">
-                    <div class="border rounded p-3" style="height: 400px; background-color: #f1f1f1;">
-                        <h5>Gráfica o información principal</h5>
+                    <div class="border rounded p-3" style="height: 400px; background-color: #ffffff;">
+                        <!--<h5>Gráfica o información principal</h5>-->
+                        <canvas id="chartPie" width="400" height="400"></canvas> <!--DC5-->
+
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 100px; background-color: #f1f1f1;">
-                        <p>Sector A</p>
-                        <!--<button class="btnblue">Best Speed</button>
-                        <button class="btnblue">Best Economy</button>
-                        <button class="btnblue">Best RPM</button>-->
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 100px; background-color: #f1f1f1;">
-                        <p>Sector B</p>
-                        <!--<button class="btnblue">Best Speed</button>
-                        <button class="btnblue">Best Economy</button>
-                        <button class="btnblue">Best RPM</button>-->
+                <div class="col-12 col-md-6">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="border rounded p-3" style="height: 190px; background-color: #ffffff;">
+                                <canvas id="chartA"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="border rounded p-3" style="height: 190px; background-color: #ffffff;">
+                                <canvas id="chartB"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="border rounded p-3" style="height: 190px; background-color: #ffffff;">
+                                <canvas id="chartC"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="border rounded p-3" style="height: 190px; background-color: #ffffff;">
+                                <canvas id="chartD"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--Ranking-->
-                <div class="col-12 col-md-6">
-                    <div class="border rounded p-3" style="height: 200px; background-color: #f1f1f1;">
-                        <p>Ranking</p>
-                        <!--<button class="btnblue">Best Speed</button>
-                        <button class="btnblue">Best Economy</button>
-                        <button class="btnblue">Best RPM</button>-->
+                <div class="col-12 col-md-3">
+                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                    <canvas id="rankingChartA"></canvas>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <div class="border rounded p-3" style="height: 200px; background-color: #f1f1f1;">
-                        <p>Ranking</p>
-                        <!--<button class="btnblue">Best Speed</button>
-                        <button class="btnblue">Best Economy</button>
-                        <button class="btnblue">Best RPM</button>-->
+                <div class="col-12 col-md-3">
+                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                        <canvas id="rankingChartB"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                        <canvas id="rankingChartC"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                        <canvas id="rankingChartD"></canvas>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 
     <script>
-        // Expandir y contraer la barra lateral
-        const sidebar = document.querySelector('.sidebar-wrapper');
-        sidebar.addEventListener('mouseenter', () => {
-            sidebar.classList.add('expanded');
-        });
-        sidebar.addEventListener('mouseleave', () => {
-            sidebar.classList.remove('expanded');
-        });
+// Expandir y contraer la barra lateral
+const sidebar = document.querySelector('.sidebar-wrapper');
+sidebar.addEventListener('mouseenter', () => {
+    sidebar.classList.add('expanded');
+    closeAllSubmenus(); // Cierra los submenús cuando la barra lateral se expande
+});
+sidebar.addEventListener('mouseleave', () => {
+    sidebar.classList.remove('expanded');
+    closeAllSubmenus(); // Cierra los submenús cuando la barra lateral se contrae
+});
 
-        // Mostrar/ocultar submenús
-        document.querySelectorAll('.has-arrow > a').forEach(button => {
-            button.addEventListener('click', function () {
-                this.parentElement.classList.toggle('open');
-            });
-        });
+// Mostrar/ocultar submenús
+document.querySelectorAll('.has-arrow > a').forEach(button => {
+    button.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (sidebar.classList.contains('expanded')) {
+            this.parentElement.classList.toggle('open');
+        }
+    });
+});
+
+// Cierra todos los submenús
+function closeAllSubmenus() {
+    document.querySelectorAll('.has-arrow').forEach(item => {
+        item.classList.remove('open');
+    });
+}
+
+// DIAGRAMAS
+// Configuración base para los gráficos
+const createBarChart = (ctx, label, data) => {
+    new Chart(ctx, {
+        type: 'bar', // Tipo de gráfico
+        data: {
+            labels: ['Grande', 'Mediano', 'Pequeño','No hay'], // Etiquetas para el eje X
+            datasets: [{
+                label: label,
+                data: data, // Valores dinámicos
+                backgroundColor: ['#52d32c', '#ff8001', '#f40606','#c4c4c4'], // Colores neón de las barras
+                borderColor: ['#3fda12', '#ff8001', '#e30808','#c1baba'], // Bordes en colores neón brillantes
+                borderWidth: 2, // Ancho del borde
+                hoverBackgroundColor: ['#52d32c', '#ff8001', '#e30808','#c4c4c4'], // Colores de barra al pasar el mouse
+                hoverBorderColor: ['#3fda12', '#ff8001', '#f40606','#c1baba'], // Bordes al pasar el mouse
+                hoverBorderWidth: 3 // Aumentar el grosor del borde al hacer hover
+            }]
+        },
+        options: {
+            responsive: true, // Ajuste responsivo
+            maintainAspectRatio: false, // Permitir ajustar al tamaño del contenedor
+            scales: {
+                y: {
+                    beginAtZero: true, // Comenzar el eje Y desde cero
+                    ticks: {
+                        font: {
+                            size: 14, // Tamaño de fuente
+                            weight: 'bold', // Negrita para los valores
+                            family: 'Arial', // Fuente para los valores
+                            color: '#FFFFFF' // Color blanco para el texto
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 14, // Tamaño de fuente
+                            weight: 'bold', // Negrita para los valores
+                            family: 'Arial', // Fuente para los valores
+                            color: '#FFFFFF' // Color blanco para el texto
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true, // Mostrar leyenda
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 16, // Tamaño de la fuente de la leyenda
+                            weight: 'bold', // Negrita para la leyenda
+                            color: '#FFFFFF' // Color blanco para la leyenda
+                        }
+                    }
+                }
+            }
+        }
+    });
+};
+
+// Inicializar gráficos dinámicamente si existen en el DOM
+const chartsData = [
+    { id: 'chartA', label: 'Sector A', data: [50, 20, 30,0] },
+    { id: 'chartB', label: 'Sector B', data: [20, 50, 30,0] },
+    { id: 'chartC', label: 'Sector C', data: [20, 10, 30,0] },
+    { id: 'chartD', label: 'Sector D', data: [0, 3, 5,50] },
+];
+
+chartsData.forEach(chart => {
+    const ctx = document.getElementById(chart.id)?.getContext('2d');
+    if (ctx) {
+        createBarChart(ctx, chart.label, chart.data);
+    } else {
+        console.warn(`El elemento con ID "${chart.id}" no existe en el DOM.`);
+    }
+});
+
+
+/// DIAGRAMA CIRCULAR 
+const createPieChart = (ctx, labels, data) => {
+    new Chart(ctx, {
+        type: 'pie', // Tipo de gráfico
+        data: {
+            labels: labels, // Etiquetas de las categorías
+            datasets: [{
+                data: data, // Valores dinámicos
+                backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'], // Colores para las porciones
+                borderColor: ['#3fda12', '#ff8001', '#e30808', '#c1baba'], // Bordes
+                borderWidth: 2, // Ancho del borde
+                hoverBackgroundColor: ['#52d32c', '#ff8001', '#e30808', '#c4c4c4'], // Colores al pasar el mouse
+                hoverBorderColor: ['#3fda12', '#ff8001', '#f40606', '#c1baba'], // Bordes al pasar el mouse
+                hoverBorderWidth: 3 // Grosor del borde al hacer hover
+            }]
+        },
+        options: {
+            responsive: true, // Ajuste responsivo
+            maintainAspectRatio: false, // Permitir ajustar al tamaño del contenedor
+            plugins: {
+                legend: {
+                    display: true, // Mostrar leyenda
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 16, // Tamaño de la fuente
+                            weight: 'bold', // Negrita para la leyenda
+                            color: '#FFFFFF' // Color blanco para la leyenda
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (tooltipItem) => {
+                            const value = tooltipItem.raw;
+                            return ` ${tooltipItem.label}: ${value} (${((value / data.reduce((a, b) => a + b, 0)) * 100).toFixed(2)}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+};
+
+// Sumar los datos de los sectores para cada categoría
+const combinedData = chartsData.reduce((totals, chart) => {
+    chart.data.forEach((value, index) => {
+        totals[index] = (totals[index] || 0) + value;
+    });
+    return totals;
+}, []);
+
+// Etiquetas y creación del gráfico
+const pieLabels = ['Grande', 'Mediano', 'Pequeño', 'No hay']; // Categorías
+const pieCtx = document.getElementById('chartPie')?.getContext('2d');
+if (pieCtx) {
+    createPieChart(pieCtx, pieLabels, combinedData);
+} else {
+    console.warn('El elemento con ID "chartPie" no existe en el DOM.');
+}
+
+
+///DIAGRAMA RANKING
+// Datos para cada sector
+const sectorData = {
+    A: [
+        { id: 'P001001', production: 300 },
+        { id: 'P001002', production: 280 },
+        { id: 'P001003', production: 270 },
+        { id: 'P001004', production: 250 },
+        { id: 'P001005', production: 240 }
+    ],
+    B: [
+        { id: 'P002001', production: 400 },
+        { id: 'P002002', production: 370 },
+        { id: 'P002003', production: 350 },
+        { id: 'P002004', production: 330 },
+        { id: 'P002005', production: 300 }
+    ],
+    C: [
+        { id: 'P003001', production: 200 },
+        { id: 'P003002', production: 190 },
+        { id: 'P003003', production: 180 },
+        { id: 'P003004', production: 170 },
+        { id: 'P003005', production: 160 }
+    ],
+    D: [
+        { id: 'P004001', production: 500 },
+        { id: 'P004002', production: 480 },
+        { id: 'P004003', production: 460 },
+        { id: 'P004004', production: 450 },
+        { id: 'P004005', production: 430 }
+    ]
+};
+
+// Función para generar un gráfico
+function createRankingChart(canvasId, data, sectorName) {
+    const labels = data.map(item => item.id);
+    const productions = data.map(item => item.production);
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `Producción`,
+                data: productions,
+                backgroundColor: '#28a745',
+                borderColor: '#1f7a34',
+                borderWidth: 1,
+                hoverBackgroundColor: '#34ce57',
+                hoverBorderColor: '#145f29',
+                hoverBorderWidth: 2,
+            }]
+        },
+        options: {
+            indexAxis: 'y', // Barras horizontales
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        font: {
+                            size: 14,
+                            weight: 'bold',
+                        },
+                        color: '#333',
+                    },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `Producción: ${tooltipItem.raw} kg`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: 'bold',
+                        },
+                        color: '#333',
+                    },
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        //text: 'Producción (kg)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        color: '#333'
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: 'bold',
+                        },
+                        color: '#333',
+                        autoSkip: false
+                    },
+                    title: {
+                        display: true,
+                        text: `${sectorName}`,
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        color: '#333'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Crear gráficos para cada sector
+createRankingChart('rankingChartA', sectorData.A, 'Sector A');
+createRankingChart('rankingChartB', sectorData.B, 'Sector B');
+createRankingChart('rankingChartC', sectorData.C, 'Sector C');
+createRankingChart('rankingChartD', sectorData.D, 'Sector D');
+
     </script>
-</body>
-
-</html>
+    
