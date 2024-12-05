@@ -1,4 +1,4 @@
-import * as CosechaService from "../services/CosechaService";
+import * as CosechaService from "../services/CosechaService.js";
 
 export const getAllCosechas = async (req, res) => {
     try {

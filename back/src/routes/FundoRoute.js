@@ -1,4 +1,4 @@
-import { getAllFundos, createFundo, getFundoById, updateFundo } from "../controllers/FundoController";
+import { getAllFundos, createFundo, getFundoById, updateFundo } from "../controllers/FundoController.js";
 import {Router} from "express";
 
 const fundoRouter = Router();

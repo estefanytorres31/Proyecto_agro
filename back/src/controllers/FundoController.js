@@ -1,4 +1,4 @@
-import * as FundoService from  "../services/FundoService";
+import * as FundoService from  "../services/FundoService.js";
 
 export const getAllFundos= async (req, res) =>{
     try {

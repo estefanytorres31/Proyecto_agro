@@ -1,11 +1,11 @@
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
 
-import Plantarouter from './routes/PlantaRoute';
-import CosechaRouter from './routes/CosechaRoute';
-import FundoRouter from './routes/FundoRoute';
-import MantenimientoRouter from './routes/MantenimientoRouter';
+import Plantarouter from './routes/PlantaRoute.js';
+import CosechaRouter from './routes/CosechaRoute.js';
+import FundoRouter from './routes/FundoRoute.js';
+import MantenimientoRouter from './routes/MantenimientoRouter.js';
 
 const app = express();
 

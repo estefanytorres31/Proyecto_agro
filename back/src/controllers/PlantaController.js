@@ -1,4 +1,4 @@
-import * as PlantaService from "../services/PlantaService";
+import * as PlantaService from "../services/PlantaService.js";
 
 export const getAllPlantas = async(req, res)=>{
     try {

@@ -1,9 +1,9 @@
-import { connect } from "../database";
-const QRCode = require ('qrcode');
-const fs = require('fs');
-const path = require('path');
-import { uploadImage } from "../utils/Cloudinary";
-const sharp=require('sharp');
+import { connect } from "../database.js";
+import QRCode from "qrcode";
+import fs from "fs";
+import path from "path";
+import { uploadImage } from "../utils/Cloudinary.js";
+import sharp from "sharp";
 
 
 export const getAllPlantas = async () => {

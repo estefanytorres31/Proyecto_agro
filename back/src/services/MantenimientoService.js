@@ -1,4 +1,4 @@
-import { connect } from "../database";
+import { connect } from "../database.js";
 
 export const getAllMantenimientos = async ({ mantenimiento = '', fecha_mantenimiento = '', orderBy = 'fecha_mantenimiento', sortOrder = 'ASC' }) => {
     const db = await connect();

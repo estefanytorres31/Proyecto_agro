@@ -1,4 +1,4 @@
-import { getAllMantenimientos, getMantenimientoById, createMantenimiento, updateMantenimiento, deleteMantenimiento } from "../controllers/MantenimientoController";
+import { getAllMantenimientos, getMantenimientoById, createMantenimiento, updateMantenimiento, deleteMantenimiento } from "../controllers/MantenimientoController.js";
 import { Router } from "express";
 
 const MantenimientoRouter = Router();

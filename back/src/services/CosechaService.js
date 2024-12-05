@@ -1,4 +1,4 @@
-import { connect } from "../database";
+import { connect } from "../database.js";
 
 export const createCosecha= async (tamaño_fruto, cosecha_codigo_planta)=>{
     const db= await connect();

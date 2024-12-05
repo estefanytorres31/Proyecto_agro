@@ -1,4 +1,4 @@
-import { connect } from "../database";
+import { connect } from "../database.js";
 
 export const getAllFundos=async()=>{
     const db = await connect();

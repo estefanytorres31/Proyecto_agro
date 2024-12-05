@@ -1,4 +1,4 @@
-import * as MantenimientoService from "../services/MantenimientoService";
+import * as MantenimientoService from "../services/MantenimientoService.js";
 
 export const getAllMantenimientos = async (req, res) => {
     try {

@@ -1,4 +1,4 @@
-import { getAllPlantas, createMultiplePlantas, deletePlanta, getPlantaById, updatePlanta} from "../controllers/PlantaController";
+import { getAllPlantas, createMultiplePlantas, deletePlanta, getPlantaById, updatePlanta} from "../controllers/PlantaController.js";
 import { Router } from "express";
 
 const Plantarouter = Router();
