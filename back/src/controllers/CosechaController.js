@@ -83,20 +83,54 @@ export const getCosechaByPlanta = async (req, res) => {
     }
 }
 
-export const rankingFrutosGrandes = async (req, res) => {
-    try {
-        const ranking = await CosechaService.rankingfrutosgrandes();
-        return res.status(200).json({
-            success: true,
-            message: 'Ranking de frutos grandes obtenido exitosamente',
-            data: ranking
+export const cantidadPorFundo=async(req,res)=>{
+    const { codigo_fundo} = req.params;
+    try{
+        const cantidad=await CosechaService.cantidadPorFundo(codigo_fundo);
+        res.status(200).json(cantidad);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener la cantidad de frutos por fundo"});
+    }
+}
+
+
+export const calculoPorSector=async(req, res)=>{
+    const { codigo_fundo, codigo_sector} = req.params;
+    try{
+        const calculo=await CosechaService.calculoPorSector(codigo_fundo, codigo_sector);
+        res.status(200).json(calculo);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener el calculo por sector"});
+    }
+}
+
+export const rankings = async (req, res) => {
+    const { tam_fruto, cod_fundo } = req.params;
+    if (!tam_fruto || !cod_fundo) {
+        return res.status(400).json({
+            message: 'Faltan parámetros en la solicitud. Se requieren tam_fruto y cod_fundo.',
         });
+    }
+    try {
+        const rankings = await CosechaService.getRanking(tam_fruto, cod_fundo);
+        console.log('Rankings:', rankings); 
+        if (rankings.length > 0) {
+            return res.status(200).json(rankings);
+        } else {
+            return res.status(404).json({
+                message: 'No se encontraron rankings para el tamaño de fruto y fondo especificados.',
+            });
+        }
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
-            success: false,
-            message: 'Error al obtener el ranking de frutos grandes',
+            message: 'Error al obtener los rankings',
             error: error.message
-            
         });
     }
 };
+
+
+

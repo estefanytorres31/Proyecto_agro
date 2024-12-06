@@ -5,7 +5,11 @@ export const createCosecha= async (tamaño_fruto, cosecha_codigo_planta)=>{
     try{
         const [fruto]=await db.execute('INSERT INTO tb_cosecha (tamaño_fruto, cosecha_codigo_planta) values (?,?)',
         [tamaño_fruto,cosecha_codigo_planta]);
-        return fruto;
+
+        const [createdCosecha]=await db.execute('select codigo_cosecha, tamaño_fruto, cosecha_codigo_planta from tb_cosecha where codigo_cosecha=?',
+            [fruto.insertId]
+        )
+        return createdCosecha[0];
     }catch(error){
         throw new Error("Error al crear fruto: " + error.message);
     }finally{
@@ -106,26 +110,47 @@ export const getAllCosechas = async ({ tamaño_fruto = '', fecha_registro = '', 
     }
 };
 
-export const rankingfrutosgrandes = async () => {
+export const cantidadPorFundo = async (codigo_fundo) => {
     const db = await connect();
     try {
-        const [ranking] = await db.execute('CALL GetTop10PlantasPorFundo()');
-        return ranking[0]; 
+        const [cantidades] = await db.execute('CALL sp_cantidadFrutosPorFundo(?)',
+            [codigo_fundo]
+        );
+        return cantidades[0]; 
     } catch (e) {
-        throw new Error("Error al obtener ranking de frutos grandes: " + e.message);
+        throw new Error("Error al obtener cantidad por fundo: " + e.message);
     } finally {
         await db.end();
     }
-};
+}
 
-export const rankingfrutosmedianos = async () => {
+export const calculoPorSector=async(codigo_fundo, codigo_sector)=>{
+    const db = await connect();
+    try{
+        const [calculo]=await db.execute('CALL sp_calculoPorSector(?,?)',
+        [codigo_fundo, codigo_sector]);
+        return calculo[0];
+    }catch(error){
+        throw new Error("Error al calcular por sector: " + error.message);
+    }finally{
+        await db.end();
+    }
+}
+
+export const getRanking = async (tam_fruto, cod_fundo) => {
     const db = await connect();
     try {
-        const [ranking] = await db.execute('CALL GetTop10PlantasPorFundo()');
-        return ranking[0]; 
-    } catch (e) {
-        throw new Error("Error al obtener ranking de frutos grandes: " + e.message);
+        const query = `
+            CALL sp_getRanking(?, ?);
+        `;
+        const [rows] = await db.query(query, [tam_fruto, cod_fundo]);
+        return rows[0];
+    } catch (error) {
+        console.error(error);
+        throw new Error("Error al obtener el ranking: " + error.message);
     } finally {
         await db.end();
     }
-};
+}
+
+
