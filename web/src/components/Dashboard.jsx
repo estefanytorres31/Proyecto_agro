@@ -105,7 +105,7 @@ const Dashboard = () => {
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", width: "100%" }}>
-      <div style={{ width: "45%", maxWidth: "600px", margin: "0 auto" }}>
+      <div style={{ width: "45%", maxWidth: "500px", margin: "0 auto" }}>
         {cosechaData.frutos.pequeños || cosechaData.frutos.medianos || cosechaData.frutos.grandes || cosechaData.frutos.sinFrutos ? (
           <Doughnut ref={chartRefDoughnut} data={doughnutData} options={doughnutOptions} />
         ) : (
@@ -113,7 +113,7 @@ const Dashboard = () => {
         )}
       </div>
       
-      <div style={{ width: "45%", maxWidth: "600px", margin: "0 auto" }}>
+      <div style={{ width: "45%", maxWidth: "400px", margin: "0 auto" }}>
         <Bar ref={chartRefBar} data={barData} options={barOptions} />
       </div>
     </div>
