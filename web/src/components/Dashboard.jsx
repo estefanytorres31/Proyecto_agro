@@ -1,86 +1,123 @@
-import { useEffect, useState } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import { useEffect, useRef } from "react";
+import { Doughnut, Bar } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale } from "chart.js";
+import useCosecha from "../hooks/Cosecha/useCosecha"; 
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale);
 
 const Dashboard = () => {
-    const [chartData, setChartData] = useState({
-        labels: ['Pequeños', 'Medianos', 'Grandes', 'No hay fruto'],
-        datasets: [
-            {
-                label: 'Cantidad de Frutos',
-                data: [0, 0, 0, 0],
-                backgroundColor: ['#FF5733', '#FFBD33', '#33FF57', '#33A1FF'],
-                borderColor: ['#FF5733', '#FFBD33', '#33FF57', '#33A1FF'],
-                borderWidth: 1,
-            },
-        ],
-    });
+  const { cosechaData, fetchCosechaData } = useCosecha();
+  const chartRefDoughnut = useRef(null);
+  const chartRefBar = useRef(null);
 
-    const [fundoInfo, setFundoInfo] = useState({ codigo: '', nombre: '' });
+  useEffect(() => {
+    fetchCosechaData("F00001"); 
 
-    const fetchCosechaData = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/api/cosecha/fundo/cantidad/F00001');
-            const data = await response.json();
-            console.log('Datos recibidos:', data);
-
-            if (data && data.length > 0) {
-                const fundo = data[0];
-                setFundoInfo({
-                    codigo: fundo.codigo_fundo,
-                    nombre: fundo.nombre_fundo
-                });
-
-                const updatedData = {
-                    ...chartData,
-                    datasets: [{
-                        ...chartData.datasets[0],
-                        data: [
-                            fundo.cantidad_pequeños,
-                            fundo.cantidad_medianos,
-                            fundo.cantidad_grandes,
-                            fundo.cantidad_sin_frutos
-                        ],
-                    }],
-                };
-
-                console.log('Datos actualizados:', updatedData);
-                setChartData(updatedData);
-            }
-        } catch (error) {
-            console.error('Error al obtener los datos:', error);
-        }
+    return () => {
+      if (chartRefDoughnut.current) {
+        chartRefDoughnut.current.destroy();
+      }
+      if (chartRefBar.current) {
+        chartRefBar.current.destroy();
+      }
     };
+  }, [fetchCosechaData]);
 
-    useEffect(() => {
-        fetchCosechaData();
-    }, []);
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: `Distribución de Frutos - ${fundoInfo.nombre}`,
-            },
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 16,
+          fontStyle: "bold",
         },
-    };
+      },
+      title: {
+        display: true,
+        fontSize: 20,
+        fontStyle: "bold",
+        text: `Distribución de Frutos - ${cosechaData.fundo?.nombre}`,
+      },
+    },
+  };
 
-    return (
-        <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
-            {chartData.datasets[0].data.some(value => value > 0) ? (
-                <Doughnut data={chartData} options={options} />
-            ) : (
-                <p>Cargando datos...</p>
-            )}
-        </div>
-    );
+  const doughnutData = {
+    labels: ["Pequeños", "Medianos", "Grandes", "No hay fruto"],
+    datasets: [
+      {
+        label: "Cantidad de Frutos",
+        data: [
+          cosechaData.frutos.pequeños,
+          cosechaData.frutos.medianos,
+          cosechaData.frutos.grandes,
+          cosechaData.frutos.sinFrutos,
+        ],
+        backgroundColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
+        hoverOffset: 4,
+        borderColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 16,
+          fontStyle: "bold",
+        },
+      },
+      title: {
+        display: true,
+        fontSize: 18,
+        fontStyle: "bold",
+        text: `Distribución de Frutos - Barras`,
+      },
+    },
+  };
+
+  const barData = {
+    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
+    datasets: [
+      {
+        label: "Cantidad de Frutos",
+        data: [30, 35, 40, 25, 30, 40], // Aquí los datos de los meses pueden ser dinámicos
+        backgroundColor: "#52d32c",
+        borderColor: "#52d32c",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  if (cosechaData.isLoading) {
+    return <p>Cargando datos...</p>;
+  }
+
+  if (cosechaData.error) {
+    return <p>{cosechaData.error}</p>;
+  }
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", width: "100%" }}>
+      <div style={{ width: "45%", maxWidth: "600px", margin: "0 auto" }}>
+        {cosechaData.frutos.pequeños || cosechaData.frutos.medianos || cosechaData.frutos.grandes || cosechaData.frutos.sinFrutos ? (
+          <Doughnut ref={chartRefDoughnut} data={doughnutData} options={doughnutOptions} />
+        ) : (
+          <p>No hay datos disponibles.</p>
+        )}
+      </div>
+      
+      <div style={{ width: "45%", maxWidth: "600px", margin: "0 auto" }}>
+        <Bar ref={chartRefBar} data={barData} options={barOptions} />
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
-
