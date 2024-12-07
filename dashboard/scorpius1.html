@@ -227,26 +227,26 @@
                     </div>
                 </div>
                 <!--Ranking-->
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
-                    <canvas id="rankingChartA"></canvas>
+                    <div class="col-12 col-md-3">
+                        <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                            <canvas id="rankingChartA"></canvas>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
-                        <canvas id="rankingChartB"></canvas>
+                    <div class="col-12 col-md-3">
+                        <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                            <canvas id="rankingChartB"></canvas>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
-                        <canvas id="rankingChartC"></canvas>
+                    <div class="col-12 col-md-3">
+                        <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                            <canvas id="rankingChartC"></canvas>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
-                        <canvas id="rankingChartD"></canvas>
+                    <div class="col-12 col-md-3">
+                        <div class="border rounded p-3" style="height: 220px; background-color: #f8f9fa;">
+                            <canvas id="rankingChartD"></canvas>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -425,132 +425,82 @@ if (pieCtx) {
 }
 
 
-///DIAGRAMA RANKING
-// Datos para cada sector
-const sectorData = {
-    A: [
-        { id: 'P001001', production: 300 },
-        { id: 'P001002', production: 280 },
-        { id: 'P001003', production: 270 },
-        { id: 'P001004', production: 250 },
-        { id: 'P001005', production: 240 }
-    ],
-    B: [
-        { id: 'P002001', production: 400 },
-        { id: 'P002002', production: 370 },
-        { id: 'P002003', production: 350 },
-        { id: 'P002004', production: 330 },
-        { id: 'P002005', production: 300 }
-    ],
-    C: [
-        { id: 'P003001', production: 200 },
-        { id: 'P003002', production: 190 },
-        { id: 'P003003', production: 180 },
-        { id: 'P003004', production: 170 },
-        { id: 'P003005', production: 160 }
-    ],
-    D: [
-        { id: 'P004001', production: 500 },
-        { id: 'P004002', production: 480 },
-        { id: 'P004003', production: 460 },
-        { id: 'P004004', production: 450 },
-        { id: 'P004005', production: 430 }
-    ]
-};
-
-// Función para generar un gráfico
-function createRankingChart(canvasId, data, sectorName) {
-    const labels = data.map(item => item.id);
-    const productions = data.map(item => item.production);
-
-    const ctx = document.getElementById(canvasId).getContext('2d');
+// Función para crear gráficos horizontales
+const createHorizontalBarChart = (ctx, label, data, color) => {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: ['Grande', 'Mediano', 'Pequeño', 'No hay'], // Etiquetas
             datasets: [{
-                label: `Producción`,
-                data: productions,
-                backgroundColor: '#28a745',
-                borderColor: '#1f7a34',
-                borderWidth: 1,
-                hoverBackgroundColor: '#34ce57',
-                hoverBorderColor: '#145f29',
-                hoverBorderWidth: 2,
+                label: label,
+                data: data, // Datos dinámicos
+                backgroundColor: Array(4).fill(color.background), // Color de fondo uniforme
+                borderColor: Array(4).fill(color.border), // Color de borde uniforme
+                borderWidth: 2, // Grosor del borde
+                hoverBackgroundColor: Array(4).fill(color.hoverBackground), // Color al pasar mouse
+                hoverBorderColor: Array(4).fill(color.hoverBorder), // Bordes al pasar mouse
+                hoverBorderWidth: 3 // Grosor de borde al pasar mouse
             }]
         },
         options: {
-            indexAxis: 'y', // Barras horizontales
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        font: {
-                            size: 14,
-                            weight: 'bold',
-                        },
-                        color: '#333',
-                    },
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return `Producción: ${tooltipItem.raw} kg`;
-                        }
-                    }
-                }
-            },
+            indexAxis: 'y', // Barras horizontales
             scales: {
                 x: {
+                    beginAtZero: true,
                     ticks: {
                         font: {
-                            size: 12,
-                            weight: 'bold',
-                        },
-                        color: '#333',
-                    },
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        //text: 'Producción (kg)',
-                        font: {
                             size: 14,
-                            weight: 'bold'
-                        },
-                        color: '#333'
+                            weight: 'bold',
+                            family: 'Arial',
+                            color: '#FFFFFF'
+                        }
                     }
                 },
                 y: {
                     ticks: {
                         font: {
-                            size: 12,
-                            weight: 'bold',
-                        },
-                        color: '#333',
-                        autoSkip: false
-                    },
-                    title: {
-                        display: true,
-                        text: `${sectorName}`,
-                        font: {
                             size: 14,
-                            weight: 'bold'
-                        },
-                        color: '#333'
+                            weight: 'bold',
+                            family: 'Arial',
+                            color: '#FFFFFF'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 16,
+                            weight: 'bold',
+                            color: '#FFFFFF'
+                        }
                     }
                 }
             }
         }
     });
-}
+};
 
-// Crear gráficos para cada sector
-createRankingChart('rankingChartA', sectorData.A, 'Grande');
-createRankingChart('rankingChartB', sectorData.B, 'Mediano');
-createRankingChart('rankingChartC', sectorData.C, 'Pequeño');
-createRankingChart('rankingChartD', sectorData.D, 'No hay');
+// Datos dinámicos para los gráficos del ranking
+const rankingData = [
+    { id: 'rankingChartA', label: 'Frutos Grandes', data: [50, 20, 30, 0], color: { background: '#52d32c', border: '#3fda12', hoverBackground: '#52d32c', hoverBorder: '#3fda12' } },
+    { id: 'rankingChartB', label: 'Frutos Medianos', data: [20, 50, 30, 0], color: { background: '#ff8001', border: '#ff8001', hoverBackground: '#ff8001', hoverBorder: '#ff8001' } },
+    { id: 'rankingChartC', label: 'Frutos Pequeños', data: [20, 10, 30, 0], color: { background: '#f40606', border: '#e30808', hoverBackground: '#e30808', hoverBorder: '#e30808' } },
+    { id: 'rankingChartD', label: 'No hay frutos', data: [0, 3, 5, 50], color: { background: '#c4c4c4', border: '#c1baba', hoverBackground: '#c4c4c4', hoverBorder: '#c1baba' } },
+];
 
+// Inicializar gráficos del ranking dinámicamente
+rankingData.forEach(chart => {
+    const ctx = document.getElementById(chart.id)?.getContext('2d');
+    if (ctx) {
+        createHorizontalBarChart(ctx, chart.label, chart.data, chart.color);
+    } else {
+        console.warn(`El elemento con ID "${chart.id}" no existe en el DOM.`);
+    }
+});
     </script>
-    

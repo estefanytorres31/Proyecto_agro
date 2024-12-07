@@ -1,123 +1,161 @@
-import { useEffect, useRef } from "react";
-import { Doughnut, Bar } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale } from "chart.js";
-import useCosecha from "../hooks/Cosecha/useCosecha"; 
+import React, { useState, useEffect } from 'react'
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+} from 'chart.js'
+import { Doughnut, Bar } from 'react-chartjs-2'
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+)
 
 const Dashboard = () => {
-  const { cosechaData, fetchCosechaData } = useCosecha();
-  const chartRefDoughnut = useRef(null);
-  const chartRefBar = useRef(null);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   useEffect(() => {
-    fetchCosechaData("F00001"); 
-
-    return () => {
-      if (chartRefDoughnut.current) {
-        chartRefDoughnut.current.destroy();
-      }
-      if (chartRefBar.current) {
-        chartRefBar.current.destroy();
+    const handleSidebarChange = (e) => {
+      if (e.detail.expanded !== undefined) {
+        setIsSidebarExpanded(e.detail.expanded);
       }
     };
-  }, [fetchCosechaData]);
 
-  const doughnutOptions = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 16,
-          fontStyle: "bold",
-        },
-      },
-      title: {
-        display: true,
-        fontSize: 20,
-        fontStyle: "bold",
-        text: `Distribución de Frutos - ${cosechaData.fundo?.nombre}`,
-      },
-    },
-  };
+    window.addEventListener('sidebarChange', handleSidebarChange);
+    return () => {
+      window.removeEventListener('sidebarChange', handleSidebarChange);
+    };
+  }, []);
+
+  const chartsData = [
+    { id: 'chartA', label: 'Sector A', data: [50, 20, 30, 0] },
+    { id: 'chartB', label: 'Sector B', data: [20, 50, 30, 0] },
+    { id: 'chartC', label: 'Sector C', data: [20, 10, 30, 0] },
+    { id: 'chartD', label: 'Sector D', data: [0, 3, 5, 50] },
+  ]
+
+  const combinedData = chartsData.reduce((totals, chart) => {
+    chart.data.forEach((value, index) => {
+      totals[index] = (totals[index] || 0) + value
+    })
+    return totals
+  }, [])
+
+  const pieLabels = ['Grande', 'Mediano', 'Pequeño', 'No hay']
 
   const doughnutData = {
-    labels: ["Pequeños", "Medianos", "Grandes", "No hay fruto"],
-    datasets: [
-      {
-        label: "Cantidad de Frutos",
-        data: [
-          cosechaData.frutos.pequeños,
-          cosechaData.frutos.medianos,
-          cosechaData.frutos.grandes,
-          cosechaData.frutos.sinFrutos,
-        ],
-        backgroundColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
-        hoverOffset: 4,
-        borderColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const barOptions = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 16,
-          fontStyle: "bold",
-        },
-      },
-      title: {
-        display: true,
-        fontSize: 18,
-        fontStyle: "bold",
-        text: `Distribución de Frutos - Barras`,
-      },
-    },
-  };
-
-  const barData = {
-    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
-    datasets: [
-      {
-        label: "Cantidad de Frutos",
-        data: [30, 35, 40, 25, 30, 40], // Aquí los datos de los meses pueden ser dinámicos
-        backgroundColor: "#52d32c",
-        borderColor: "#52d32c",
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  if (cosechaData.isLoading) {
-    return <p>Cargando datos...</p>;
+    labels: pieLabels,
+    datasets: [{
+      data: combinedData,
+      backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'],
+      borderColor: ['#ffffff'],
+      borderWidth: 2,
+    }]
   }
 
-  if (cosechaData.error) {
-    return <p>{cosechaData.error}</p>;
+  const barChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'category',
+        beginAtZero: true,
+      },
+      y: {
+        type: 'linear',
+        beginAtZero: true,
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  }
+
+  const horizontalBarChartOptions = {
+    ...barChartOptions,
+    indexAxis: 'y',
+    scales: {
+      x: {
+        type: 'linear',
+        beginAtZero: true,
+      },
+      y: {
+        type: 'category',
+      }
+    },
   }
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", width: "100%" }}>
-      <div style={{ width: "45%", maxWidth: "400px", margin: "0 auto" }}>
-        {cosechaData.frutos.pequeños || cosechaData.frutos.medianos || cosechaData.frutos.grandes || cosechaData.frutos.sinFrutos ? (
-          <Doughnut ref={chartRefDoughnut} data={doughnutData} options={doughnutOptions} />
-        ) : (
-          <p>No hay datos disponibles.</p>
-        )}
-      </div>
-      
-      <div style={{ width: "45%", maxWidth: "400px", margin: "0 auto" }}>
-        <Bar ref={chartRefBar} data={barData} options={barOptions} />
+    <div className={`transition-all duration-300 ease-in-out overflow-y-auto flex ${
+      isSidebarExpanded ? 'ml-64' : 'ml-20'
+    }`}>
+      <div className="container mx-auto p-5 flex flex-col gap-4">
+        <div className="flex justify-between mb-4">
+          <h4 className="text-xl font-bold">SCORPIUS 1</h4>
+          <h4 id="realtime-clock" className="text-xl font-bold"></h4>
+        </div>
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <div className="w-full md:w-1/2 h-96 bg-white rounded-lg shadow p-4 flex">
+            <Doughnut data={doughnutData} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
+          <div className="w-full md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {chartsData.map((chart) => (
+              <div key={chart.id} className="h-44 bg-white rounded-lg shadow p-4">
+                <Bar
+                  data={{
+                    labels: pieLabels,
+                    datasets: [{
+                      label: chart.label,
+                      data: chart.data,
+                      backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'],
+                      borderColor: ['#3fda12', '#ff8001', '#e30808', '#c1baba'],
+                      borderWidth: 2,
+                    }]
+                  }}
+                  options={barChartOptions}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {chartsData.map((chart) => (
+            <div key={`ranking-${chart.id}`} className="h-56 bg-gray-100 rounded-lg shadow p-4">
+              <Bar
+                data={{
+                  labels: pieLabels,
+                  datasets: [{
+                    label: chart.label,
+                    data: chart.data,
+                    backgroundColor: chart.id === 'chartA' ? '#52d32c' : 
+                                     chart.id === 'chartB' ? '#ff8001' : 
+                                     chart.id === 'chartC' ? '#f40606' : '#c4c4c4',
+                    borderColor: chart.id === 'chartA' ? '#3fda12' : 
+                                 chart.id === 'chartB' ? '#ff8001' : 
+                                 chart.id === 'chartC' ? '#e30808' : '#c1baba',
+                    borderWidth: 2,
+                  }]
+                }}
+                options={horizontalBarChartOptions}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

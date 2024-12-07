@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: "http://fundoscorpius.com:3000"
+    baseURL: "http://192.168.0.107:3000"
   })
   
   export default apiClient;

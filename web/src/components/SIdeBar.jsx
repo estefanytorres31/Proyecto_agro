@@ -21,7 +21,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`h-screen bg-gray-800 text-white flex flex-col transition-all ${
+      className={`fixed top-0 left-0 h-screen bg-gray-800 text-white flex flex-col transition-all duration-300 ease-in-out ${
         isExpanded ? "w-64" : "w-20"
       }`}
       onMouseEnter={() => setIsExpanded(true)}
@@ -35,15 +35,15 @@ const Sidebar = () => {
       </div>
 
       {/* Menu */}
-      <ul className="flex-grow mt-4 space-y-1">
+      <ul className="flex-grow overflow-y-auto scrollbar-hide">
         {/* Home */}
         <li className="border-b border-gray-700">
           <Link
             to="/inicio"
-            className="flex items-center space-x-2 px-4 py-3 hover:bg-green-500"
+            className="flex items-center space-x-2 px-4 py-3 hover:bg-green-500 transition-colors duration-200"
           >
             <FaHouseUser className="text-xl" />
-            {isExpanded && <span className="text-sm">Inicio</span>}
+            {isExpanded && <span className="text-sm whitespace-nowrap">Inicio</span>}
           </Link>
         </li>
 
@@ -51,32 +51,32 @@ const Sidebar = () => {
         <li>
           <button
             onClick={() => handleMenuClick(1)}
-            className="w-full flex items-center justify-between px-4 py-3 hover:bg-green-500"
+            className="w-full flex items-center justify-between px-4 py-3 hover:bg-green-500 transition-colors duration-200"
           >
             <div className="flex items-center space-x-2">
               <FaIndustry className="text-xl" />
-              {isExpanded && <span className="text-sm">Producción</span>}
+              {isExpanded && <span className="text-sm whitespace-nowrap">Producción</span>}
             </div>
             {isExpanded && (
               <FiChevronRight
-                className={`transform transition ${
+                className={`transform transition-transform duration-200 ${
                   openMenu === 1 ? "rotate-90" : ""
                 }`}
               />
             )}
           </button>
           {openMenu === 1 && isExpanded && (
-            <ul className="pl-8 bg-gray-700">
-              <li className="py-2 hover:bg-green-500">
-                <button onClick={() => handleNavigation('/dashboard')} className="flex items-center space-x-2 w-full text-left">
+            <ul className="bg-gray-700">
+              <li className="hover:bg-green-500 transition-colors duration-200">
+                <button onClick={() => handleNavigation('/dashboard')} className="flex items-center space-x-2 w-full text-left px-8 py-2">
                   <FaCogs />
-                  <span>Scorpius 1</span>
+                  <span className="whitespace-nowrap">Scorpius 1</span>
                 </button>
               </li>
-              <li className="py-2 hover:bg-green-500">
-                <button className="flex items-center space-x-2 w-full text-left">
+              <li className="hover:bg-green-500 transition-colors duration-200">
+                <button className="flex items-center space-x-2 w-full text-left px-8 py-2">
                   <FaCogs />
-                  <span>Scorpius 2</span>
+                  <span className="whitespace-nowrap">Scorpius 2</span>
                 </button>
               </li>
             </ul>
@@ -87,10 +87,10 @@ const Sidebar = () => {
         <li className="border-t border-gray-700">
           <Link
             to="/"
-            className="flex items-center space-x-2 px-4 py-3 hover:bg-green-500"
+            className="flex items-center space-x-2 px-4 py-3 hover:bg-green-500 transition-colors duration-200"
           >
             <FaHeartbeat className="text-xl" />
-            {isExpanded && <span className="text-sm">Salud</span>}
+            {isExpanded && <span className="text-sm whitespace-nowrap">Salud</span>}
           </Link>
         </li>
       </ul>
