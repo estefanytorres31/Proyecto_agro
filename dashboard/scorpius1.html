@@ -194,12 +194,12 @@
                 <h4>SCORPIUS 1</h4>
                 <h4 id="realtime-clock"></h4>
             </div>
+            <!--DONA-->
             <div class="row g-3">
                 <div class="col-12 col-md-6">
                     <div class="border rounded p-3" style="height: 400px; background-color: #ffffff;">
                         <!--<h5>Gráfica o información principal</h5>-->
                         <canvas id="chartPie" width="400" height="400"></canvas> <!--DC5-->
-
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
@@ -547,10 +547,10 @@ function createRankingChart(canvasId, data, sectorName) {
 }
 
 // Crear gráficos para cada sector
-createRankingChart('rankingChartA', sectorData.A, 'Sector A');
-createRankingChart('rankingChartB', sectorData.B, 'Sector B');
-createRankingChart('rankingChartC', sectorData.C, 'Sector C');
-createRankingChart('rankingChartD', sectorData.D, 'Sector D');
+createRankingChart('rankingChartA', sectorData.A, 'Grande');
+createRankingChart('rankingChartB', sectorData.B, 'Mediano');
+createRankingChart('rankingChartC', sectorData.C, 'Pequeño');
+createRankingChart('rankingChartD', sectorData.D, 'No hay');
 
     </script>
     
