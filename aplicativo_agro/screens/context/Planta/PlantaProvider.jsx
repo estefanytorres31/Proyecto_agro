@@ -1,80 +1,120 @@
-import React, { useEffect, useState } from "react";
-import { createPlanta, getPlantas, updatePlantaTamano, deletePlanta } from "../../services/PlantaService";
-import PlantaContext from "./PlantaContext";
+import React, { useState } from 'react';
+import PlantaContext from './PlantaContext';
+import { 
+  createPlanta, 
+  getPlantas, 
+  deletePlanta, 
+  getPlantaById 
+} from '../../services/PlantaService';
 
 const PlantaProvider = ({ children }) => {
-    const [plantas, setPlantas] = useState([]);
-    const [planta, setPlanta] = useState(null);
+  // State for managing plantas
+  const [plantas, setPlantas] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedPlanta, setSelectedPlanta] = useState(null);
 
-    const handleCreatePlanta = async (newPlanta) => {
-        try {
-            const res = await createPlanta(newPlanta);
-            if (res.status === 200 || res.status === 201) {
-                setPlantas((prevPlantas) => [...prevPlantas, res.data]);
-                return res.data;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
+  // Function to fetch all plantas
+  const fetchPlantas = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getPlantas();
+      if (data) {
+        setPlantas(data);
+        return data;
+      }
+    } catch (err) {
+      setError('Error fetching plantas');
+      return [];
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchPlantas = async () => {
-        try {
-            const plantas = await getPlantas();
-            setPlantas(plantas);  
-        } catch (error) {
-            console.error(error);
-        }
+  // Function to add a new planta
+  const addPlanta = async (newPlanta) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await createPlanta(newPlanta);
+      if (response.data) {
+        // Update local state with the new planta
+        setPlantas(prev => [...prev, response.data]);
+        return response;
+      }
+    } catch (err) {
+      setError('Error creating planta');
+      return null;
+    } finally {
+      setLoading(false);
     }
+  };
 
-    useEffect(() => {
-        fetchPlantas();
-    }, []);  
+  // Function to remove a planta
+  const removePlanta = async (codigo_planta) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await deletePlanta(codigo_planta);
+      if (response.data) {
+        // Remove planta from local state
+        setPlantas(prev => 
+          prev.filter(planta => planta.codigo_planta !== codigo_planta)
+        );
+        return response;
+      }
+    } catch (err) {
+      setError('Error deleting planta');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleEditPlanta = async (qrData, updatedPlanta) => {
-        try {
-            const updatedPlantaData = await updatePlantaTamano(qrData, updatedPlanta);
-            setPlantas((prevPlantas) =>
-                prevPlantas.map((planta) =>
-                    planta.qrData === qrData ? updatedPlantaData : planta
-                )
-            );
-            return updatedPlantaData;
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-    };
+  // Function to fetch a specific planta by ID
+  const fetchPlantaById = async (codigo_planta) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const planta = await getPlantaById(codigo_planta);
+      if (planta) {
+        setSelectedPlanta(planta);
+        return planta;
+      }
+    } catch (err) {
+      setError(`Error fetching planta with ID ${codigo_planta}`);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleDeletePlanta = async (codigo_planta) => {
-        try {
-            const res = await deletePlanta(codigo_planta);
-            if (res.status === 200 || res.status === 204) {
-                setPlantas((prevPlantas) => prevPlantas.filter((planta) => planta.qrData !== codigo_planta));
-                return res.data;
-            }
-            return null;
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-    };
+  // Function to clear selected planta
+  const clearSelectedPlanta = () => {
+    setSelectedPlanta(null);
+  };
 
-    return (
-        <PlantaContext.Provider value={{
-            plantas,
-            planta,
-            handleCreatePlanta,
-            fetchPlantas,
-            handleEditPlanta,
-            handleDeletePlanta
-        }}>
-            {children}
-        </PlantaContext.Provider>
-    );
-}
+  // Prepare the context value
+  const contextValue = {
+    plantas,
+    loading,
+    error,
+    selectedPlanta,
+    fetchPlantas,
+    addPlanta,
+    removePlanta,
+    fetchPlantaById,
+    clearSelectedPlanta,
+    setPlantas,
+    setSelectedPlanta
+  };
+
+  return (
+    <PlantaContext.Provider value={contextValue}>
+      {children}
+    </PlantaContext.Provider>
+  );
+};
 
 export default PlantaProvider;

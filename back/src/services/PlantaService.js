@@ -1,15 +1,16 @@
-import { connect } from "../database";
-const QRCode = require ('qrcode');
-const fs = require('fs');
-const path = require('path');
-import { uploadImage } from "../utils/Cloudinary";
+import { connect } from "../database.js";
+import QRCode from "qrcode";
+import fs from "fs";
+import path from "path";
+import { uploadImage } from "../utils/Cloudinary.js";
+import sharp from "sharp";
 
 
 export const getAllPlantas = async () => {
     const db = await connect();
     try {
-        const [plants] = await db.execute('SELECT * FROM tb_planta where estado=true');
-        return [plants];
+        const plants = await db.execute('SELECT * FROM tb_planta where estado=true');
+        return plants;
     } catch (error) {
         throw new Error("Error al obtener plantas: " + error.message);
     } finally {
@@ -20,8 +21,11 @@ export const getAllPlantas = async () => {
 export const getPlantaById = async (codigo_planta) => {
     const db = await connect();
     try {
-        const [plant] = await db.execute('SELECT * FROM tb_planta WHERE codigo_planta =?', [codigo_planta]);
-        return plant[0];
+        const result = await db.execute('SELECT * FROM tb_planta WHERE estado=true AND codigo_planta=?', [codigo_planta]);
+        if (result[0].length === 0) {
+            return null;  
+        }
+        return result[0][0];
     } catch (error) {
         throw new Error("Error al obtener planta por ID: " + error.message);
     } finally {
@@ -29,27 +33,6 @@ export const getPlantaById = async (codigo_planta) => {
     }
 };
 
-/*
-export const createPlanta = async (codigo_planta, planta_codigo_sector) => {
-    const db = await connect();
-    try {
-        const qrPath = path.join(__dirname, `../qrcodes/${codigo_planta}.png`);
-        
-        await QRCode.toFile(qrPath, codigo_planta);
-
-        const qrRelativePath = `/qrcodes/${codigo_planta}.png`;
-
-        const planta = await db.execute(
-            `INSERT INTO tb_planta (codigo_planta, codigo_qr, planta_codigo_sector) VALUES (?, ?, ?)`,
-            [codigo_planta, qrRelativePath, planta_codigo_sector]
-        );
-        return planta;
-    } catch (error) {
-        throw new Error("Error al crear planta: " + error.message);
-    } finally {
-        db.end();
-    }
-}*/
 
 export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
     if (!cantidad || cantidad <= 0 || !sectorCodigo) {
@@ -64,12 +47,37 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
         const uploadPromises = [];
 
         for (let i = 1; i <= cantidad; i++) {
-            const codigo_planta = `P${String(lastCode + i).padStart(5, "0")}`;
+            const codigo_planta = `P${String(lastCode + i).padStart(6, "0")}`;
             const tempFilePath = path.join(__dirname, `../qrcodes/${codigo_planta}.png`);
 
-            await QRCode.toFile(tempFilePath, codigo_planta);
+            const qrBuffer = await QRCode.toBuffer(codigo_planta);
+            const resizedQRBuffer = await sharp(qrBuffer)
+                .resize(200, 200) 
+                .toBuffer();
+            const textBuffer = Buffer.from(
+                `<svg width="400" height="50" xmlns="http://www.w3.org/2000/svg">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-family="Arial" fill="black">
+                        ${codigo_planta}
+                    </text>
+                </svg>`
+            );
 
-            const uploadPromise = uploadImage(tempFilePath)
+            await sharp({
+                create: {
+                    width: 400,  
+                    height: 450, 
+                    channels: 4,
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }, 
+                },
+            })
+                .composite([
+                    { input: resizedQRBuffer, top: 100, left: 90 },
+                    { input: textBuffer, top: 300, left: 0 },
+                ])
+                .toFile(tempFilePath);
+
+
+            const uploadPromise = uploadImage(tempFilePath, codigo_planta)
                 .then(async (result) => {
                     fs.unlinkSync(tempFilePath);
 
@@ -97,22 +105,6 @@ export const createMultiplePlantas = async (cantidad, sectorCodigo) => {
     }
 };
 
-
-
-export const updatePlantaTamano=async(codigo_planta, tamaño)=>{
-    const db = await connect();
-    try {
-        const [planta]=await db.execute('UPDATE tb_planta SET tamaño=? where codigo_planta=?',
-            [tamaño, codigo_planta]
-        )
-        return planta;
-    } catch (error) {
-        throw new Error("Error al actualizar tamaños de códigos QR: " + error.message);
-    } finally {
-        db.end();
-    }
-}
-
 export const deletePlanta = async (codigo_planta) => {
     const db = await connect();
     try {
@@ -124,18 +116,21 @@ export const deletePlanta = async (codigo_planta) => {
     }
 }
 
-export const getInformationByQR = async (codigo_planta) => {
+export const updatePlanta = async (codigo_planta, planta_codigo_sector) => {
     const db = await connect();
     try {
-        const [plant] = await db.execute('SELECT * FROM tb_planta WHERE codigo_planta = ? AND estado = true', [codigo_planta]);
-        if (plant.length === 0) {
-            throw new Error("Planta no encontrada o inactiva");
-        }
-        return plant[0];
+        const [result] = await db.execute(
+            'UPDATE tb_planta SET planta_codigo_sector = ?, fecha_actualizacion = NOW() WHERE codigo_planta = ?',
+            [planta_codigo_sector, codigo_planta]
+        );
+        const [updatedPlanta] = await db.execute(
+            'SELECT codigo_planta, planta_codigo_sector, fecha_actualizacion FROM tb_planta WHERE codigo_planta = ?',
+            [codigo_planta]
+        );
+        return { message: 'Planta actualizada con éxito.', affectedRows: result.affectedRows, Planta: updatedPlanta[0]};
     } catch (error) {
-        throw new Error("Error al obtener información por código QR: " + error.message);
+        throw new Error("Error al actualizar planta: " + error.message);
     } finally {
         db.end();
     }
 };
-

@@ -1,10 +1,11 @@
 {
   "name": "back",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "build": "babel src -d dist",
-    "dev": "nodemon src --exec babel-node",
+    "dev": "nodemon --delay 1000ms src/index.js",
     "start": "node dist"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.11.4",
     "qrcode": "^1.5.4",
+    "sharp": "^0.33.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },

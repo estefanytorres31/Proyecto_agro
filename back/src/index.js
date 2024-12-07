@@ -1,4 +1,14 @@
-import app from "./app"
+import app from "./app.js";
 
-app.listen(3000)
-console.log("Server on port 3000")
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+
+process.on('SIGTERM', () => {
+    console.log('Closing server...');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});

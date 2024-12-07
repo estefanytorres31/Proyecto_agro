@@ -11,7 +11,7 @@ export default Button = ({icon, size, color, style, onPress }) => {
         >
             <MaterialIcons 
                 name = {icon}
-                size={size? size : 28} //if size is passed in props we use it else we use 28
+                size={size? size : 28} 
                 color={color ? color : '#f1f1f1'}
             />
         </TouchableOpacity>

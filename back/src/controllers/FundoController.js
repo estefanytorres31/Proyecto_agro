@@ -1,4 +1,4 @@
-import * as FundoService from  "../services/FundoService";
+import * as FundoService from  "../services/FundoService.js";
 
 export const getAllFundos= async (req, res) =>{
     try {
@@ -39,7 +39,7 @@ export const updateFundo = async(req, res)=>{
     const { codigo_fundo } = req.params;
     const { nombre_fundo, hectarea } = req.body;
     try{
-        const fundo = await FundoService.updateFundo(codigo_fundo, nombre_fundo, hectarea);
+        const fundo = await FundoService.updateFundo(codigo_fundo,nombre_fundo, hectarea);
         if(!fundo){
             return res.status(404).json({message: "Fundo no encontrado"});
         }
