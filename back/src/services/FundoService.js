@@ -1,4 +1,4 @@
-import { connect } from "../database";
+import { connect } from "../database.js";
 
 export const getAllFundos=async()=>{
     const db = await connect();
@@ -50,7 +50,10 @@ export const updateFundo = async (codigo_fundo, nombre_fundo, hectarea)=>{
         if (result.affectedRows === 0) {
             throw new Error("Fundo no encontrado");
         }
-        return result.affectedRows;
+        const [updatedFundo]=await db.execute('select nombre_fundo, hectarea, fecha_actualizacion from tb_fundo where codigo_fundo =?',
+            [codigo_fundo]
+        );
+        return { message: 'Fundo actualizado con éxito.', affectedRows: result.affectedRows, Fundo: updatedFundo[0]};
     } catch (error) {
         throw new Error("Error al actualizar el fondo: " + error.message);
     } finally {
