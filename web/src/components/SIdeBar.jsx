@@ -35,7 +35,7 @@ const Sidebar = () => {
       </div>
 
       {/* Menu */}
-      <ul className="flex-grow overflow-y-auto scrollbar-hide">
+      <ul className="flex-grow overflow-y-auto">
         {/* Home */}
         <li className="border-b border-gray-700">
           <Link
@@ -51,6 +51,7 @@ const Sidebar = () => {
         <li>
           <button
             onClick={() => handleMenuClick(1)}
+            aria-expanded={openMenu === 1}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-green-500 transition-colors duration-200"
           >
             <div className="flex items-center space-x-2">
@@ -65,22 +66,31 @@ const Sidebar = () => {
               />
             )}
           </button>
-          {openMenu === 1 && isExpanded && (
+          <div
+            className={`transition-all duration-300 overflow-hidden ${
+              openMenu === 1 && isExpanded ? "max-h-screen" : "max-h-0"
+            }`}
+          >
             <ul className="bg-gray-700">
               <li className="hover:bg-green-500 transition-colors duration-200">
-                <button onClick={() => handleNavigation('/dashboard')} className="flex items-center space-x-2 w-full text-left px-8 py-2">
+                <button
+                  onClick={() => handleNavigation("/dashboard")}
+                  className="flex items-center space-x-2 w-full text-left px-8 py-2"
+                >
                   <FaCogs />
                   <span className="whitespace-nowrap">Scorpius 1</span>
                 </button>
               </li>
               <li className="hover:bg-green-500 transition-colors duration-200">
-                <button className="flex items-center space-x-2 w-full text-left px-8 py-2">
+                <button
+                  className="flex items-center space-x-2 w-full text-left px-8 py-2"
+                >
                   <FaCogs />
                   <span className="whitespace-nowrap">Scorpius 2</span>
                 </button>
               </li>
             </ul>
-          )}
+          </div>
         </li>
 
         {/* Salud */}
@@ -99,4 +109,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
