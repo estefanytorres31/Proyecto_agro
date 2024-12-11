@@ -1,6 +1,6 @@
 // App.js
 import { BrowserRouter as Router } from "react-router-dom";
-import Sidebar from "./components/SIdeBar";
+import Sidebar from "./components/Sidebar";
 import AppRoutes from "./AppRoutes";
 import CosechaProvider from "./context/Cosecha/CosechaProvider"; // Importa el CosechaProvider
 

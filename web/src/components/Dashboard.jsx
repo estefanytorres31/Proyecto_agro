@@ -1,165 +1,125 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import Sidebar from './SIdeBar'; // Importar Sidebar
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-} from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import useCosecha from '../hooks/Cosecha/useCosecha';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const Dashboard = () => {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const { cosechaData, fetchCosechaData, fetchRankingData } = useCosecha();
 
-  // Cambiar el estado del sidebar
-  const toggleSidebar = () => {
-    setIsSidebarExpanded((prev) => !prev);
-  };
+  useEffect(() => {
+    // Código para obtener los datos de la cosecha para los sectores A, B, C, D del fundo F00001
+    fetchCosechaData("F00001", "S00001");  // Sector A
+    fetchCosechaData("F00001", "S00002");  // Sector B
+    fetchCosechaData("F00001", "S00003");  // Sector C
+    fetchCosechaData("F00001", "S00004");  // Sector D
 
-  const chartsData = [
-    { id: 'chartA', label: 'Sector A', data: [50, 20, 30, 0] },
-    { id: 'chartB', label: 'Sector B', data: [20, 50, 30, 0] },
-    { id: 'chartC', label: 'Sector C', data: [20, 10, 30, 0] },
-    { id: 'chartD', label: 'Sector D', data: [0, 3, 5, 50] },
-  ];
-
-  const combinedData = chartsData.reduce((totals, chart) => {
-    chart.data.forEach((value, index) => {
-      totals[index] = (totals[index] || 0) + value;
-    });
-    return totals;
-  }, []);
-
-  const pieLabels = ['Grande', 'Mediano', 'Pequeño', 'No hay'];
+    // Llamar a la API para el ranking
+    fetchRankingData("Grande", "F00001");
+  }, [fetchCosechaData, fetchRankingData]);
 
   const doughnutData = {
-    labels: pieLabels,
+    labels: ["Pequeños", "Medianos", "Grandes", "No hay fruto"],
     datasets: [
       {
-        data: combinedData,
-        backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'],
-        borderColor: ['#ffffff'],
-        borderWidth: 2,
+        label: "Cantidad de Frutos",
+        data: [
+          cosechaData.frutos.pequeños,
+          cosechaData.frutos.medianos,
+          cosechaData.frutos.grandes,
+          cosechaData.frutos.sinFrutos,
+        ],
+        backgroundColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
+        hoverOffset: 4,
+        borderColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
+        borderWidth: 1,
       },
     ],
   };
 
-  const barChartOptions = {
+  const barDataTemplate = (sector, data) => ({
+    labels: ["Grande", "Mediano", "Pequeño", "No hay"],
+    datasets: [
+      {
+        label: `Sector ${sector}`,
+        data: [
+          data.grandes || 0,
+          data.medianos || 0,
+          data.pequeños || 0,
+          data.sinFrutos || 0,
+        ],
+        backgroundColor: ["#52d32c", "#ff8001", "#f40606", "#c4c4c4"],
+      },
+    ],
+  });
+
+  const productionBarDataTemplate = (type) => ({
+    labels: [`P${type}001`, `P${type}002`, `P${type}003`, `P${type}004`, `P${type}005`],
+    datasets: [
+      {
+        label: "Producción",
+        data: [100, 200, 300, 400, 500],
+        backgroundColor: "#52d32c",
+      },
+    ],
+  });
+
+  const options = {
     responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        beginAtZero: true,
-      },
-      y: {
-        beginAtZero: true,
-      },
-    },
     plugins: {
       legend: {
-        position: 'top',
+        position: "right",
+        labels: {
+          boxWidth: 16,
+          fontStyle: "bold",
+        },
+      },
+      title: {
+        display: true,
+        fontSize: 18,
+        fontStyle: "bold",
+        text: `Distribución de Frutos - Barras`,
       },
     },
   };
 
-  const horizontalBarChartOptions = {
-    ...barChartOptions,
-    indexAxis: 'y',
-  };
+  if (cosechaData.isLoading) {
+    return <p>Cargando datos...</p>;
+  }
+
+  if (cosechaData.error) {
+    return <p>{cosechaData.error}</p>;
+  }
 
   return (
-    <div
-      className="flex"
-      style={{ backgroundColor: '#ededee', minHeight: '100vh' }}
-    >
-
-      {/* Main Content */}
-      <div
-        className={`ml-${isSidebarExpanded ? '64' : '20'} transition-all duration-300 ease-in-out w-full p-6`}
-      >
-        <div className="container mx-auto flex flex-col gap-8">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h4 className="text-2xl font-bold text-gray-800">SCORPIUS 1</h4>
-            <h4 id="realtime-clock" className="text-xl font-semibold text-gray-500"></h4>
-          </div>
-
-          {/* Doughnut Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow p-4 h-96 flex">
-              <Doughnut
-                data={doughnutData}
-                options={{ responsive: true, maintainAspectRatio: false }}
-              />
-            </div>
-
-            {/* Bar Charts */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {chartsData.map((chart) => (
-                <div key={chart.id} className="bg-white rounded-lg shadow p-4 h-44">
-                  <Bar
-                    data={{
-                      labels: pieLabels,
-                      datasets: [
-                        {
-                          label: chart.label,
-                          data: chart.data,
-                          backgroundColor: ['#52d32c', '#ff8001', '#f40606', '#c4c4c4'],
-                          borderColor: ['#3fda12', '#ff8001', '#e30808', '#c1baba'],
-                          borderWidth: 2,
-                        },
-                      ],
-                    }}
-                    options={barChartOptions}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Rankings */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {chartsData.map((chart) => (
-              <div key={`ranking-${chart.id}`} className="bg-white rounded-lg shadow p-4 h-56">
-                <Bar
-                  data={{
-                    labels: pieLabels,
-                    datasets: [
-                      {
-                        label: chart.label,
-                        data: chart.data,
-                        backgroundColor:
-                          chart.id === 'chartA'
-                            ? '#52d32c'
-                            : chart.id === 'chartB'
-                            ? '#ff8001'
-                            : chart.id === 'chartC'
-                            ? '#f40606'
-                            : '#c4c4c4',
-                        borderColor:
-                          chart.id === 'chartA'
-                            ? '#3fda12'
-                            : chart.id === 'chartB'
-                            ? '#ff8001'
-                            : chart.id === 'chartC'
-                            ? '#e30808'
-                            : '#c1baba',
-                        borderWidth: 2,
-                      },
-                    ],
-                  }}
-                  options={horizontalBarChartOptions}
-                />
-              </div>
-            ))}
-          </div>
+    <div className="flex flex-col gap-6 p-4">
+      {/* Sección superior: Dona y 4 barras verticales */}
+      <div className="grid lg:grid-cols-2 gap-6 items-center">
+        <div className="flex flex-col items-center">
+          <Doughnut data={doughnutData} options={options} />
+          <p className="text-center mt-2 font-semibold">Distribución General</p>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {["A", "B", "C", "D"].map((sector) => (
+            <div key={sector} className="flex flex-col items-center">
+              <Bar data={barDataTemplate(sector, cosechaData.frutos)} options={options} />
+              <p className="text-center mt-2 font-semibold">Sector {sector}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sección inferior: 4 barras horizontales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {["00", "01", "02", "03"].map((type) => (
+          <div key={type} className="flex flex-col items-center">
+            <Bar data={productionBarDataTemplate(type)} options={{ ...options, indexAxis: "y" }} />
+            <p className="text-center mt-2 font-semibold">
+              Producción {type === "00" ? "Grande" : type === "01" ? "Mediano" : type === "02" ? "Pequeño" : "No hay"}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
