@@ -29,10 +29,22 @@ const DoughnutChart = ({ codigoFundo }) => {
       {
         label: "Cantidad de Frutos",
         data: [frutos.pequeños, frutos.medianos, frutos.grandes, frutos.sinFrutos],
-        backgroundColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
-        hoverOffset: 4,
-        borderColor: ["#f40606", "#ff8001", "#52d32c", "#c4c4c4"],
-        borderWidth: 1,
+        backgroundColor: [
+          "#f40606",
+          "#ff8001",
+          "#52d32c",
+          "#c4c4c4"
+        ],
+        hoverBackgroundColor: [
+          "rgba(244, 6, 6, 0.8)",
+          "rgba(255, 128, 1, 0.8)",
+          "rgba(82, 211, 44, 0.8)",
+          "rgba(196, 196, 196, 0.8)"
+        ],
+        borderColor: ["#a80505", "#b35b01", "#2e8b1c", "#8a8a8a"],
+        borderWidth: 2,
+        cutout: "70%",
+        hoverOffset: 8,
       },
     ],
   };
@@ -44,20 +56,39 @@ const DoughnutChart = ({ codigoFundo }) => {
         position: "right",
         labels: {
           boxWidth: 16,
-          fontStyle: "bold",
+          font: {
+            size: 14,
+            weight: "bold",
+          },
         },
       },
       title: {
         display: true,
-        fontSize: 18,
-        fontStyle: "bold",
-        text: `Distribución de Frutos - Barras`,
+        text: `Distribución de Frutos`,
+        font: {
+          size: 18,
+          weight: "bold",
+        },
       },
+    },
+    layout: {
+      padding: 20,
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true,
     },
   };
 
   return (
-    <div>
+    <div style={{
+      width: "50%",
+      margin: "0 auto",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+      borderRadius: "16px",
+      padding: "20px",
+      backgroundColor: "#fff",
+    }}>
       <Doughnut data={doughnutData} options={options} />
     </div>
   );
