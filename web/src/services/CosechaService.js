@@ -8,6 +8,7 @@ export const cantidadPorFundo=async(codigo_fundo)=>{
         console.error(error);
         return null;
     }
+ 
 }
 
 export const calculoPorSector = async(codigo_fundo, codigo_sector)=>{
