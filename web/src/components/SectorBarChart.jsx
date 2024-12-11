@@ -1,26 +1,39 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import useCosecha from '../hooks/Cosecha/useCosecha';
 
 const SectorBarChart = ({ codigoFundo, codigoSector }) => {
   const { sectorData, fetchSectorData } = useCosecha();
-  console.log('Datos recibidos en BarChart',codigoSector , codigoFundo);
+  const sector = sectorData[codigoSector]; // Obtener los datos del sector correspondiente
+  const [hasData, setHasData] = useState(false); // Estado para verificar si hay datos
 
   useEffect(() => {
     fetchSectorData(codigoFundo, codigoSector);
   }, [codigoFundo, codigoSector, fetchSectorData]);
 
+  useEffect(() => {
+    // Verificamos si los datos del sector existen
+    if (sector && sector.frutos && (sector.frutos.pequeños || sector.frutos.medianos || sector.frutos.grandes || sector.frutos.sinFrutos)) {
+      setHasData(true);
+    } else {
+      setHasData(false);
+    }
+  }, [sector]);
+
+  // Si no hay datos, no renderizar el gráfico
+  if (!hasData || !sector?.frutos) return null;
+
   const data = {
     labels: ["Pequeños", "Medianos", "Grandes", "Sin Frutos"],
     datasets: [
       {
-        label: `Sector ${sectorData.sector ? sectorData.sector.nombre : ""}`,
+        label: `Sector ${sector?.sector?.nombre || "Cargando..."}`,
         data: [
-          sectorData.frutos.pequeños,
-          sectorData.frutos.medianos,
-          sectorData.frutos.grandes,
-          sectorData.frutos.sinFrutos
+          sector?.frutos?.pequeños || 0,
+          sector?.frutos?.medianos || 0,
+          sector?.frutos?.grandes || 0,
+          sector?.frutos?.sinFrutos || 0
         ],
         backgroundColor: ["#FF6347", "#FFA500", "#32CD32", "#808080"],
         borderColor: "#FFFFFF",
@@ -40,8 +53,8 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
 
   return (
     <div>
-      <h3>Gráfico de Frutos - {sectorData.sector ? sectorData.sector.nombre : "Cargando..."}</h3>
-      {sectorData.isLoading ? (
+      <h3>Gráfico de Frutos - {sector?.sector?.nombre || "Cargando..."}</h3>
+      {sector?.isLoading ? (
         <p>Cargando datos...</p>
       ) : (
         <Bar data={data} options={options} />

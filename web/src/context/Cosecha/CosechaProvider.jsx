@@ -79,40 +79,47 @@ const CosechaProvider = ({ children }) => {
   const fetchSectorData = useCallback(async (codigoFundo, codigoSector) => {
     setSectorData((prev) => ({
       ...prev,
-      isLoading: true,
-      error: null
+      [codigoSector]: {
+        isLoading: true,
+        error: null
+      }
     }));
-
+  
     try {
       const data = await calculoPorSector(codigoFundo, codigoSector);
       if (data && data.length > 0) {
         const sector = data[0];
-        setSectorData({
-          sector: {
-            codigo: sector.codigo_sector,
-            nombre: sector.nombre_sector
-          },
-          frutos: {
-            pequeños: sector.cantidad_pequeños,
-            medianos: sector.cantidad_medianos,
-            grandes: sector.cantidad_grandes,
-            sinFrutos: sector.cantidad_sin_frutos
-          },
-          isLoading: false,
-          error: null
-        });
-        console.log(sector.data)
+        setSectorData((prev) => ({
+          ...prev,
+          [codigoSector]: {
+            sector: {
+              codigo: sector.codigo_sector,
+              nombre: sector.nombre_sector
+            },
+            frutos: {
+              pequeños: sector.cantidad_pequeños,
+              medianos: sector.cantidad_medianos,
+              grandes: sector.cantidad_grandes,
+              sinFrutos: sector.cantidad_sin_frutos
+            },
+            isLoading: false,
+            error: null
+          }
+        }));
       } else {
         throw new Error("No se encontraron datos");
       }
     } catch (error) {
       setSectorData((prev) => ({
         ...prev,
-        isLoading: false,
-        error: error.message || "Error desconocido"
+        [codigoSector]: {
+          isLoading: false,
+          error: error.message || "Error desconocido"
+        }
       }));
     }
   }, []);
+  
 
   // Función para cargar rankings
   const fetchRankingData = useCallback(async (tamañoFruto, codigoFundo) => {
