@@ -1,47 +1,48 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import useCosecha from '../hooks/Cosecha/useCosecha';
 
-const BarChart = ({ tamañoFruto, codigoFundo }) => {
-  const { sectorData, fetchSectorData } =  useCosecha();
-  useEffect(() => {
-    fetchSectorData(codigoFundo, codigoSector);
-  }, [codigoFundo, codigoSector, fetchSectorData]);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const GraficoRankingPlantas = ({ tamañoFruto, codigoFundo }) => {
+  const { rankingData, loading, error } = useCosecha();
 
   const data = {
-    labels: ["Pequeños", "Medianos", "Grandes", "No hay fruto"],
+    labels: rankingData?.map(item => item.nombre_planta), 
     datasets: [
       {
-        label: `Sector ${sectorData.sector ? sectorData.sector.nombre : ""}`,
-        data: [
-          sectorData.frutos.pequeños,
-          sectorData.frutos.medianos,
-          sectorData.frutos.grandes,
-          sectorData.frutos.sinFrutos
-        ],
-        backgroundColor: ["#FF6347", "#FFA500", "#32CD32", "#808080"],
+        label: `Ranking de Plantas (${tamañoFruto})`,
+        data: rankingData?.map(item => item[`frutas_${tamañoFruto.toLowerCase()}`]), 
+        backgroundColor: rankingData?.map((_, index) => index % 2 === 0 ? "#FF6347" : "#32CD32"), 
         borderColor: "#FFFFFF",
         borderWidth: 1
       }
     ]
   };
 
-  // Opciones para el gráfico
   const options = {
     responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: `Ranking de Plantas por Frutos ${tamañoFruto.charAt(0).toUpperCase() + tamañoFruto.slice(1)}`
+      },
+    },
     scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
+      x: {
+        beginAtZero: true,
+      },
+    },
   };
 
   return (
     <div>
-      <h3>Gráfico de Frutos - {sectorData.sector ? sectorData.sector.nombre : "Cargando..."}</h3>
-      {sectorData.isLoading ? (
+      <h3>Ranking de Plantas por {tamañoFruto.charAt(0).toUpperCase() + tamañoFruto.slice(1)} - {codigoFundo}</h3>
+      {loading ? (
         <p>Cargando datos...</p>
+      ) : error ? (
+        <p>Error al cargar los datos: {error}</p>
       ) : (
         <Bar data={data} options={options} />
       )}
@@ -49,4 +50,4 @@ const BarChart = ({ tamañoFruto, codigoFundo }) => {
   );
 };
 
-export default BarChart;
+export default GraficoRankingPlantas;

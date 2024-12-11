@@ -43,7 +43,9 @@
     "react-native-svg": "^15.9.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.19.13",
-    "react-native-web-refresh-control": "^1.1.2"
+    "react-native-web-refresh-control": "^1.1.2",
+    "expo-splash-screen": "~0.29.18",
+    "expo-modules-core": "~2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

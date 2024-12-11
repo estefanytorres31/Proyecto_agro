@@ -9,13 +9,11 @@ const Dashboard = () => {
   const { cosechaData, fetchCosechaData, fetchRankingData } = useCosecha();
 
   useEffect(() => {
-    // Código para obtener los datos de la cosecha para los sectores A, B, C, D del fundo F00001
-    fetchCosechaData("F00001", "S00001");  // Sector A
-    fetchCosechaData("F00001", "S00002");  // Sector B
-    fetchCosechaData("F00001", "S00003");  // Sector C
-    fetchCosechaData("F00001", "S00004");  // Sector D
+    fetchCosechaData("F00001", "S00001");  
+    fetchCosechaData("F00001", "S00002");  
+    fetchCosechaData("F00001", "S00003");  
+    fetchCosechaData("F00001", "S00004"); 
 
-    // Llamar a la API para el ranking
     fetchRankingData("Grande", "F00001");
   }, [fetchCosechaData, fetchRankingData]);
 
