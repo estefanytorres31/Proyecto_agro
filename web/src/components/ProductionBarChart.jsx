@@ -7,17 +7,18 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
   const { rankingData, loading, error } = useCosecha();
-  console.log('Datos recibidos en SectorBarChart', tamañoFruto, codigoFundo);
+  console.log('Datos recibidos en ProduccionChart', tamañoFruto, codigoFundo);
 
   const safeRankingData = Array.isArray(rankingData) ? rankingData : [];
-
   const validTamañoFruto = tamañoFruto ? tamañoFruto.charAt(0).toUpperCase() + tamañoFruto.slice(1) : "Desconocido";
-  
-  console.log("Datos de ranking:", safeRankingData); // Ver los datos de ranking recibidos
-  console.log("Tamaño de Fruto:", validTamañoFruto); // Ver el valor de tamañoFruto
+
+  console.log("Datos de ranking:", safeRankingData); 
+  console.log("Tamaño de Fruto:", validTamañoFruto); 
+
+  const labels = safeRankingData.map(item => `${item.codigo_planta}`);
 
   const data = {
-    labels: safeRankingData.map(item => item.nombre_planta), 
+    labels: labels, 
     datasets: [
       {
         label: `Ranking de Plantas (${validTamañoFruto})`,
@@ -29,18 +30,17 @@ const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
     ]
   };
 
-  console.log("Datos para el gráfico:", data);  // Ver los datos listos para el gráfico
+  console.log("Datos para el gráfico:", data); 
 
   const options = {
     responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: `Ranking de Plantas por Frutos ${validTamañoFruto}`
-      },
-    },
     scales: {
       x: {
+        ticks: {
+          autoSkip: false,  
+          maxRotation: 45,  
+          minRotation: 0,  
+        },
         beginAtZero: true,
       },
     },
@@ -59,4 +59,5 @@ const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
     </div>
   );
 };
+
 export default ProductionBarChart;

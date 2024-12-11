@@ -4,6 +4,8 @@ import ProductionBarChart from "./ProductionBarChart";
 
 const Dashboard = () => {
   const codigoFundo = "F00001";
+  
+  const sectores = ["S00001", "S00002", "S00003", "S00004"];
 
   return (
     <div className="p-6">
@@ -14,12 +16,11 @@ const Dashboard = () => {
         <DoughnutChart codigoFundo={codigoFundo} />
       </div>
       
-      {/* Gráficos de barras y rankings */}
+      {/* Gráficos de barras para cada sector */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <SectorBarChart codigoFundo={codigoFundo} codigoSector="S00001" />
-        <SectorBarChart codigoFundo={codigoFundo} codigoSector="S00002" />
-        <SectorBarChart codigoFundo={codigoFundo} codigoSector="S00003" />
-        <SectorBarChart codigoFundo={codigoFundo} codigoSector="S00004" />
+        {sectores.map((sector) => (
+          <SectorBarChart key={sector} codigoFundo={codigoFundo} codigoSector={sector} />
+        ))}
         
         <ProductionBarChart tamañoFruto="Grande" codigoFundo={codigoFundo}  />
         <ProductionBarChart tamañoFruto="Mediano" codigoFundo={codigoFundo} />
