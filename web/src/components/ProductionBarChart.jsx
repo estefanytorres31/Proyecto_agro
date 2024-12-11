@@ -15,15 +15,17 @@ const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
   console.log("Datos de ranking:", safeRankingData); 
   console.log("Tamaño de Fruto:", validTamañoFruto); 
 
+  // Verifica que los datos sean correctos
   const labels = safeRankingData.map(item => `${item.codigo_planta}`);
+  console.log('Labels:', labels);
 
   const data = {
     labels: labels, 
     datasets: [
       {
         label: `Ranking de Plantas (${validTamañoFruto})`,
-        data: safeRankingData.map(item => item[`frutas_${tamañoFruto.toLowerCase()}`]), 
-        backgroundColor: safeRankingData.map((_, index) => index % 2 === 0 ? "#FF6347" : "#32CD32"), 
+        data: safeRankingData.map(item => item[`frutas_${tamañoFruto.toLowerCase()}`]),
+        backgroundColor: safeRankingData.map((_, index) => index % 2 === 0 ? "#FF6347" : "#32CD32"),
         borderColor: "#FFFFFF",
         borderWidth: 1
       }
@@ -47,7 +49,7 @@ const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
   };
 
   return (
-    <div>
+    <div style={{ height: '400px' }}>
       <h3>Ranking de Plantas por {validTamañoFruto} - {codigoFundo}</h3>
       {loading ? (
         <p>Cargando datos...</p>
