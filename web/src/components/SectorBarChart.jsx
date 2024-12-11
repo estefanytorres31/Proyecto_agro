@@ -3,8 +3,9 @@ import { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import useCosecha from '../hooks/Cosecha/useCosecha';
 
-const GraficoDeBarras = ({ codigoFundo, codigoSector }) => {
+const SectorBarChart = ({ codigoFundo, codigoSector }) => {
   const { sectorData, fetchSectorData } = useCosecha();
+  console.log('Datos recibidos en BarChart',codigoSector , codigoFundo);
 
   useEffect(() => {
     fetchSectorData(codigoFundo, codigoSector);
@@ -49,4 +50,4 @@ const GraficoDeBarras = ({ codigoFundo, codigoSector }) => {
   );
 };
 
-export default GraficoDeBarras;
+export default SectorBarChart;

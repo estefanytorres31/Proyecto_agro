@@ -101,6 +101,7 @@ const CosechaProvider = ({ children }) => {
           isLoading: false,
           error: null
         });
+        console.log(sector.data)
       } else {
         throw new Error("No se encontraron datos");
       }
