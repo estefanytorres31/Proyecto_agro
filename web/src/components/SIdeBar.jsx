@@ -83,6 +83,7 @@ const Sidebar = () => {
               </li>
               <li className="hover:bg-green-500 transition-colors duration-200">
                 <button
+                onClick={() => handleNavigation("/Scorpius2")}
                   className="flex items-center space-x-2 w-full text-left px-8 py-2"
                 >
                   <FaCogs />
