@@ -46,13 +46,36 @@ const ProductionBarChart = ({ tamañoFruto, codigoFundo }) => {
     },
   };
 
+  const containerStyle = {
+    padding: "20px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    maxWidth: "800px",
+    margin: "20px auto",
+  };
+
+  const titleStyle = {
+    fontSize: "1.5em",
+    fontWeight: "bold",
+    marginBottom: "10px",
+    color: "#333",
+    textAlign: "center",
+  };
+
+  const loadingStyle = {
+    textAlign: "center",
+    color: "#555",
+    fontStyle: "italic",
+  };
+
   return (
-    <div>
-      <h3>Ranking de Plantas por {validTamañoFruto} - {codigoFundo}</h3>
+    <div style={containerStyle}>
+      <h3 style={titleStyle}>Ranking de Plantas por {validTamañoFruto} - {codigoFundo}</h3>
       {loading ? (
-        <p>Cargando datos...</p>
+        <p style={loadingStyle}>Cargando datos...</p>
       ) : error ? (
-        <p>Error al cargar los datos: {error}</p>
+        <p style={loadingStyle}>Error al cargar los datos: {error}</p>
       ) : (
         <Bar data={data} options={options} />
       )}
