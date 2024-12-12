@@ -21,12 +21,13 @@ export const calculoPorSector = async(codigo_fundo, codigo_sector)=>{
     }
 }
 
-export const rankings=async(tam_fruto, cod_fundo)=>{
-    try{
-        const response=await apiClient.get(`/api/cosecha/ranking/${tam_fruto}/${cod_fundo}`)
-        return response.data
-    }catch(error){
+export const rankings = async (tam_fruto, cod_fundo) => {
+    try {
+        const response = await apiClient.get(`/api/cosecha/ranking/${cod_fundo}/${tam_fruto}`);
+        console.log("Respuesta de API Rankings:", response.data); // Verifica aquí
+        return response.data;
+    } catch (error) {
         console.error(error);
         return null;
     }
-}
+};
