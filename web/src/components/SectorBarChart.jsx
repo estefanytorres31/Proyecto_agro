@@ -5,15 +5,14 @@ import useCosecha from '../hooks/Cosecha/useCosecha';
 
 const SectorBarChart = ({ codigoFundo, codigoSector }) => {
   const { sectorData, fetchSectorData } = useCosecha();
-  const sector = sectorData[codigoSector]; // Obtener los datos del sector correspondiente
-  const [hasData, setHasData] = useState(false); // Estado para verificar si hay datos
+  const sector = sectorData[codigoSector]; 
+  const [hasData, setHasData] = useState(false); 
 
   useEffect(() => {
     fetchSectorData(codigoFundo, codigoSector);
   }, [codigoFundo, codigoSector, fetchSectorData]);
 
   useEffect(() => {
-    // Verificamos si los datos del sector existen
     if (sector && sector.frutos && (sector.frutos.pequeños || sector.frutos.medianos || sector.frutos.grandes || sector.frutos.sinFrutos)) {
       setHasData(true);
     } else {
@@ -21,7 +20,6 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
     }
   }, [sector]);
 
-  // Si no hay datos, no renderizar el gráfico
   if (!hasData || !sector?.frutos) return null;
 
   const data = {

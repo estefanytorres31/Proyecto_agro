@@ -9,12 +9,10 @@ import {
 } from '../../services/CosechaService';
 
 const CosechaProvider = ({ children }) => {
-  // State for managing cosechas (harvests)
   const [cosechas, setCosechas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to fetch all cosechas
   const fetchCosechas = async () => {
     setLoading(true);
     setError(null);
@@ -32,7 +30,6 @@ const CosechaProvider = ({ children }) => {
     }
   };
 
-  // Function to add a new cosecha
   const addCosecha = async (cosecha_codigo_planta, tamaño_fruto) => {
     setLoading(true);
     setError(null);
@@ -50,7 +47,6 @@ const CosechaProvider = ({ children }) => {
     }
   };
 
-  // Function to update fruit size
   const updateCosechaFrutoSize = async (codigo_cosecha, tamaño_fruto) => {
     setLoading(true);
     setError(null);
@@ -72,7 +68,6 @@ const CosechaProvider = ({ children }) => {
     }
   };
 
-  // Function to remove a cosecha
   const removeCosecha = async (codigo_cosecha) => {
     setLoading(true);
     setError(null);
@@ -92,7 +87,6 @@ const CosechaProvider = ({ children }) => {
     }
   };
 
-  // Function to get a specific cosecha by ID
   const fetchCosechaById = async (codigo_cosecha) => {
     setLoading(true);
     setError(null);
