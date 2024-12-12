@@ -44,7 +44,9 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
     responsive: true,
     scales: {
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        min: 0,
+        max: sector?.frutos?.pequeños + sector?.frutos?.medianos + sector?.frutos?.grandes + sector?.frutos?.sinFrutos,
       }
     }
   };

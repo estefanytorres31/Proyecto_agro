@@ -32,7 +32,10 @@ const CosechaProvider = ({ children }) => {
 
   // Estado para rankings
   const [rankingData, setRankingData] = useState({
-    plantas: [],
+    grande: [],
+    mediano: [],
+    pequeño: [],
+    noHayFruto: [],
     isLoading: false,
     error: null
   });
@@ -122,7 +125,7 @@ const CosechaProvider = ({ children }) => {
   
 
   // Función para cargar rankings
-  const fetchRankingData = useCallback(async (tamañoFruto, codigoFundo) => {
+  const fetchAllRankings = useCallback(async (codigoFundo) => {
     setRankingData((prev) => ({
       ...prev,
       isLoading: true,
@@ -130,16 +133,21 @@ const CosechaProvider = ({ children }) => {
     }));
 
     try {
-      const data = await rankings(tamañoFruto, codigoFundo);
-      if (data && data.length > 0) {
-        setRankingData({
-          plantas: data,
-          isLoading: false,
-          error: null
-        });
-      } else {
-        throw new Error("No se encontraron datos");
-      }
+      const [grandeData, medianoData, pequeñoData, noHayFrutoData] = await Promise.all([
+        rankings('Grande', codigoFundo),
+        rankings('Mediano', codigoFundo),
+        rankings('Pequeño', codigoFundo),
+        rankings('No hay fruto', codigoFundo)
+      ]);
+
+      setRankingData({
+        grande: grandeData,
+        mediano: medianoData,
+        pequeño: pequeñoData,
+        noHayFruto: noHayFrutoData,
+        isLoading: false,
+        error: null
+      });
     } catch (error) {
       setRankingData((prev) => ({
         ...prev,
@@ -162,7 +170,7 @@ const CosechaProvider = ({ children }) => {
       sectorData,
       fetchSectorData,
       rankingData,
-      fetchRankingData
+      fetchAllRankings
     }),
     [cosechaData, sectorData, rankingData]
   );

@@ -39,6 +39,7 @@ const DoughnutChart = ({ codigoFundo }) => {
 
   const options = {
     responsive: true,
+    
     plugins: {
       legend: {
         position: "right",
