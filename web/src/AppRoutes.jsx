@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Inicio from "./components/Inicio";
 import Scorpius2 from "./components/Scorpius2";
+import ClockTime from "./components/ClockTime";
 
 const AppRoutes = () => {
   return (
@@ -10,6 +11,7 @@ const AppRoutes = () => {
       <Route path="/inicio" element={<Inicio />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/Scorpius2" element={<Scorpius2 />}/>
+      <Route path="/ClockTime" element={<ClockTime/>}/>
     </Routes>
   );
 };

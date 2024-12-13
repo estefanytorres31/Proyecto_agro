@@ -1,16 +1,17 @@
-// App.js
 import { BrowserRouter as Router } from "react-router-dom";
-import Sidebar from "./components/SIdeBar";
+import Sidebar from "./components/SIdebar";
 import AppRoutes from "./AppRoutes";
-import CosechaProvider from "./context/Cosecha/CosechaProvider"; // Importa el CosechaProvider
+import CosechaProvider from "./context/Cosecha/CosechaProvider";
 
 function App() {
   return (
     <Router>
-      <CosechaProvider> {/* Envuelve tu aplicación con el provider */}
-        <div className="flex">
+      <CosechaProvider>
+        <div className="flex h-screen">
+          {/* Sidebar ocupa una parte fija o proporcional del ancho */}
           <Sidebar />
-          <main className="flex-1">
+          {/* Contenedor principal del dashboard */}
+          <main className="flex-1 transition-all duration-100 overflow-auto">
             <AppRoutes />
           </main>
         </div>

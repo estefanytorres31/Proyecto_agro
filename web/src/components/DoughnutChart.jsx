@@ -44,38 +44,34 @@ const DoughnutChart = ({ codigoFundo }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: "bottom",
         labels: {
-          boxWidth: 18,
+          boxWidth: 16,
           font: {
             size: 14,
-            weight: "bold",
           },
-          padding: 10, // Espaciado entre etiquetas
-          color: "#333", // Color de texto
+          padding: 10,
+          color: "#333",
         },
       },
       title: {
         display: true,
         text: "Distribución de Frutos",
         font: {
-          size: 20,
+          size: 18,
           weight: "bold",
         },
-        color: "#444", // Color del título
+        color: "#444",
         padding: {
-          top: 20,
-          bottom: 20,
+          top: 10,
+          bottom: 10,
         },
-        align: "left", // Centrar el título
       },
     },
     layout: {
       padding: {
         top: 10,
         bottom: 10,
-        left: 10,
-        right: 10,
       },
     },
     animation: {
@@ -83,42 +79,34 @@ const DoughnutChart = ({ codigoFundo }) => {
       animateScale: true,
     },
   };
-  
-  // Asegúrate de que el contenedor se adapte al sidebar dinámicamente.
-  const resizeObserver = new ResizeObserver((entries) => {
-    for (let entry of entries) {
-      const canvas = entry.target.querySelector("canvas");
-      if (canvas) {
-        canvas.style.width = `${entry.contentRect.width}px`;
-        canvas.style.height = `${entry.contentRect.height}px`;
-      }
-    }
-  });
-  
 
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginLeft: "var(--sidebar-width, 100px)", // Espacio dinámico según la barra lateral
-        transition: "margin-left 0.3s ease-in-out",
-        width: "calc(100% - var(--sidebar-width, 110px))",
-        height: "100%",
+        width: "100%",
+        maxWidth: "1000px",
+        margin: "0 auto",
+        padding: "20px",
+        boxSizing: "border-box",
       }}
     >
       <div
-          style={{
-            width: "100%",
-            maxWidth: "600px",
-            height: "400px",
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "20px",
-          }}>
-          <Doughnut data={doughnutData} options={options} />
+        style={{
+          width: "100%",
+          maxWidth: "600px",
+          height: "400px",
+          //backgroundColor: "#fff",
+          borderRadius: "12px",
+          //boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          //padding: "20px",
+          boxSizing: "border-box",
+        }}
+      >
+        <Doughnut data={doughnutData} options={options} />
       </div>
     </div>
   );
