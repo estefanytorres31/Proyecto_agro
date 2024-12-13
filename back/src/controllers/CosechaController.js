@@ -22,7 +22,7 @@ export const createCosecha= async (req, res) => {
     const {tamaño_fruto, cosecha_codigo_planta} = req.body;
     try{
         const fruto = await CosechaService.createCosecha(tamaño_fruto, cosecha_codigo_planta);
-        res.status(201).json(fruto);
+        res.status(200).json(fruto);
     }catch(error){
         console.error(error);
         res.status(500).json({message: "Error al crear el fruto"});

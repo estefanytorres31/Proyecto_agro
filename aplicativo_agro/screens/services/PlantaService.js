@@ -1,5 +1,4 @@
 import apiClient from "../API/AxiosConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const createPlanta=async (newPlanta)=>{
     try{

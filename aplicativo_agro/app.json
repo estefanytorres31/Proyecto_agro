@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "aplicativo_agro",
-    "slug": "aplicativo_agro",
+    "name": "Aplicativo Agro",
+    "slug": "aplicativo-agro",
     "version": "1.0.0",
+    "sdkVersion": "52.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -42,11 +43,6 @@
           "recordAudioAndroid": true
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "354d90b9-8ecb-4031-86c6-00380b17e1e8"
-      }
-    }
+    ]
   }
 }

@@ -14,7 +14,7 @@ export const createMultiplePlantas=async(req, res)=>{
     const {cantidad, sectorCodigo}= req.body;
     try{
         const plantas = await PlantaService.createMultiplePlantas(cantidad, sectorCodigo);
-        res.status(201).json(plantas);
+        res.status(200).json(plantas);
         
     } catch(error){
         console.error(error);

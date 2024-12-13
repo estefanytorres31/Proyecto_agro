@@ -4,7 +4,10 @@ import fs from "fs";
 import path from "path";
 import { uploadImage } from "../utils/Cloudinary.js";
 import sharp from "sharp";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const getAllPlantas = async () => {
     const db = await connect();
