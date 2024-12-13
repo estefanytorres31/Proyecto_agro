@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'aplicativo_agro'
+rootProject.name = 'Aplicativo Agro'
 
 dependencyResolutionManagement {
   versionCatalogs {

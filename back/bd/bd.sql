@@ -263,8 +263,8 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getRanking`(
-    IN tamaño_fruto VARCHAR(25),
     IN cod_fundo CHAR(8)
+    IN tamaño_fruto VARCHAR(25)
 )
 BEGIN
     -- Variable para el alias dinámico

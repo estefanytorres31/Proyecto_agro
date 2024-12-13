@@ -114,7 +114,7 @@ export const rankings = async (req, res) => {
         });
     }
     try {
-        const rankings = await CosechaService.getRanking(tam_fruto, cod_fundo);
+        const rankings = await CosechaService.getRanking(cod_fundo,tam_fruto);
         console.log('Rankings:', rankings); 
         if (rankings.length > 0) {
             return res.status(200).json(rankings);
