@@ -14,12 +14,12 @@ const Scanner = ({ navigation }) => {
 
       <Image
         style={styles.qrCode}
-        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }} // Cambia esto a la URL de tu código QR
+        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }}
       />
 
     <TouchableOpacity
         style={styles.scanButton}
-        onPress={() => navigation.navigate('QRScann')} // Navegar a la pantalla de escaneo
+        onPress={() => navigation.navigate('QRScann')} 
       >
         <Text style={styles.scanButtonText}>📷 Escanear</Text>
       </TouchableOpacity>
