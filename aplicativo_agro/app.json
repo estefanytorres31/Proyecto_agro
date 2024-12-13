@@ -14,7 +14,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.estefanytorres.aplicativo_agro",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Necesitamos acceso a tu ubicación"
+      }
     },
     "android": {
       "adaptiveIcon": {
