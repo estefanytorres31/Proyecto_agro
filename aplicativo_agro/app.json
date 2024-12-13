@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Aplicativo Agro",
-    "slug": "Aplicativo Agro",
+    "name": "aplicativo_agro",
+    "slug": "aplicativo_agro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,6 +1,6 @@
-import expo.modules.splashscreen.SplashScreenManager
 package com.estefanytorres.aplicativo_agro
 
+import expo.modules.splashscreen.SplashScreenManager // Mover esta importación después del package
 import android.os.Build
 import android.os.Bundle
 
