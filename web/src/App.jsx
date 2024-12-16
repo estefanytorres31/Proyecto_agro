@@ -10,7 +10,7 @@ function App() {
         <div className="flex h-screen">
           {/* Sidebar ocupa una parte fija o proporcional del ancho */}
           <Sidebar />
-          <main className="flex-1 transition-all duration-0 ml-0 md:ml-0 p-4 overflow-auto h-screen">
+          <main className="flex-1 transition-all duration-0 ml-0 md:ml-0 overflow-auto h-screen">
             <AppRoutes />
           </main>
         </div>

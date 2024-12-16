@@ -58,7 +58,7 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
         display: false,
         position: "top",
       },
-      datalabels: {
+      datalabels: { //nivel
         anchor: "end", 
         align: "end",
         formatter: (value) => value,
