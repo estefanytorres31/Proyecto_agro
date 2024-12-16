@@ -48,12 +48,10 @@ const Dashboard = () => {
             {sectores.map((sector) => (
               <div
                 key={sector}
-                className="bg-white rounded-lg shadow-md p-4 flex justify-center items-center"
               >
                 <SectorBarChart
                   codigoFundo={codigoFundo}
                   codigoSector={sector}
-                  className="w-full h-full"
                 />
               </div>
             ))}
