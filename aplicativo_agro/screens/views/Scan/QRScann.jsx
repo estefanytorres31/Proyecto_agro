@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import Button from '../../components/Buttons';
 import { Overlay } from '../../components/Overlay';
 
 const { width, height } = Dimensions.get("window");
-const innerDimension = 300;
 
 const QRScann = ({ navigation }) => {
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
@@ -18,7 +17,14 @@ const QRScann = ({ navigation }) => {
     animateShutter: false,
     enableTorch: false,
   });
+  const [permissionModalVisible, setPermissionModalVisible] = useState(false);
   const qrCodeLock = useRef(false);
+
+  useEffect(() => {
+    if (!cameraPermission || !cameraPermission.granted) {
+      setPermissionModalVisible(true);
+    }
+  }, [cameraPermission]);
 
   const handleRegionOfInterest = (roi) => {
     setRegionOfInterest(roi);
@@ -33,7 +39,7 @@ const QRScann = ({ navigation }) => {
 
   const handleBarcodeScanned = ({ type, data }) => {
     if (!qrCodeLock.current) {
-      qrCodeLock.current = true; 
+      qrCodeLock.current = true;
       setScanning(true);
       navigation.navigate('Menu', { qrData: data });
       setTimeout(() => {
@@ -43,21 +49,31 @@ const QRScann = ({ navigation }) => {
     }
   };
 
-  if (!cameraPermission) {
-    return <View />;
-  }
-
-  if (!cameraPermission.granted) {
+  if (!cameraPermission || !cameraPermission.granted) {
     return (
-      <View style={styles.container}>
-        <Text>Necesitamos permiso de cámara para poder continuar.</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => requestCameraPermission()}
-        >
-          <Text style={styles.buttonText}>Solicitar permiso</Text>
-        </TouchableOpacity>
-      </View>
+      <Modal
+        visible={permissionModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setPermissionModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Necesitamos permiso de cámara para continuar.
+            </Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={async () => {
+                await requestCameraPermission();
+                setPermissionModalVisible(false); 
+              }}
+            >
+              <Text style={styles.modalButtonText}>Dar permiso</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   }
 
@@ -82,15 +98,17 @@ const QRScann = ({ navigation }) => {
         onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
         scannerType="qr"
         scannerOptions={{
-          region: regionOfInterest ? {
-            x: (regionOfInterest.x / width),
-            y: (regionOfInterest.y / height),
-            width: (regionOfInterest.width / width),
-            height: (regionOfInterest.height / height)
-          } : undefined
+          region: regionOfInterest
+            ? {
+                x: regionOfInterest.x / width,
+                y: regionOfInterest.y / height,
+                width: regionOfInterest.width / width,
+                height: regionOfInterest.height / height,
+              }
+            : undefined,
         }}
       >
-        <Overlay onRegionOfInterest={handleRegionOfInterest}/>
+        <Overlay onRegionOfInterest={handleRegionOfInterest} />
       </CameraView>
     </View>
   );
@@ -108,16 +126,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  button: {
-    backgroundColor: '#e3f2fd',
-    padding: 10,
-    margin: 10,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
   },
-  buttonText: {
+  modalButtonText: {
     color: 'white',
     fontSize: 16,
-  }
+  },
 });
 
 export default QRScann;

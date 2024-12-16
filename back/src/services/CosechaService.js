@@ -137,13 +137,13 @@ export const calculoPorSector=async(codigo_fundo, codigo_sector)=>{
     }
 }
 
-export const getRanking = async (tam_fruto, cod_fundo) => {
+export const getRanking = async ( cod_fundo,tam_fruto) => {
     const db = await connect();
     try {
         const query = `
             CALL sp_getRanking(?, ?);
         `;
-        const [rows] = await db.query(query, [tam_fruto, cod_fundo]);
+        const [rows] = await db.query(query, [cod_fundo,tam_fruto]);
         return rows[0];
     } catch (error) {
         console.error(error);

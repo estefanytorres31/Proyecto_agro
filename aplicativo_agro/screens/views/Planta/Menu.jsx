@@ -6,16 +6,15 @@ import { useNavigation } from "@react-navigation/native";
 const Menu = ({ route }) => {
     const { qrData } = route.params || {};
     const [menuSeleccionado, setMenuSeleccionado] = useState("");
-    const navigation = useNavigation(); // Hook de navegación
+    const navigation = useNavigation(); 
 
     const manejarCambioMenu = (menu) => {
         setMenuSeleccionado(menu);
 
-        // Navegar a la pantalla correspondiente
         if (menu === "Cosecha") {
-          navigation.navigate("QRInfo", { qrData }); // Asegúrate de pasar los datos del QR
+          navigation.navigate("QRInfo", { qrData }); 
       } else if (menu === "Mantenimiento") {
-          navigation.navigate("Mantenimiento", { qrData }); // Asegúrate de pasar los datos del QR
+          navigation.navigate("Mantenimiento", { qrData }); 
       }
     };
 

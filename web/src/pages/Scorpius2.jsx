@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import DoughnutChart from "./DoughnutChart";
-import SectorBarChart from "./SectorBarChart";
-import RankingChart from "./ProductionBarChart";
+import DoughnutChart from "../components/DoughnutChart";
+import SectorBarChart from "../components/SectorBarChart";
+import RankingChart from "../components/ProductionBarChart";
 import useCosecha from "../hooks/Cosecha/useCosecha";
-import ClockTime from "./ClockTime"; // Importa el componente Clock
+import ClockTime from "../components/ClockTime"; // Importa el componente Clock
 
-const Dashboard = () => {
+const Scorpius2 = () => {
   const { cosechaData, fetchCosechaData, rankingData, fetchAllRankings } = useCosecha();
-  const codigoFundo = "F00001";
-  const sectores = ["S00001", "S00002", "S00003", "S00004"];
+  const codigoFundo = "F00002";
+  const sectores = ["S00005", "S00006", "S00007", "S00008"];
 
   useEffect(() => {
     fetchCosechaData(codigoFundo);
@@ -17,14 +17,14 @@ const Dashboard = () => {
 
   const renderRankingChart = (data, tamañoFruto) => (
     <div className="w-full md:w-1/2 xl:w-1/4 px-2 mb-4">
-      <div className="bg-[#ffff] rounded-lg shadow-md p-4 h-[300px] xl:h-[320px] flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-md p-4 h-[300px] xl:h-[320px] flex items-center justify-center">
         <RankingChart data={data} tamañoFruto={tamañoFruto} />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]"> {/* Fondo digitalizado */}
+    <div className="min-h-screen bg-gradient-to-br from-[#1f232bb3] via-[#707078ba] to-[#1f232b]"> {/* Fondo digitalizado */}
       <div className="p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
@@ -48,12 +48,10 @@ const Dashboard = () => {
             {sectores.map((sector) => (
               <div
                 key={sector}
-                className="bg-white rounded-lg shadow-md p-4 flex justify-center items-center"
               >
                 <SectorBarChart
                   codigoFundo={codigoFundo}
                   codigoSector={sector}
-                  className="w-full h-full"
                 />
               </div>
             ))}
@@ -88,4 +86,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Scorpius2;
