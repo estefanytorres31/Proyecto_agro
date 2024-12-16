@@ -32,6 +32,7 @@ const ClockTime = () => {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     display: "inline-block",
     textAlign: "center",
+    fontSize: "1.5vw",
   };
 
   return <p style={clockStyles}>{currentDate}</p>;

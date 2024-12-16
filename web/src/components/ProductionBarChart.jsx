@@ -75,7 +75,21 @@ const RankingChart = ({ data, tamañoFruto }) => {
         cornerRadius: 8, // Bordes redondeados del tooltip
         padding: 10, // Espaciado interno del tooltip
       },
+      datalabels: { //nivel
+        anchor: "end", 
+        align: "end",
+        formatter: (value) => value,
+        color: "#000",
+        font: {
+          weight: "bold",
+          size: 12,
+        },
+        display: (context) => {
+          return context.dataset.data[context.dataIndex] >= 0;
+        }
+      },
     },
+    
     scales: {
       x: {
         beginAtZero: true, // Comienza en 0 para mayor claridad

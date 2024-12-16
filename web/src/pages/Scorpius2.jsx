@@ -28,7 +28,7 @@ const Scorpius2 = () => {
       <div className="p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-semibold">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-wide uppercase">
             {cosechaData?.fundo?.nombre}
           </h1>
           <div className="flex-shrink-0">
