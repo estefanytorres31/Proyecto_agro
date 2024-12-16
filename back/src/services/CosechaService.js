@@ -153,4 +153,13 @@ export const getRanking = async ( cod_fundo,tam_fruto) => {
     }
 }
 
+export const getLastCosecha=  async(cod_fundo,tam_fruto) => {
+    const db = await connect();
+    try{
+        
 
+
+    }catch (error) {
+
+    }
+}
