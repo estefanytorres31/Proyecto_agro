@@ -3,7 +3,7 @@ import { FaBars, FaHouseUser, FaIndustry, FaHeartbeat, FaCogs } from "react-icon
 import { FiChevronRight } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
+const Nav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const navigate = useNavigate();
@@ -98,4 +98,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Nav;
