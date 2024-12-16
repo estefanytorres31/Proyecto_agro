@@ -17,6 +17,7 @@ export default function Navigation() {
         <Stack.Screen 
           name="Scanner" 
           component={Scanner} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="QRScann" 

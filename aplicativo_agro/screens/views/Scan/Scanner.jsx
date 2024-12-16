@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import qr from "../../image/qr.png";
 
 const Scanner = ({ navigation }) => {
   return (
@@ -14,14 +15,15 @@ const Scanner = ({ navigation }) => {
 
       <Image
         style={styles.qrCode}
-        source={require('../../../assets')} 
+        source={qr}
       />
 
-    <TouchableOpacity
+<TouchableOpacity
         style={styles.scanButton}
-        onPress={() => navigation.navigate('QRScann')} 
+        onPress={() => navigation.navigate('QRScann')} // Navega a la pantalla QRScann
       >
-        <Text style={styles.scanButtonText}>📷 Escanear</Text>
+        <MaterialCommunityIcons name="camera" size={24} color="#000" /> {/* Ícono de cámara */}
+        <Text style={styles.scanButtonText}> Escanear</Text>
       </TouchableOpacity>
     </View>
   );
