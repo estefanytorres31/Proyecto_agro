@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:3000"
-})
-
-export default apiClient;
+    baseURL: "http://fundoscorpius.com:3000"
+  })
+  
+  export default apiClient;
