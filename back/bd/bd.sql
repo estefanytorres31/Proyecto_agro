@@ -34,7 +34,7 @@ CREATE TABLE `tb_cosecha` (
   PRIMARY KEY (`codigo_cosecha`),
   KEY `cosecha_codigo_planta` (`cosecha_codigo_planta`),
   CONSTRAINT `tb_cosecha_ibfk_1` FOREIGN KEY (`cosecha_codigo_planta`) REFERENCES `tb_planta` (`codigo_planta`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `tb_cosecha` (
 
 LOCK TABLES `tb_cosecha` WRITE;
 /*!40000 ALTER TABLE `tb_cosecha` DISABLE KEYS */;
-INSERT INTO `tb_cosecha` VALUES (1,'Pequeño','P000181',1,'2024-12-06 10:47:11','2024-12-06 10:47:11'),(2,'Mediano','P000181',1,'2024-12-06 10:47:16','2024-12-06 10:47:16'),(3,'Grande','P000181',1,'2024-12-06 10:47:24','2024-12-06 10:47:24'),(4,'Mediano','P000181',1,'2024-12-06 10:47:29','2024-12-06 10:47:29'),(5,'Grande','P000181',1,'2024-12-06 10:47:35','2024-12-06 10:47:35'),(6,'Grande','P000111',1,'2024-12-06 10:47:42','2024-12-06 10:47:42'),(7,'Pequeño','P000111',1,'2024-12-06 10:47:49','2024-12-06 10:47:49'),(8,'Grande','P000111',1,'2024-12-06 10:47:55','2024-12-06 10:47:55'),(9,'Mediano','P000111',1,'2024-12-06 10:47:59','2024-12-06 10:47:59'),(10,'Pequeño','P000111',1,'2024-12-06 10:48:05','2024-12-06 10:48:05'),(11,'Grande','P000111',1,'2024-12-06 10:48:09','2024-12-06 10:48:09'),(12,'Grande','P000161',1,'2024-12-06 10:48:15','2024-12-06 10:48:15'),(13,'Grande','P000161',1,'2024-12-06 10:48:16','2024-12-06 10:48:16'),(14,'Grande','P000161',1,'2024-12-06 10:48:17','2024-12-06 10:48:17'),(15,'Pequeño','P000161',1,'2024-12-06 10:48:23','2024-12-06 10:48:23'),(16,'Mediano','P000161',1,'2024-12-06 10:48:28','2024-12-06 10:48:28'),(17,'Pequeño','P003161',1,'2024-12-06 10:52:33','2024-12-06 10:52:33'),(18,'Grande','P003161',1,'2024-12-06 10:52:39','2024-12-06 10:52:39'),(19,'Mediano','P003161',1,'2024-12-06 10:52:44','2024-12-06 10:52:44'),(20,'Grande','P003161',1,'2024-12-06 10:52:53','2024-12-06 10:52:53'),(21,'No hay fruto','P003161',1,'2024-12-06 10:57:28','2024-12-06 10:58:43'),(22,'No hay fruto','P002161',1,'2024-12-06 10:59:05','2024-12-06 10:59:05'),(23,'No hay fruto','P002061',1,'2024-12-06 10:59:12','2024-12-06 10:59:12'),(24,'Grande','P002161',1,'2024-12-06 15:03:04','2024-12-06 15:03:04'),(25,'Pequeño','P002161',1,'2024-12-06 15:03:12','2024-12-06 15:03:12'),(26,'Pequeño','P002861',1,'2024-12-06 15:03:21','2024-12-06 15:03:21'),(27,'Grande','P002761',1,'2024-12-06 15:03:29','2024-12-06 15:03:29'),(28,'No hay fruto','P002761',1,'2024-12-11 17:56:13','2024-12-11 17:56:13'),(29,'Mediano','P002561',1,'2024-12-11 17:56:48','2024-12-11 17:56:48'),(30,'No hay fruto','P000561',1,'2024-12-11 17:57:28','2024-12-11 17:57:28');
 /*!40000 ALTER TABLE `tb_cosecha` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +91,7 @@ CREATE TABLE `tb_mantenimiento` (
   PRIMARY KEY (`codigo_mantenimiento`),
   KEY `mantenimiento_codigo_planta` (`mantenimiento_codigo_planta`),
   CONSTRAINT `tb_mantenimiento_ibfk_1` FOREIGN KEY (`mantenimiento_codigo_planta`) REFERENCES `tb_planta` (`codigo_planta`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +100,6 @@ CREATE TABLE `tb_mantenimiento` (
 
 LOCK TABLES `tb_mantenimiento` WRITE;
 /*!40000 ALTER TABLE `tb_mantenimiento` DISABLE KEYS */;
-INSERT INTO `tb_mantenimiento` VALUES (1,'Poda',1,'P000001','2024-12-02 14:48:10','2024-12-02 14:49:29');
 /*!40000 ALTER TABLE `tb_mantenimiento` ENABLE KEYS */;
 UNLOCK TABLES;
 
