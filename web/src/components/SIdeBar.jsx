@@ -34,7 +34,7 @@ const Sidebar = () => {
       onMouseLeave={() => setIsExpanded(false)}
     >
       {/* Header */}
-      <div className="flex items-center justify-between bg-gradient-to-r from-green-500 to-teal-400 p-4 border-b border-green-600 shadow-md">
+      <div className="flex items-center justify-between bg-gradient-to-r from-teal-950 to-teal-950 p-4 border-b border-green-600 shadow-md">
         <button className="text-2xl focus:outline-none" onClick={toggleSidebar}>
           <FaBars />
         </button>
@@ -47,7 +47,7 @@ const Sidebar = () => {
         <li className="border-b border-gray-700">
           <Link
             to="/inicio"
-            className="flex items-center space-x-4 px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-500 hover:to-teal-400 hover:text-gray-900"
+            className="flex items-center space-x-4 px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-800 hover:to-teal-900 hover:text-gray-950"
           >
             <FaHouseUser className="text-2xl" />
             {isExpanded && <span className="text-md font-medium">Inicio</span>}
@@ -59,7 +59,7 @@ const Sidebar = () => {
           <button
             onClick={() => handleMenuClick(1)}
             aria-expanded={openMenu === 1}
-            className="w-full flex items-center justify-between px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-500 hover:to-teal-400 hover:text-gray-900"
+            className="w-full flex items-center justify-between px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-800 hover:to-teal-900 hover:text-gray-950"
           >
             <div className="flex items-center space-x-4">
               <FaIndustry className="text-2xl" />
@@ -105,7 +105,7 @@ const Sidebar = () => {
         <li className="border-t border-gray-700">
           <Link
             to="/"
-            className="flex items-center space-x-4 px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-500 hover:to-teal-400 hover:text-gray-900"
+            className="flex items-center space-x-4 px-4 py-3 transition-all duration-200 hover:bg-gradient-to-r hover:from-green-800 hover:to-teal-900 hover:text-gray-950"
           >
             <FaHeartbeat className="text-2xl" />
             {isExpanded && <span className="text-md font-medium">Salud</span>}

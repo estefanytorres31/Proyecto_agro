@@ -17,14 +17,14 @@ const Dashboard = () => {
 
   const renderRankingChart = (data, tamañoFruto) => (
     <div className="w-full md:w-1/2 xl:w-1/4 px-2 mb-4">
-      <div className="bg-white rounded-lg shadow-md p-4 h-[300px] xl:h-[320px] flex items-center justify-center">
+      <div className="bg-[#ffff] rounded-lg shadow-md p-4 h-[300px] xl:h-[320px] flex items-center justify-center">
         <RankingChart data={data} tamañoFruto={tamañoFruto} />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1f232bb3] via-[#707078ba] to-[#1f232b]"> {/* Fondo digitalizado */}
+    <div className="min-h-screen bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]"> {/* Fondo digitalizado */}
       <div className="p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
