@@ -8,7 +8,7 @@ import ClockTime from "../components/ClockTime"; // Importa el componente Clock
 const Scorpius2 = () => {
   const { cosechaData, fetchCosechaData, rankingData, fetchAllRankings } = useCosecha();
   const codigoFundo = "F00002";
-  const sectores = ["S00001", "S00002", "S00003", "S00004"];
+  const sectores = ["S00005", "S00006", "S00007", "S00008"];
 
   useEffect(() => {
     fetchCosechaData(codigoFundo);

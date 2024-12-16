@@ -68,13 +68,13 @@ const Sidebar = () => {
           {openMenu === 1 && isExpanded && (
             <ul className="pl-8 bg-gray-700">
               <li className="py-2 hover:bg-green-500">
-                <button onClick={() => handleNavigation('/dashboard')} className="flex items-center space-x-2 w-full text-left">
+                <button onClick={() => handleNavigation('/scorpius1')} className="flex items-center space-x-2 w-full text-left">
                   <FaCogs />
                   <span>Scorpius 1</span>
                 </button>
               </li>
               <li className="py-2 hover:bg-green-500">
-                <button className="flex items-center space-x-2 w-full text-left">
+                <button onClick={() => handleNavigation('/scorpius2')} className="flex items-center space-x-2 w-full text-left">
                   <FaCogs />
                   <span>Scorpius 2</span>
                 </button>
