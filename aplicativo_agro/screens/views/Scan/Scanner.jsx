@@ -14,7 +14,7 @@ const Scanner = ({ navigation }) => {
 
       <Image
         style={styles.qrCode}
-        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }}
+        source={require('../../../assets')} 
       />
 
     <TouchableOpacity
