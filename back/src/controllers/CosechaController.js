@@ -132,5 +132,17 @@ export const rankings = async (req, res) => {
     }
 };
 
-
+export const getLastCosecha = async (req, res) =>{
+    const {codigo_fundo} = req.params;
+    try{
+        const cosecha = await CosechaService.getLastCosecha(codigo_fundo);
+        if(!cosecha){
+            return res.status(404).json({message: "No se encontró la cosecha más reciente por fundo"});
+        };
+        res.status(200).json(cosecha);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener la cosecha más reciente por fundo", error});
+    }
+}
 
