@@ -31,3 +31,14 @@ export const rankings = async (tam_fruto, cod_fundo) => {
         return null;
     }
 };
+
+export const getLastCosecha= async (codigo_fundo)=>{
+    try{
+        const response=await apiClient.get(`/api/cosecha/ultima/${codigo_fundo}`)
+        console.log(response.data);
+        return response.data
+    }catch(error){
+        console.error(error);
+        return null;
+    }
+}
