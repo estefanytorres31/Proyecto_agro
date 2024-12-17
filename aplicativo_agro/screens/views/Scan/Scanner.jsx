@@ -18,12 +18,14 @@ const Scanner = ({ navigation }) => {
         source={qr}
       />
 
-<TouchableOpacity
+      <TouchableOpacity
         style={styles.scanButton}
-        onPress={() => navigation.navigate('QRScann')} // Navega a la pantalla QRScann
+        onPress={() => navigation.navigate('QRScann')}
       >
-        <MaterialCommunityIcons name="camera" size={24} color="#000" /> {/* Ícono de cámara */}
-        <Text style={styles.scanButtonText}> Escanear</Text>
+        <View style={styles.scanButtonContent}>
+          <MaterialCommunityIcons name="camera" size={24} color="#000" />
+          <Text style={styles.scanButtonText}>Escanear</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -63,17 +65,20 @@ const styles = StyleSheet.create({
   },
   scanButton: {
     width: '80%',
-    backgroundColor: '#e3f2fd', 
+    backgroundColor: '#e3f2fd',
     paddingVertical: 15,
     borderRadius: 10,
-    alignItems: 'center',
+  },
+  scanButtonContent: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   scanButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+    marginLeft: 10,
   },
 });
 
