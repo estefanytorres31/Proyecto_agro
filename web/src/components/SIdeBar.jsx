@@ -40,10 +40,9 @@ const Sidebar = () => {
           <Bars3Icon className="h-6 w-6" />
         </button>
       </div>
-
+      
       {/* Menu */}
       <ul className="flex-grow mt-4 space-y-1">
-        {/* Fundo */}
         <li>
           <button
             onClick={() => handleMenuClick(0)}
@@ -51,7 +50,7 @@ const Sidebar = () => {
           >
             <div className="flex items-center space-x-2">
               <HomeIcon className="h-6 w-6" />
-              {isExpanded && <span className="text-sm">Fundo</span>}
+              {isExpanded && <span className="text-sm">Inicio</span>}
             </div>
             {isExpanded && (
               <ChevronRightIcon
@@ -61,30 +60,7 @@ const Sidebar = () => {
               />
             )}
           </button>
-          {openMenu === 0 && isExpanded && (
-            <ul className="pl-8 bg-gray-700">
-              <li className="py-2 hover:bg-green-500 hover:shadow-md transition-all duration-200 ease-in-out">
-                <button
-                  onClick={() => handleNavigation("/fundo1")}
-                  className="flex items-center space-x-2 w-full text-left"
-                >
-                  <BuildingLibraryIcon className="h-5 w-5" />
-                  <span>Fundo 1</span>
-                </button>
-              </li>
-              <li className="py-2 hover:bg-green-500 hover:shadow-md transition-all duration-200 ease-in-out">
-                <button
-                  onClick={() => handleNavigation("/fundo2")}
-                  className="flex items-center space-x-2 w-full text-left"
-                >
-                  <BuildingLibraryIcon className="h-5 w-5" />
-                  <span>Fundo 2</span>
-                </button>
-              </li>
-            </ul>
-          )}
         </li>
-
         {/* Producción */}
         <li>
           <button

@@ -27,11 +27,11 @@ const Fundo1 = () => {
                         {cosechaData?.fundo?.nombre}
                     </h1>
                     <div className="flex-shrink-0">
-                        <ClockTime />
+                        <ClockTime /> {/* Reloj en el extremo derecho */}
                     </div>
                 </div>
 
-                {/* Main Content */}
+                {/* Contenedor */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Gráfico de Dona */}
                     <div className="col-span-1 lg:col-span-1 flex justify-center items-center bg-white rounded-lg shadow-md p-6">
