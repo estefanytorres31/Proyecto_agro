@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import Sidebar from "./components/SIdebar";
+import Sidebar from "./components/SIdeBar";
 import AppRoutes from "./AppRoutes";
 import CosechaProvider from "./context/Cosecha/CosechaProvider";
 

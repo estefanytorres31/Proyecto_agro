@@ -11,7 +11,7 @@ const ClockTime = () => {
     const hour = today.getHours();
     const minute = today.getMinutes();
     const second = today.getSeconds();
-    return `${month}/${date}/${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
+    return `${date}/${month}/${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
   }
 
   useEffect(() => {
@@ -32,7 +32,6 @@ const ClockTime = () => {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     display: "inline-block",
     textAlign: "center",
-    fontSize: "1.5vw",
   };
 
   return <p style={clockStyles}>{currentDate}</p>;

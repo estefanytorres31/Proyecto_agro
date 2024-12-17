@@ -1,4 +1,4 @@
-const Inicio = () => {
+const Fundo2 = () => {
     return (
       <div>
         {/*<h1>Página de Inicio</h1>*/}
@@ -6,5 +6,5 @@ const Inicio = () => {
     );
   };
   
-  export default Inicio; // Exportación por defecto
+  export default Fundo2; // Exportación por defecto
   

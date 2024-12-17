@@ -30,7 +30,7 @@ const Scorpius1 = () => {
 
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-wide uppercase">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-wide uppercase ">
           {cosechaData?.fundo?.nombre}
         </h1>
           <div className="flex-shrink-0">

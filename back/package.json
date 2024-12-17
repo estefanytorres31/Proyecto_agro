@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "back": "file:",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
