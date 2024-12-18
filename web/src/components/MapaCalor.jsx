@@ -34,15 +34,17 @@ const FundoGrid = () => {
   return (
     <div className="grid grid-cols-1 gap-4">
       {['S00001', 'S00002', 'S00003', 'S00004'].map((sector) => (
-        <div key={sector} className="border border-gray-300 p-4">
+        <div key={sector} className="border border-gray-300">
           <h3 className="text-center mb-2 text-lg font-medium">Sector {sector}</h3>
-          <div className="grid grid-cols-10 gap-0"> {/* Eliminamos cualquier espacio entre celdas */}
+          {/* Grid ajustable */}
+          <div className="grid grid-flow-row auto-rows-max grid-cols-[repeat(auto-fit,_20px)] gap-0">
             {fundoData
               .filter((planta) => planta.planta_codigo_sector === sector)
               .map((planta, index) => (
                 <div
                   key={`${planta.codigo_planta}-${index}`}
-                  className={`w-4 h-4 ${getColorForFruit(planta.tamaño_fruto)} border-2 border-black`}
+                  className={`w-5 h-5 ${getColorForFruit(planta.tamaño_fruto)} border border-black`}
+                  style={{ margin: 0, padding: 0 }}
                 ></div>
               ))}
           </div>
