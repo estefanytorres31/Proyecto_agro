@@ -11,7 +11,7 @@ const ClockTime = () => {
     const hour = today.getHours();
     const minute = today.getMinutes();
     const second = today.getSeconds();
-    return `${month}/${date}/${year} ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
+    return `${date}/${month}/${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
   }
 
   useEffect(() => {
@@ -22,7 +22,19 @@ const ClockTime = () => {
     return () => clearInterval(timer);
   }, []);
 
-  return <p>{currentDate}</p>;
+  const clockStyles = {
+    fontFamily: "Arial, sans-serif",
+    fontSize: "1.5rem",
+    color: "#333",
+    backgroundColor: "#f4f4f4",
+    padding: "10px 20px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    display: "inline-block",
+    textAlign: "center",
+  };
+
+  return <p style={clockStyles}>{currentDate}</p>;
 };
 
 export default ClockTime;

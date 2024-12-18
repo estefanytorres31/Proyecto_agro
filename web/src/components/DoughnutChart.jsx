@@ -60,18 +60,35 @@ const DoughnutChart = ({ codigoFundo }) => {
         font: {
           size: 18,
           weight: "bold",
+          family: "Roboto, Arial, sans-serif",
         },
         color: "#444",
         padding: {
           top: 10,
-          bottom: 10,
+          bottom: 30,
         },
+      },
+      tooltip: {
+        enabled: true,
+      },
+      datalabels: { //nivel
+        anchor: "end", 
+        align: "end",
+        formatter: (value) => value,
+        color: "#000",
+        font: {
+          weight: "bold",
+          size: 12,
+        },
+        display: (context) => {
+          return context.dataset.data[context.dataIndex] >= 0;
+        }
       },
     },
     layout: {
       padding: {
-        top: 10,
-        bottom: 10,
+        top: 20,
+        bottom: 20,
       },
     },
     animation: {
@@ -87,7 +104,7 @@ const DoughnutChart = ({ codigoFundo }) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
+        width: "150%",
         maxWidth: "1000px",
         margin: "0 auto",
         padding: "20px",

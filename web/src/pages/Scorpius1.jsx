@@ -24,8 +24,8 @@ const Scorpius1 = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1f232bb3] via-[#707078ba] to-[#1f232b]"> {/* Fondo digitalizado */}
-      <div className="p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]"> 
+          <div className="p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-semibold">
