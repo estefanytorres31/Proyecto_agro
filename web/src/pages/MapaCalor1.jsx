@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import MapaCalor from '../components/MapaCalor';
 
-const Inicio = () => {
+const MapaCalor1 = () => {
 
   return (
       <div className="container mx-auto p-4">
@@ -11,5 +11,5 @@ const Inicio = () => {
   );
 };
 
-export default Inicio;
+export default MapaCalor1;
 
