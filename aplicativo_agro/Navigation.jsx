@@ -8,15 +8,15 @@ import QRInfo from './screens/views/Planta/InformePlantaQR';
 import Menu from './screens/views/Planta/Menu';
 import Mantenimiento from './screens/views/Planta/InformeMantenimiento';
 
-const Stack = createNativeStackNavigator();
-
 export default function Navigation() {
+  const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Scanner">
         <Stack.Screen 
           name="Scanner" 
           component={Scanner} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="QRScann" 

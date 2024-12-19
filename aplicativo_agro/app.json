@@ -13,10 +13,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "bundleIdentifier": "com.estefanytorres.aplicativo_agro",
+      "bundleIdentifier": "com.estefanytorres.aplicativoagro",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Necesitamos acceso a tu ubicación"
+        "NSLocationWhenInUseUsageDescription": "Necesitamos acceso a tu ubicación",
+        "NSCameraUsageDescription": "La aplicación necesita acceso a la cámara para escanear códigos QR."
       }
     },
     "android": {
@@ -34,9 +38,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "infoPlist": {
-      "NSCameraUsageDescription": "La aplicación necesita acceso a la cámara para escanear códigos QR."
-    },
     "plugins": [
       [
         "expo-camera",
@@ -45,7 +46,8 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {

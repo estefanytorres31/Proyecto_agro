@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import qr from "../../image/qr.png";
 
 const Scanner = ({ navigation }) => {
   return (
@@ -14,14 +15,17 @@ const Scanner = ({ navigation }) => {
 
       <Image
         style={styles.qrCode}
-        source={{ uri: 'https://w7.pngwing.com/pngs/978/217/png-transparent-qr-code-2d-code-barcode-information-chinese-copy-miscellaneous-text-rectangle.png' }}
+        source={qr}
       />
 
-    <TouchableOpacity
+      <TouchableOpacity
         style={styles.scanButton}
-        onPress={() => navigation.navigate('QRScann')} 
+        onPress={() => navigation.navigate('QRScann')}
       >
-        <Text style={styles.scanButtonText}>📷 Escanear</Text>
+        <View style={styles.scanButtonContent}>
+          <MaterialCommunityIcons name="camera" size={24} color="#000" />
+          <Text style={styles.scanButtonText}>Escanear</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -61,17 +65,20 @@ const styles = StyleSheet.create({
   },
   scanButton: {
     width: '80%',
-    backgroundColor: '#e3f2fd', 
+    backgroundColor: '#e3f2fd',
     paddingVertical: 15,
     borderRadius: 10,
-    alignItems: 'center',
+  },
+  scanButtonContent: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   scanButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+    marginLeft: 10,
   },
 });
 

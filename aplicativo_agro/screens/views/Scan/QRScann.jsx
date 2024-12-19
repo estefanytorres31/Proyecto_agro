@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import Button from '../../components/Buttons';
 import { Overlay } from '../../components/Overlay';
@@ -21,8 +21,13 @@ const QRScann = ({ navigation }) => {
   const qrCodeLock = useRef(false);
 
   useEffect(() => {
-    if (!cameraPermission || !cameraPermission.granted) {
+    if (!cameraPermission) {
       setPermissionModalVisible(true);
+    } else if (cameraPermission.status === 'denied') {
+      Alert.alert(
+        'Permiso de cámara denegado', 
+        'Por favor, habilite los permisos de cámara en la configuración de la aplicación.'
+      );
     }
   }, [cameraPermission]);
 
@@ -49,6 +54,18 @@ const QRScann = ({ navigation }) => {
     }
   };
 
+  const requestPermission = async () => {
+    const result = await requestCameraPermission();
+    if (result.granted) {
+      setPermissionModalVisible(false);
+    } else {
+      Alert.alert(
+        'Permiso denegado', 
+        'No se puede continuar sin permisos de cámara.'
+      );
+    }
+  };
+
   if (!cameraPermission || !cameraPermission.granted) {
     return (
       <Modal
@@ -64,10 +81,8 @@ const QRScann = ({ navigation }) => {
             </Text>
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={async () => {
-                await requestCameraPermission();
-                setPermissionModalVisible(false); 
-              }}
+              onPress={requestPermission}
+              accessibilityLabel="Solicitar permiso de cámara"
             >
               <Text style={styles.modalButtonText}>Dar permiso</Text>
             </TouchableOpacity>
@@ -83,10 +98,12 @@ const QRScann = ({ navigation }) => {
         <Button
           icon={cameraProps.flash === 'on' ? 'flash-on' : 'flash-off'}
           onPress={() => toggleProperty('flash', 'on', 'off')}
+          accessibilityLabel={`Cambiar flash ${cameraProps.flash === 'on' ? 'apagado' : 'encendido'}`}
         />
         <Button
           icon={cameraProps.enableTorch ? 'flashlight-on' : 'flashlight-off'}
           onPress={() => toggleProperty('enableTorch', true, false)}
+          accessibilityLabel={`Cambiar linterna ${cameraProps.enableTorch ? 'apagada' : 'encendida'}`}
         />
       </View>
       <CameraView

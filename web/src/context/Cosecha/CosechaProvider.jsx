@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useCallback, useMemo } from "react";
 import CosechaContext from "./CosechaContext";
-import { cantidadPorFundo, calculoPorSector, rankings } from "../../services/CosechaService";
+import { cantidadPorFundo, calculoPorSector, rankings, getLastCosecha } from "../../services/CosechaService";
 
 const CosechaProvider = ({ children }) => {
   // Estado para datos generales de cosecha
@@ -38,6 +38,12 @@ const CosechaProvider = ({ children }) => {
     noHayFruto: [],
     isLoading: false,
     error: null
+  });
+
+  const [lastCosechaData, setLastCosechaData] = useState({
+    data: [],
+    isLoading: false,
+    error: null,
   });
 
   // Función para cargar datos generales de cosecha
@@ -157,6 +163,20 @@ const CosechaProvider = ({ children }) => {
     }
   }, []);
 
+  const fetchLastCosechaData = useCallback(async (codigoFundo) => {
+    setLastCosechaData((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      const data = await getLastCosecha(codigoFundo);
+      setLastCosechaData({ data, isLoading: false, error: null });
+    } catch (error) {
+      setLastCosechaData((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: error.message || "Error desconocido",
+      }));
+    }
+  }, []);
+
   // Valor del contexto
   const contextValue = useMemo(
     () => ({
@@ -170,7 +190,9 @@ const CosechaProvider = ({ children }) => {
       sectorData,
       fetchSectorData,
       rankingData,
-      fetchAllRankings
+      fetchAllRankings,
+      lastCosechaData,
+      fetchLastCosechaData,
     }),
     [cosechaData, sectorData, rankingData]
   );

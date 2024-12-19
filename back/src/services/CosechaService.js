@@ -100,7 +100,6 @@ export const getAllCosechas = async ({ tamaño_fruto = '', fecha_registro = '', 
             query += ' ORDER BY fecha_registro ASC';
         }
 
-        // Ejecutar la consulta
         const [frutos] = await db.execute(query, params);
         return frutos;
     } catch (error) {
@@ -153,4 +152,16 @@ export const getRanking = async ( cod_fundo,tam_fruto) => {
     }
 }
 
-
+export const getLastCosecha=  async(codigo_fundo) => {
+    const db = await connect();
+    try{
+        const [lastCosecha] = await db.execute('CALL sp_getLastCosecha(?)',
+            [codigo_fundo]
+        );
+        return lastCosecha[0];
+    }catch (error) {
+        throw new Error("Error al obtener la última cosecha: " + error.message);
+    }finally{
+        await db.end();
+    }
+}

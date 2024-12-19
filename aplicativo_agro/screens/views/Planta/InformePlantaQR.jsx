@@ -7,11 +7,13 @@ import {
   Modal,
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import useCosecha from "../../hooks/Cosecha/useCosecha"; // Asegúrate de que la ruta sea correcta
+import useCosecha from "../../hooks/Cosecha/useCosecha"; 
+import {useNavigation} from "@react-navigation/native"// Asegúrate de que la ruta sea correcta
 
 const QRInfo = ({ route }) => {
   const { qrData } = route.params;
-  const { addCosecha } = useCosecha(); // Obtén la función desde el contexto
+  const { addCosecha } = useCosecha(); 
+  const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -29,6 +31,7 @@ const QRInfo = ({ route }) => {
         if (response) {
           setModalMessage("¡Cosecha guardada correctamente!");
           setModalStyle(styles.modalSuccess);
+          navigation.navigate("QRScann"); // Vuelve a la pantalla principal
         } else {
           setModalMessage("Error al guardar la cosecha.");
           setModalStyle(styles.modalError);

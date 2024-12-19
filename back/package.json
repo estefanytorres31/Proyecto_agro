@@ -1,11 +1,11 @@
 {
   "name": "back",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "build": "babel src -d dist",
-    "dev": "nodemon --delay 1000ms src/index.js",
+    "dev": "nodemon --delay 1000ms index.js",
     "start": "node dist"
   },
   "keywords": [],
