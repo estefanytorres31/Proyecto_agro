@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 import useMantenimiento from "../../hooks/Mantenimiento/useMantenimiento";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import Historial from "../../components/Historial";
 import Button from "../../components/Buttons";
 import CustomAlert from "../../components/Alerta";
@@ -25,7 +25,15 @@ const Mantenimiento = ({ route }) => {
   const handleCloseAlert = () => {
     setAlertConfig(prev => ({ ...prev, visible: false }));
     if (alertConfig.type === 'SUCCESS') {
-      navigation.navigate("QRScann");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Scanner' },
+            { name: 'QRScann' }
+          ],
+        })
+      )
     }
   };
 
@@ -54,6 +62,39 @@ const Mantenimiento = ({ route }) => {
       showAlert("Error interno.", "ERROR");
     }
   };
+
+  React.useEffect(() => {
+      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        if (mantenimientoSeleccionado && !alertConfig.visible) {
+          e.preventDefault();
+          
+          Alert.alert(
+            'Datos sin guardar',
+            '¿Estás seguro que deseas salir? Los cambios no guardados se perderán.',
+            [
+              { text: 'Cancelar', style: 'cancel', onPress: () => {} },
+              {
+                text: 'Salir',
+                style: 'destructive',
+                onPress: () => {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [
+                        { name: 'Scanner' },
+                        { name: 'QRScann' }
+                      ],
+                    })
+                  );
+                },
+              },
+            ]
+          );
+        }
+      });
+  
+      return unsubscribe;
+    }, [navigation, mantenimientoSeleccionado, alertConfig.visible]);
 
   return (
     <View style={estilos.contenedor}>
