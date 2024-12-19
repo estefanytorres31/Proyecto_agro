@@ -45,20 +45,13 @@ const Sidebar = () => {
       <ul className="flex-grow mt-4 space-y-1">
         <li>
           <button
-            onClick={() => handleMenuClick(0)}
-            className="w-full flex items-center justify-between px-4 py-3 hover:bg-green-500 hover:shadow-lg transition-all duration-200 ease-in-out"
+            onClick={() => handleNavigation("/")}
+            className="w-full flex items-center px-4 py-3 hover:bg-green-500 hover:shadow-lg transition-all duration-200 ease-in-out"
           >
             <div className="flex items-center space-x-2">
               <HomeIcon className="h-6 w-6" />
               {isExpanded && <span className="text-sm">Inicio</span>}
             </div>
-            {isExpanded && (
-              <ChevronRightIcon
-                className={`h-5 w-5 transform transition-transform duration-200 ${
-                  openMenu === 0 ? "rotate-90" : ""
-                }`}
-              />
-            )}
           </button>
         </li>
         {/* Producción */}

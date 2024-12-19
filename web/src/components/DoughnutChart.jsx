@@ -50,7 +50,7 @@ const DoughnutChart = ({ codigoFundo }) => {
           font: {
             size: 14,
           },
-          padding: 10,
+          padding: 15, // Separación adicional entre los elementos de la leyenda
           color: "#333",
         },
       },
@@ -64,15 +64,15 @@ const DoughnutChart = ({ codigoFundo }) => {
         },
         color: "#444",
         padding: {
-          top: 10,
-          bottom: 30,
+          top: 20, // Espaciado adicional entre el título y el gráfico
+          bottom: 20,
         },
       },
       tooltip: {
         enabled: true,
       },
-      datalabels: { //nivel
-        anchor: "end", 
+      datalabels: {
+        anchor: "end",
         align: "end",
         formatter: (value) => value,
         color: "#000",
@@ -82,13 +82,13 @@ const DoughnutChart = ({ codigoFundo }) => {
         },
         display: (context) => {
           return context.dataset.data[context.dataIndex] >= 0;
-        }
+        },
       },
     },
     layout: {
       padding: {
-        top: 20,
-        bottom: 20,
+        top: 5, // Espaciado adicional entre el título y el gráfico
+        bottom: 20, // Espaciado adicional entre el gráfico y la leyenda
       },
     },
     animation: {
@@ -96,7 +96,7 @@ const DoughnutChart = ({ codigoFundo }) => {
       animateScale: true,
     },
   };
-
+  
   return (
     <div
       style={{
@@ -115,11 +115,8 @@ const DoughnutChart = ({ codigoFundo }) => {
         style={{
           width: "100%",
           maxWidth: "600px",
-          height: "400px",
-          //backgroundColor: "#fff",
+          height: "450px", // Incremento de altura para mejorar la distribución
           borderRadius: "12px",
-          //boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          //padding: "20px",
           boxSizing: "border-box",
         }}
       >
@@ -127,6 +124,6 @@ const DoughnutChart = ({ codigoFundo }) => {
       </div>
     </div>
   );
-};
+};  
 
 export default DoughnutChart;
