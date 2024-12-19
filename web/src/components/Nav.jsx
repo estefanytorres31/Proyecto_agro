@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { 
-  FaBars, 
-  FaHouseUser, 
-  FaIndustry, 
-  FaHeartbeat, 
-  FaCogs, 
-  FaThermometerHalf, 
-  FaChartArea 
+import {
+  FaBars,
+  FaHouseUser,
+  FaIndustry,
+  FaHeartbeat,
+  FaCogs,
+  FaThermometerHalf,
+  FaChartArea,
 } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -32,26 +32,25 @@ const Nav = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav 
+    <nav
       className={`
-        h-screen 
-        bg-gradient-to-b from-gray-900 to-gray-800 
-        text-white 
-        flex 
-        flex-col 
-        shadow-2xl 
-        transition-all 
-        duration-300 
-        ease-in-out 
+        h-screen
+        bg-gradient-to-b from-gray-800 to-gray-700
+        text-white
+        flex
+        flex-col
+        shadow-xl
+        transition-all
+        duration-300
         ${isExpanded ? "w-64" : "w-20"}
       `}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       {/* Header */}
-      <div className="flex items-center justify-between bg-gray-900 p-4 border-b border-green-600">
-        <button 
-          className="text-2xl text-green-400 hover:text-green-300 focus:outline-none transition " 
+      <div className="flex items-center justify-between bg-gray-900 p-4 border-b border-teal-500">
+        <button
+          className="text-2xl text-teal-400 hover:text-teal-300 focus:outline-none transition "
           onClick={toggleSidebar}
           aria-label="Toggle Sidebar"
         >
@@ -60,33 +59,42 @@ const Nav = () => {
       </div>
 
       {/* Menu */}
-      <ul className="flex-grow mt-4 space-y-1 overflow-hidden">
+      <ul className="flex-grow mt-4 space-y-2 overflow-hidden">
         {/* Home */}
         <li>
           <Link
             to="/inicio"
             className={`
-              flex 
-              items-center 
-              space-x-3 
-              px-4 
-              py-3 
-              transition 
+              flex
+              items-center
+              space-x-3
+              px-4
+              py-3
+              transition
+              rounded-md
               group
-              ${isActive("/inicio") 
-                ? "bg-green-600/30 text-green-300" 
-                : "hover:bg-green-600/30"}
+              ${isActive("/inicio")
+                ? "bg-teal-600 text-teal-300"
+                : "hover:bg-teal-600/30"}
             `}
           >
-            <FaHouseUser className={`
-              text-xl 
-              ${isActive("/inicio") ? "text-green-300" : "text-green-400 group-hover:text-green-300"}
-            `} />
+            <FaHouseUser
+              className={`
+                text-xl
+                ${isActive("/inicio")
+                  ? "text-teal-300"
+                  : "text-teal-400 group-hover:text-teal-300"}
+              `}
+            />
             {isExpanded && (
-              <span className={`
-                text-sm 
-                ${isActive("/inicio") ? "text-white" : "text-gray-300 group-hover:text-white"}
-              `}>
+              <span
+                className={`
+                  text-sm
+                  ${isActive("/inicio")
+                    ? "text-white"
+                    : "text-gray-300 group-hover:text-white"}
+                `}
+              >
                 Inicio
               </span>
             )}
@@ -98,19 +106,20 @@ const Nav = () => {
           <button
             onClick={() => handleMenuClick(1)}
             className="
-              w-full 
-              flex 
-              items-center 
-              justify-between 
-              px-4 
-              py-3 
-              hover:bg-green-600/30 
-              transition 
+              w-full
+              flex
+              items-center
+              justify-between
+              px-4
+              py-3
+              rounded-md
+              hover:bg-teal-600/30
+              transition
               group
             "
           >
             <div className="flex items-center space-x-3">
-              <FaIndustry className="text-xl text-green-400 group-hover:text-green-300" />
+              <FaIndustry className="text-xl text-teal-400 group-hover:text-teal-300" />
               {isExpanded && (
                 <span className="text-sm text-gray-300 group-hover:text-white">
                   Producción
@@ -120,74 +129,82 @@ const Nav = () => {
             {isExpanded && (
               <FiChevronRight
                 className={`
-                  text-gray-400 
-                  transform 
-                  transition 
-                  duration-200 
-                  ${openMenu === 1 ? "rotate-90 text-green-400" : ""}
+                  text-gray-400
+                  transform
+                  transition
+                  duration-200
+                  ${openMenu === 1 ? "rotate-90 text-teal-400" : ""}
                 `}
               />
             )}
           </button>
 
           {openMenu === 1 && isExpanded && (
-            <ul className="bg-gray-800/50 border-l-4 border-green-600 ml-4 mr-2">
+            <ul className="bg-gray-700/50 border-l-4 border-teal-600 ml-4 mr-2 mt-2 rounded-md">
               {/* Scorpius 1 */}
-              <li className="py-2 hover:bg-green-600/20 rounded">
+              <li className="py-2">
                 <button
-                  onClick={() => handleNavigation('/scorpius1')}
+                  onClick={() => handleNavigation("/scorpius1")}
                   className={`
-                    flex 
-                    items-center 
-                    space-x-3 
-                    w-full 
-                    text-left 
-                    px-4 
-                    py-2 
+                    flex
+                    items-center
+                    space-x-3
+                    w-full
+                    text-left
+                    px-4
+                    py-2
+                    rounded-md
                     group
-                    ${isActive("/scorpius1") 
-                      ? "bg-green-600/30 text-green-300" 
-                      : ""}
+                    ${isActive("/scorpius1")
+                      ? "bg-teal-600/30 text-teal-300"
+                      : "hover:bg-teal-600/20"}
                   `}
                 >
-                  <FaCogs className={`
-                    text-green-400 
-                    group-hover:text-green-300
-                    ${isActive("/scorpius1") ? "text-green-300" : ""}
-                  `} />
-                  <span className={`
-                    text-gray-300 
-                    group-hover:text-white
-                    ${isActive("/scorpius1") ? "text-white" : ""}
-                  `}>
+                  <FaCogs
+                    className={`
+                      text-teal-400
+                      group-hover:text-teal-300
+                      ${isActive("/scorpius1") ? "text-teal-300" : ""}
+                    `}
+                  />
+                  <span
+                    className={`
+                      text-gray-300
+                      group-hover:text-white
+                      ${isActive("/scorpius1") ? "text-white" : ""}
+                    `}
+                  >
                     Scorpius 1
                   </span>
                 </button>
                 {/* Submenú: Mapa de calor */}
-                <ul className="pl-12">
-                  <li className="py-1 hover:bg-green-600/20 rounded">
+                <ul className="pl-12 mt-1">
+                  <li className="py-1">
                     <button
-                      onClick={() => handleNavigation('/scorpius1/MapaCalor')}
+                      onClick={() => handleNavigation("/scorpius1/MapaCalor")}
                       className={`
-                        w-full 
-                        flex 
-                        items-center 
+                        w-full
+                        flex
+                        items-center
                         space-x-2
-                        text-left 
-                        text-sm 
-                        px-4 
-                        py-2 
+                        text-left
+                        text-sm
+                        px-4
+                        py-2
+                        rounded-md
                         group
-                        ${isActive("/scorpius1/MapaCalor") 
-                          ? "text-white bg-green-600/30" 
-                          : "text-gray-400 hover:text-white"}
+                        ${isActive("/scorpius1/MapaCalor")
+                          ? "text-white bg-teal-600/30"
+                          : "text-gray-400 hover:text-white hover:bg-teal-600/20"}
                       `}
                     >
-                      <FaThermometerHalf className={`
-                        ${isActive("/scorpius1/MapaCalor") 
-                          ? "text-green-300" 
-                          : "text-green-400 group-hover:text-green-300"}
-                      `} />
+                      <FaThermometerHalf
+                        className={`
+                          ${isActive("/scorpius1/MapaCalor")
+                            ? "text-teal-300"
+                            : "text-teal-400 group-hover:text-teal-300"}
+                        `}
+                      />
                       <span>Mapa de calor</span>
                     </button>
                   </li>
@@ -195,61 +212,69 @@ const Nav = () => {
               </li>
 
               {/* Scorpius 2 */}
-              <li className="py-2 hover:bg-green-600/20 rounded">
+              <li className="py-2">
                 <button
-                  onClick={() => handleNavigation('/scorpius2')}
+                  onClick={() => handleNavigation("/scorpius2")}
                   className={`
-                    flex 
-                    items-center 
-                    space-x-3 
-                    w-full 
-                    text-left 
-                    px-4 
-                    py-2 
+                    flex
+                    items-center
+                    space-x-3
+                    w-full
+                    text-left
+                    px-4
+                    py-2
+                    rounded-md
                     group
-                    ${isActive("/scorpius2") 
-                      ? "bg-green-600/30 text-green-300" 
-                      : ""}
+                    ${isActive("/scorpius2")
+                      ? "bg-teal-600/30 text-teal-300"
+                      : "hover:bg-teal-600/20"}
                   `}
                 >
-                  <FaCogs className={`
-                    text-green-400 
-                    group-hover:text-green-300
-                    ${isActive("/scorpius2") ? "text-green-300" : ""}
-                  `} />
-                  <span className={`
-                    text-gray-300 
-                    group-hover:text-white
-                    ${isActive("/scorpius2") ? "text-white" : ""}
-                  `}>
+                  <FaCogs
+                    className={`
+                      text-teal-400
+                      group-hover:text-teal-300
+                      ${isActive("/scorpius2") ? "text-teal-300" : ""}
+                    `}
+                  />
+                  <span
+                    className={`
+                      text-gray-300
+                      group-hover:text-white
+                      ${isActive("/scorpius2") ? "text-white" : ""}
+                    `}
+                  >
                     Scorpius 2
                   </span>
                 </button>
                 {/* Submenú: Mapa de calor */}
-                <ul className="pl-12">
-                  <li className="py-1 hover:bg-green-600/20 rounded">
+                <ul className="pl-12 mt-1">
+                  <li className="py-1">
                     <button
-                      onClick={() => handleNavigation('/scorpius2/MapaCalor')}
+                      onClick={() => handleNavigation("/scorpius2/MapaCalor")}
                       className={`
-                        w-full 
-                        flex 
-                        items-center 
+                        w-full
+                        flex
+                        items-center
                         space-x-2
-                        text-left 
-                        text-sm 
-                        px-4 
-                        py-2 
+                        text-left
+                        text-sm
+                        px-4
+                        py-2
+                        rounded-md
                         group
-                        ${isActive("/scorpius2/MapaCalor") 
-                          ? "text-white bg-green-600/30" 
-                          : "text-gray-400 hover:text-white"}
+                        ${isActive("/scorpius2/MapaCalor")
+                          ? "text-white bg-teal-600/30"
+                          : "text-gray-400 hover:text-white hover:bg-teal-600/20"}
                       `}
                     >
-                      <FaThermometerHalf className={`
-                        ${isActive("/scorpius2/MapaCalor") 
-                          ? "text-green-300" 
-                          : "text-green-400 group-hover:text-green-300"}
-                      `} />
+                      <FaThermometerHalf
+                        className={`
+                          ${isActive("/scorpius2/MapaCalor")
+                            ? "text-teal-300"
+                            : "text-teal-400 group-hover:text-teal-300"}
+                        `}
+                      />
                       <span>Mapa de calor</span>
                     </button>
                   </li>
@@ -264,27 +289,36 @@ const Nav = () => {
           <Link
             to="/"
             className={`
-              flex 
-              items-center 
-              space-x-3 
-              px-4 
-              py-3 
-              transition 
+              flex
+              items-center
+              space-x-3
+              px-4
+              py-3
+              transition
+              rounded-md
               group
-              ${isActive("/") 
-                ? "bg-green-600/30 text-green-300" 
-                : "hover:bg-green-600/30"}
+              ${isActive("/")
+                ? "bg-teal-600 text-teal-300"
+                : "hover:bg-teal-600/30"}
             `}
           >
-            <FaHeartbeat className={`
-              text-xl 
-              ${isActive("/") ? "text-green-300" : "text-green-400 group-hover:text-green-300"}
-            `} />
+            <FaHeartbeat
+              className={`
+                text-xl
+                ${isActive("/")
+                  ? "text-teal-300"
+                  : "text-teal-400 group-hover:text-teal-300"}
+              `}
+            />
             {isExpanded && (
-              <span className={`
-                text-sm 
-                ${isActive("/") ? "text-white" : "text-gray-300 group-hover:text-white"}
-              `}>
+              <span
+                className={`
+                  text-sm
+                  ${isActive("/")
+                    ? "text-white"
+                    : "text-gray-300 group-hover:text-white"}
+                `}
+              >
                 Salud
               </span>
             )}

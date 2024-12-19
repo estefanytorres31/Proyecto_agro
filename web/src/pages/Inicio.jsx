@@ -9,21 +9,20 @@ const Inicio = () => {
   const { fetchCosechaData, fetchAllRankings } = useCosecha();
   const [combinedCosechaData, setCombinedCosechaData] = useState(null);
   const [combinedRankingData, setCombinedRankingData] = useState(null);
-  const codigosFundos = ["F00001", "F00002"];
+  const codigosFundos = ["F00001", "F00002"]; // Scorpius1 y Scorpius2
 
   useEffect(() => {
     const fetchCombinedData = async () => {
       try {
-        // Fetch data for all fundos in parallel
+        // Fetch datos de cosecha y ranking en paralelo
         const cosechaResults = await Promise.all(
-          codigosFundos.map(codigo => fetchCosechaData(codigo))
+          codigosFundos.map((codigo) => fetchCosechaData(codigo))
         );
-        
         const rankingResults = await Promise.all(
-          codigosFundos.map(codigo => fetchAllRankings(codigo))
+          codigosFundos.map((codigo) => fetchAllRankings(codigo))
         );
 
-        // Combine cosecha data
+        // Combinar datos de cosecha
         const combinedCosecha = cosechaResults.reduce(
           (acc, data) => {
             if (data && data.frutos) {
@@ -37,22 +36,18 @@ const Inicio = () => {
           { pequeños: 0, medianos: 0, grandes: 0, sinFrutos: 0 }
         );
 
-        // Combine ranking data with more robust merging
+        // Combinar datos de ranking
         const combinedRanking = rankingResults.reduce((acc, data) => {
-          Object.keys(data || {}).forEach(key => {
-            // Inicializar el arreglo si no existe
+          Object.keys(data || {}).forEach((key) => {
             if (!acc[key]) acc[key] = [];
-            
-            // Combinar y ordenar datos, eliminando duplicados
             acc[key] = [...acc[key], ...(data[key] || [])]
               .reduce((unique, item) => {
-                // Asegurarse de que no haya elementos duplicados
-                const exists = unique.some(u => 
-                  u.nombre === item.nombre && u.cantidad === item.cantidad
+                const exists = unique.some(
+                  (u) =>
+                    u.nombre === item.nombre && u.cantidad === item.cantidad
                 );
                 return exists ? unique : [...unique, item];
               }, [])
-              // Ordenar de mayor a menor cantidad
               .sort((a, b) => (b.cantidad || 0) - (a.cantidad || 0));
           });
           return acc;
@@ -61,15 +56,12 @@ const Inicio = () => {
         // Actualizar estados
         setCombinedCosechaData(combinedCosecha);
         setCombinedRankingData(combinedRanking);
-
       } catch (error) {
         console.error("Error combinando datos:", error);
-        // Manejar el error de manera más amigable
         alert("No se pudieron cargar los datos. Por favor, intente nuevamente.");
       }
     };
 
-    // Solo llamar si los hooks están definidos
     if (fetchCosechaData && fetchAllRankings) {
       fetchCombinedData();
     }
@@ -92,9 +84,9 @@ const Inicio = () => {
           {/* Gráfico de Dona */}
           <div className="col-span-2 bg-white rounded-lg shadow-md p-4 flex justify-center items-center">
             {combinedCosechaData ? (
-              <DoughnutChart 
-                data={combinedCosechaData} 
-                title="Distribución Total de Frutos" 
+              <DoughnutChart
+                data={combinedCosechaData}
+                title="Distribución Total de Frutos"
               />
             ) : (
               <div className="text-center w-full">
@@ -106,8 +98,8 @@ const Inicio = () => {
           {/* Gráficos de Barras por Sector */}
           <div className="col-span-3 grid grid-cols-2 gap-4">
             {["pequeños", "medianos", "grandes", "sinFrutos"].map((categoria) => (
-              <div 
-                key={categoria} 
+              <div
+                key={categoria}
                 className="bg-white rounded-lg shadow-md p-4 transition-all hover:shadow-xl"
               >
                 {combinedCosechaData ? (
@@ -135,8 +127,8 @@ const Inicio = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {["grande", "mediano", "pequeño", "noHayFruto"].map((tamañoFruto) => (
-              <div 
-                key={tamañoFruto} 
+              <div
+                key={tamañoFruto}
                 className="bg-white rounded-lg shadow-md p-4 transition-all hover:shadow-xl"
               >
                 {combinedRankingData ? (
