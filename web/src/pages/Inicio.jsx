@@ -50,13 +50,8 @@ const Inicio = () => {
           {/* Sector charts container */}
           <div className="col-span-1 xl:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {sectores.map((sector) => (
-              <div
-                key={sector}
-              >
-                <SectorBarChart
-                  codigoFundo={codigoFundo}
-                  codigoSector={sector}
-                />
+              <div key={sector}>
+                <SectorBarChart codigoFundo={codigoFundo} codigoSector={sector}/>
               </div>
             ))}
           </div>

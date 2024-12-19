@@ -178,7 +178,7 @@ const CosechaProvider = ({ children }) => {
   }, []);
 
    // Función para cargar datos generales de cosecha
-   const fetchResumendatos = useCallback(async () => {
+  const fetchResumendatos = useCallback(async () => {
     setCosechaData((prev) => ({
       ...prev,
       isLoading: true,
