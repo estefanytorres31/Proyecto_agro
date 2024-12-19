@@ -74,3 +74,15 @@ export const deleteFundo = async (codigo_fundo)=>{
         db.end();
     }
 }
+
+export const getResumenFundos=async()=>{
+    const db = await connect();
+    try{
+        const [total]=await db.execute('CALL ResumenTotalPorFundo()',[]);
+        return total;
+    }catch(error){
+        throw new Error("Error al calcular por sector: " + error.message);
+    }finally{
+        await db.end();
+    }
+}

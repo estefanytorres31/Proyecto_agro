@@ -8,7 +8,6 @@ export const cantidadPorFundo=async(codigo_fundo)=>{
         console.error(error);
         return null;
     }
- 
 }
 
 export const calculoPorSector = async(codigo_fundo, codigo_sector)=>{
@@ -35,6 +34,18 @@ export const rankings = async (tam_fruto, cod_fundo) => {
 export const getLastCosecha= async (codigo_fundo)=>{
     try{
         const response=await apiClient.get(`/api/cosecha/ultima/${codigo_fundo}`)
+        console.log(response.data);
+        return response.data
+    }catch(error){
+        console.error(error);
+        return null;
+    }
+}
+
+
+export const getResumenFundos= async ()=>{
+    try{
+        const response=await apiClient.get(`/api/getResumenFundos`)
         console.log(response.data);
         return response.data
     }catch(error){

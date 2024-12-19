@@ -6,146 +6,84 @@ import useCosecha from "../hooks/Cosecha/useCosecha";
 import ClockTime from "../components/ClockTime";
 
 const Inicio = () => {
-  const { fetchCosechaData, fetchAllRankings } = useCosecha();
-  const [combinedCosechaData, setCombinedCosechaData] = useState(null);
-  const [combinedRankingData, setCombinedRankingData] = useState(null);
-  const codigosFundos = ["F00001", "F00002"]; // Scorpius1 y Scorpius2
+  const { cosechaData, fetchResumendatos, rankingData, fetchAllRankings } = useCosecha();
+  const codigoFundo = "F00001";
+  const sectores = ["S00001", "S00002", "S00003", "S00004"];
 
   useEffect(() => {
-    const fetchCombinedData = async () => {
-      try {
-        // Fetch datos de cosecha y ranking en paralelo
-        const cosechaResults = await Promise.all(
-          codigosFundos.map((codigo) => fetchCosechaData(codigo))
-        );
-        const rankingResults = await Promise.all(
-          codigosFundos.map((codigo) => fetchAllRankings(codigo))
-        );
+    fetchResumendatos();
+    fetchAllRankings(codigoFundo);
+    console.log("ESTOS SON LOS DATOS:");
+    console.log(cosechaData);
+  }, [codigoFundo, fetchResumendatos, fetchAllRankings]);
 
-        // Combinar datos de cosecha
-        const combinedCosecha = cosechaResults.reduce(
-          (acc, data) => {
-            if (data && data.frutos) {
-              acc.pequeños += data.frutos.pequeños || 0;
-              acc.medianos += data.frutos.medianos || 0;
-              acc.grandes += data.frutos.grandes || 0;
-              acc.sinFrutos += data.frutos.sinFrutos || 0;
-            }
-            return acc;
-          },
-          { pequeños: 0, medianos: 0, grandes: 0, sinFrutos: 0 }
-        );
-
-        // Combinar datos de ranking
-        const combinedRanking = rankingResults.reduce((acc, data) => {
-          Object.keys(data || {}).forEach((key) => {
-            if (!acc[key]) acc[key] = [];
-            acc[key] = [...acc[key], ...(data[key] || [])]
-              .reduce((unique, item) => {
-                const exists = unique.some(
-                  (u) =>
-                    u.nombre === item.nombre && u.cantidad === item.cantidad
-                );
-                return exists ? unique : [...unique, item];
-              }, [])
-              .sort((a, b) => (b.cantidad || 0) - (a.cantidad || 0));
-          });
-          return acc;
-        }, {});
-
-        // Actualizar estados
-        setCombinedCosechaData(combinedCosecha);
-        setCombinedRankingData(combinedRanking);
-      } catch (error) {
-        console.error("Error combinando datos:", error);
-        alert("No se pudieron cargar los datos. Por favor, intente nuevamente.");
-      }
-    };
-
-    if (fetchCosechaData && fetchAllRankings) {
-      fetchCombinedData();
-    }
-  }, [fetchCosechaData, fetchAllRankings]);
+  const renderRankingChart = (data, tamañoFruto) => (
+    <div className="w-full md:w-1/2 xl:w-1/4 px-2 mb-4">
+      <div className="bg-[#ffff] rounded-lg shadow-md p-4 h-[300px] xl:h-[320px] flex items-center justify-center">
+        <RankingChart data={data} tamañoFruto={tamañoFruto} />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]">
-      <div className="p-4 sm:p-6 lg:p-8">
+<div className="min-h-screen w-full bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]"> {/*Fondo de contenedor*/}
+  {/* Fondo digitalizado */}
+  <div className="sm:p-6 lg:p-8 transition-all duration-300"> {/*Espacios de contenedor*/}
+
+        {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-wide uppercase">
-            Informe de Cosechas
-          </h2>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-wide uppercase ">
+          {cosechaData?.fundo?.nombre}
+        </h1>
           <div className="flex-shrink-0">
-            <ClockTime />
+            <ClockTime /> {/* Reloj en el extremo derecho */}
           </div>
         </div>
 
-        {/* Sección de Gráficos de Cosecha */}
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 mb-6">
-          {/* Gráfico de Dona */}
-          <div className="col-span-2 bg-white rounded-lg shadow-md p-4 flex justify-center items-center">
-            {combinedCosechaData ? (
-              <DoughnutChart
-                data={combinedCosechaData}
-                title="Distribución Total de Frutos"
-              />
-            ) : (
-              <div className="text-center w-full">
-                <p className="text-gray-500 animate-pulse">Cargando datos...</p>
-              </div>
-            )}
+        {/* Contenedor */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+          {/* Doughnut Chart */}
+          <div className="col-span-1 flex justify-center items-center bg-white rounded-lg shadow-md p-4">
+            <DoughnutChart codigoFundo={codigoFundo} />
           </div>
 
-          {/* Gráficos de Barras por Sector */}
-          <div className="col-span-3 grid grid-cols-2 gap-4">
-            {["pequeños", "medianos", "grandes", "sinFrutos"].map((categoria) => (
+          {/* Sector charts container */}
+          <div className="col-span-1 xl:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {sectores.map((sector) => (
               <div
-                key={categoria}
-                className="bg-white rounded-lg shadow-md p-4 transition-all hover:shadow-xl"
+                key={sector}
               >
-                {combinedCosechaData ? (
-                  <SectorBarChart
-                    categoria={categoria}
-                    data={combinedCosechaData[categoria]}
-                  />
-                ) : (
-                  <div className="text-center">
-                    <p className="text-gray-500 animate-pulse">
-                      Cargando {categoria}...
-                    </p>
-                  </div>
-                )}
+                <SectorBarChart
+                  codigoFundo={codigoFundo}
+                  codigoSector={sector}
+                />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Sección de Rankings */}
+        {/* Rankings section */}
         <div className="mt-8">
           <h2 className="text-xl sm:text-2xl font-semibold text-center mb-6">
-            Rankings Totales por Tamaño de Fruto
+            Rankings por Tamaño de Fruto
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {["grande", "mediano", "pequeño", "noHayFruto"].map((tamañoFruto) => (
-              <div
-                key={tamañoFruto}
-                className="bg-white rounded-lg shadow-md p-4 transition-all hover:shadow-xl"
-              >
-                {combinedRankingData ? (
-                  <RankingChart
-                    tamañoFruto={tamañoFruto}
-                    data={combinedRankingData[tamañoFruto] || []}
-                  />
-                ) : (
-                  <div className="text-center">
-                    <p className="text-gray-500 animate-pulse">
-                      Cargando ranking {tamañoFruto}...
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          {rankingData.isLoading ? (
+            <div className="flex justify-center items-center h-[200px] sm:h-[300px] lg:h-[400px]">
+              <p className="text-lg">Cargando rankings...</p>
+            </div>
+          ) : rankingData.error ? (
+            <div className="flex justify-center items-center h-[200px] sm:h-[300px] lg:h-[400px]">
+              <p className="text-lg text-red-500">Error: {rankingData.error}</p>
+            </div>
+          ) : (
+            <div className="flex flex-wrap -mx-2">
+              {renderRankingChart(rankingData.grande, "Grande")}
+              {renderRankingChart(rankingData.mediano, "Mediano")}
+              {renderRankingChart(rankingData.pequeño, "Pequeño")}
+              {renderRankingChart(rankingData.noHayFruto, "No hay fruto")}
+            </div>
+          )}
         </div>
       </div>
     </div>

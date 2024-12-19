@@ -50,3 +50,12 @@ export const updateFundo = async(req, res)=>{
     }
 }
 
+export const getResumenFundos= async (req, res) =>{
+    try {
+        const fundos = await FundoService.getResumenFundos();
+        res.status(200).json(fundos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Error al obtener los fundos"});
+    }
+};

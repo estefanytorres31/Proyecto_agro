@@ -13,6 +13,8 @@ const Scorpius1 = () => {
   useEffect(() => {
     fetchCosechaData(codigoFundo);
     fetchAllRankings(codigoFundo);
+    console.log("ESTOS SON LOS DATOS:");
+    console.log(cosechaData);
   }, [codigoFundo, fetchCosechaData, fetchAllRankings]);
 
   const renderRankingChart = (data, tamañoFruto) => (
