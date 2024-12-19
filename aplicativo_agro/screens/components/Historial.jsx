@@ -27,7 +27,7 @@ const HistorialCosechas = ({ qrData }) => {
       {historial.length > 0 ? ( // Esto ahora es seguro porque `historial` siempre es un arreglo
         historial.map((cosecha, index) => (
           <View key={index} style={styles.historialItem}>
-            <Text style={styles.texto}>Tamaño: {cosecha.tamano_fruto}</Text>
+            <Text style={styles.texto}>Tamaño: {cosecha.tamaño_fruto}</Text>
             <Text style={styles.texto}>Fecha: {cosecha.fecha_registro}</Text>
           </View>
         ))
