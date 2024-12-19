@@ -1,28 +1,42 @@
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default Button = ({icon, size, color, style, onPress }) => {
-
+const Button = ({ icon, size, color, style, onPress, text }) => {
     return (
         <TouchableOpacity 
             style={[styles.button, style]}
             onPress={onPress}
         >
-            <MaterialIcons 
-                name = {icon}
-                size={size? size : 28} 
-                color={color ? color : '#f1f1f1'}
-            />
+            <View style={styles.iconContainer}>
+                <MaterialIcons 
+                    name={icon}
+                    size={size ? size : 28}
+                    color={color ? color : '#f1f1f1'}
+                />
+                {text && <Text style={styles.buttonText}>{text}</Text>}
+            </View>
         </TouchableOpacity>
-    )
-
+    );
 }
 
 const styles = StyleSheet.create({
-  button : {
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
+    button: {
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 8,  // Espacio entre el ícono y el texto
+    }
+});
+
+export default Button;

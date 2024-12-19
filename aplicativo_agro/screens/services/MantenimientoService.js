@@ -58,14 +58,14 @@ export const deleteMantenimiento= async(codigo_mantenimiento)=>{
     }
 }
 
-export const getLast3Mante=async(codigo_planta)=>{
+export const get3LastMante= async (codigo_planta)=>{
     try{
-        const {data, status}=await apiClient.get(`/api/mantenimiento/registros/${codigo_planta}`)
-        return {
-            data,
-            status
-        }
+        const response=await apiClient.get(
+            `/api/mantenimiento/registros/${codigo_planta}`
+        )
+        return response.data;
     }catch(error){
-        console.log(error)
+        console.error(error);
+        return null;
     }
 }

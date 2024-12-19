@@ -5,7 +5,8 @@ import {
   getMantenimientoById, 
   createMantenimiento, 
   updateMantenimiento, 
-  deleteMantenimiento 
+  deleteMantenimiento,
+  get3LastMante
 } from '../../services/MantenimientoService';
 
 const MantenimientoProvider = ({ children }) => {
@@ -103,6 +104,19 @@ const MantenimientoProvider = ({ children }) => {
     }
   };
 
+  const obtener3registros=async(codigo_planta)=>{
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await get3LastMante(codigo_planta);
+      return response;
+    } catch (err) {
+      setError('Error fetching 3 last mantenimientos');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // Prepare the context value
   const contextValue = {
     mantenimientos,
@@ -113,7 +127,8 @@ const MantenimientoProvider = ({ children }) => {
     addMantenimiento,
     modifyMantenimiento,
     removeMantenimiento,
-    setMantenimientos
+    setMantenimientos,
+    obtener3registros,
   };
 
   return (

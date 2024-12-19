@@ -65,7 +65,6 @@ export const get3LastCosecha= async (codigo_planta)=>{
         const response=await apiClient.get(
             `/api/cosecha/registros/${codigo_planta}`
         )
-        console.log('Datos:',response)
         return response.data;
     }catch(error){
         console.error(error);

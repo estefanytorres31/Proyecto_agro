@@ -92,7 +92,6 @@ const CosechaProvider = ({ children }) => {
     setError(null);
     try{
       const cosechas=await get3LastCosecha (codigo_planta);
-      console.log(cosechas);
       return cosechas;
     }catch(err){
       setError('Error fetching 3 last cosechas');
