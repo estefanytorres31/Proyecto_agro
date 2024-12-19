@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import useCosecha from "../../hooks/Cosecha/useCosecha"; 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import Historial from "../../components/Historial";
 import Button from "../../components/Buttons";
 import CustomAlert from "../../components/Alerta";
@@ -24,9 +24,16 @@ const QRInfo = ({ route }) => {
 
   const handleCloseAlert = () => {
     setAlertConfig(prev => ({ ...prev, visible: false }));
-    // Si fue exitoso, navegar
     if (alertConfig.type === 'SUCCESS') {
-      navigation.navigate("QRScann");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Scanner' },
+            { name: 'QRScann' }
+          ],
+        })
+      );
     }
   };
 
@@ -55,6 +62,40 @@ const QRInfo = ({ route }) => {
       showAlert("Error interno.", "ERROR");
     }
   };
+
+  // Manejador para el botón de retroceso
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (selectedOption && !alertConfig.visible) {
+        e.preventDefault();
+        
+        Alert.alert(
+          'Datos sin guardar',
+          '¿Estás seguro que deseas salir? Los cambios no guardados se perderán.',
+          [
+            { text: 'Cancelar', style: 'cancel', onPress: () => {} },
+            {
+              text: 'Salir',
+              style: 'destructive',
+              onPress: () => {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      { name: 'Scanner' },
+                      { name: 'QRScann' }
+                    ],
+                  })
+                );
+              },
+            },
+          ]
+        );
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, selectedOption, alertConfig.visible]);
 
   return (
     <View style={styles.container}>
