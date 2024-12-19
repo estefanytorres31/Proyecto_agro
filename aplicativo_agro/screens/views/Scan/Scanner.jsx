@@ -1,22 +1,18 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { ImageBackground, View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import qr from "../../image/qr.png";
+import fondo from "../../image/fondo.png"
 
 const Scanner = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <ImageBackground source={fondo} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Escanee código QR</Text>
         <Text style={styles.headerSubtitle}>
           Para poder obtener información de la palma, debe escanear el código QR
         </Text>
       </View>
-
-      <Image
-        style={styles.qrCode}
-        source={qr}
-      />
 
       <TouchableOpacity
         style={styles.scanButton}
@@ -27,7 +23,7 @@ const Scanner = ({ navigation }) => {
           <Text style={styles.scanButtonText}>Escanear</Text>
         </View>
       </TouchableOpacity>
-    </View>
+      </ImageBackground>
   );
 };
 
@@ -36,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    resizeMode: 'cover',
   },
   header: {
     width: '70%',
