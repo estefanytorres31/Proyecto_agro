@@ -15,14 +15,21 @@ const formatDateTime = (isoDate) => {
 
 const Historial = ({ getData, codigoPlanta, formatData }) => {
   const [historial, setHistorial] = useState([]);
+  const [error, setError] = useState(null);  // Para manejar errores
 
   useEffect(() => {
     const fetchHistorial = async () => {
       try {
         const data = await getData(codigoPlanta);
-        setHistorial(data || []);
+        if (!data || data.length === 0) {
+          setError("No se encontraron registros.");
+        } else {
+          setHistorial(data);
+          setError(null);  
+        }
       } catch (error) {
         console.error("Error al cargar el historial:", error);
+        setError("Hubo un error al cargar los registros.");
       }
     };
 
@@ -32,7 +39,9 @@ const Historial = ({ getData, codigoPlanta, formatData }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Últimos registros:</Text>
-      {historial.length > 0 ? (
+      {error ? (
+        <Text style={styles.texto}>{error}</Text>  // Mostrar mensaje de error si existe
+      ) : historial.length > 0 ? (
         historial.map((item, index) => (
           <View key={index} style={styles.historialItem}>
             <Text style={styles.texto}>

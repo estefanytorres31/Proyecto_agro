@@ -81,7 +81,7 @@ export const getLast3Mante = async (req, res) => {
     const {codigo_planta}=req.params;
     try{
         const mantenimientos = await MantenimientoService.getLast3Mante(codigo_planta);
-        if(mantenimientos.length === 0){
+        if(!mantenimientos){
             return res.status(404).json({ message: 'No se encontraron mantenimientos' });  
         }
         res.status(200).json(mantenimientos);
