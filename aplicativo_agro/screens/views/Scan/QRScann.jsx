@@ -21,7 +21,6 @@ const QRScann = ({ navigation }) => {
   const [permissionModalVisible, setPermissionModalVisible] = useState(false);
   const qrCodeLock = useRef(false);
 
-  // Efecto para manejar el enfoque/desenfoque de la pantalla
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus', () => {
       setIsActive(true);
@@ -32,7 +31,6 @@ const QRScann = ({ navigation }) => {
     const unsubscribeBlur = navigation.addListener('blur', () => {
       setIsActive(false);
       setScanning(true);
-      // Resetear el estado de la cámara
       setCameraProps(prev => ({
         ...prev,
         enableTorch: false,

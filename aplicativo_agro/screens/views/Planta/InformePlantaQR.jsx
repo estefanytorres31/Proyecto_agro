@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import useCosecha from "../../hooks/Cosecha/useCosecha"; 
 import { useNavigation, CommonActions } from "@react-navigation/native";

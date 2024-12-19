@@ -1,5 +1,5 @@
 import React, { useState } from "react"; 
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 import useMantenimiento from "../../hooks/Mantenimiento/useMantenimiento";
 import { useNavigation, CommonActions } from "@react-navigation/native";
