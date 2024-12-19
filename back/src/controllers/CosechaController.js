@@ -146,3 +146,13 @@ export const getLastCosecha = async (req, res) =>{
     }
 }
 
+export const get3LastCosecha=async(req, res) => {
+    const {codigo_planta}=req.params;
+    try{
+        const cosechas = await CosechaService.get3LastCosecha(codigo_planta);
+        res.status(200).json(cosechas);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener las 3 últimas cosechas", error});
+    }
+}
