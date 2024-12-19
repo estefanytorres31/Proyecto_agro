@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import useCosecha from "../../hooks/Cosecha/useCosecha"; 
-import {useNavigation} from "@react-navigation/native"// Asegúrate de que la ruta sea correcta
+import {useNavigation} from "@react-navigation/native";
+import Historial from "../../components/Historial"// Asegúrate de que la ruta sea correcta
 
 const QRInfo = ({ route }) => {
   const { qrData } = route.params;
@@ -56,6 +57,7 @@ const QRInfo = ({ route }) => {
         <QRCode value={qrData} size={150} />
         <Text style={styles.qrDataText}>{qrData}</Text>
       </View>
+      <Historial qrData={qrData} />
 
       {/* Contenedor de opciones */}
       <View style={styles.optionsContainer}>
