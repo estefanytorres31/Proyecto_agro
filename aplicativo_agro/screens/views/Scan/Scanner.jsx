@@ -1,69 +1,89 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ImageBackground, View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import qr from "../../image/qr.png";
-import fondo from "../../image/fondo.png"
+import { ImageBackground, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import fondo from "../../image/fondo.webp";
 
 const Scanner = ({ navigation }) => {
   return (
     <ImageBackground source={fondo} style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Escanee código QR</Text>
-        <Text style={styles.headerSubtitle}>
-          Para poder obtener información de la palma, debe escanear el código QR
-        </Text>
-      </View>
-
-      <TouchableOpacity
-        style={styles.scanButton}
-        onPress={() => navigation.navigate('QRScann')}
-      >
-        <View style={styles.scanButtonContent}>
-          <MaterialCommunityIcons name="camera" size={24} color="#000" />
-          <Text style={styles.scanButtonText}>Escanear</Text>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Escanee código QR</Text>
+          <Text style={styles.headerSubtitle}>
+            Para poder obtener información de la palma.
+          </Text>
         </View>
-      </TouchableOpacity>
-      </ImageBackground>
+
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={() => navigation.navigate('QRScann')}
+        >
+          <View style={styles.scanButtonContent}>
+            <MaterialCommunityIcons name="camera" size={28} color='#000'/>
+            <Text style={styles.scanButtonText}>Escanear</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     resizeMode: 'cover',
   },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
   header: {
-    width: '70%',
     backgroundColor: '#e3f2fd',
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 20,
+    padding: 25,
     alignItems: 'center',
-    marginBottom: 60,
-    marginTop: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 30,
+  },
+  headerIcon: {
+    backgroundColor: '#e8f0fe',
+    padding: 15,
+    borderRadius: 50,
+    marginBottom: 15,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 16,
+    color: '#5f6368',
     textAlign: 'center',
-  },
-  qrCode: {
-    width: 200,
-    height: 200,
-    marginBottom: 80,
+    lineHeight: 22,
   },
   scanButton: {
-    width: '80%',
     backgroundColor: '#e3f2fd',
-    paddingVertical: 15,
-    borderRadius: 10,
+    paddingVertical: 16,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   scanButtonContent: {
     flexDirection: 'row',
@@ -71,10 +91,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scanButtonText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#000',
-    marginLeft: 10,
+    marginLeft: 12,
   },
 });
 
