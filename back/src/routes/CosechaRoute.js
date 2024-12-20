@@ -8,6 +8,7 @@ import { cantidadPorFundo,
     rankings,
     getLastCosecha,
     get3LastCosecha,
+    totalFrutos,
     calculoPorSector } from "../controllers/CosechaController.js";
 import { Router } from "express"
 
@@ -24,6 +25,7 @@ FrutoRouter.get('/api/cosecha/calculo/:codigo_fundo/:codigo_sector', calculoPorS
 FrutoRouter.get('/api/cosecha/ranking/:cod_fundo/:tam_fruto',rankings)
 FrutoRouter.get('/api/cosecha/ultima/:codigo_fundo', getLastCosecha)
 FrutoRouter.get('/api/cosecha/registros/:codigo_planta',get3LastCosecha)
+FrutoRouter.get('/api/fundo/total', totalFrutos);
 
 
 export default FrutoRouter;

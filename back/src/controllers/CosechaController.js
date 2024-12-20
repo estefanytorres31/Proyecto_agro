@@ -163,3 +163,16 @@ export const get3LastCosecha=async(req, res) => {
         res.status(500).json({message: "Error al obtener las 3 últimas cosechas", error});
     }
 }
+
+export const totalFrutos=async(req, res)=>{
+    try{
+        const cantidadFrutos = await CosechaService.getCantidadFrutosTotal();
+        if (!cantidadFrutos) {
+            return res.status(404).json({ message: "No se encontraron datos" });
+        }
+        res.status(200).json(cantidadFrutos);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener el total de frutos"});
+    }
+}
