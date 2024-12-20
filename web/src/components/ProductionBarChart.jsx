@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels'; // Importa el plugin
 
 ChartJS.register(
   CategoryScale,
@@ -17,6 +18,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  ChartDataLabels // Registra el plugin
 );
 
 const RankingChart = ({ data, tamañoFruto }) => {
@@ -75,21 +77,17 @@ const RankingChart = ({ data, tamañoFruto }) => {
         cornerRadius: 8, // Bordes redondeados del tooltip
         padding: 10, // Espaciado interno del tooltip
       },
-      datalabels: { //nivel
-        anchor: "end", 
-        align: "end",
-        formatter: (value) => value,
-        color: "#000",
+      datalabels: { // Configuración de los valores dentro de las barras
+        color: '#000', // Color blanco para el texto (se ve mejor dentro de las barras)
         font: {
-          weight: "bold",
-          size: 12,
+          weight: 'bold', // Negrita
+          size: 12, // Tamaño del texto
         },
-        display: (context) => {
-          return context.dataset.data[context.dataIndex] >= 0;
-        }
+        anchor: 'center', // Posiciona el texto en el centro de la barra
+        align: 'center', // Alinea el texto dentro de la barra
+        formatter: (value) => value.toLocaleString(), // Formatea los números (opcional)
       },
     },
-    
     scales: {
       x: {
         beginAtZero: true, // Comienza en 0 para mayor claridad

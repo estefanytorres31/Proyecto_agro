@@ -42,7 +42,7 @@ const Inicio = () => {
 
         {/* Contenedor */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-          {/* Doughnut Chart */}
+          {/* Dona Chart */}
           <div className="col-span-1 flex justify-center items-center bg-white rounded-lg shadow-md p-4">
             <DoughnutChart codigoFundo={codigoFundo} />
           </div>

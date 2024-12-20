@@ -84,22 +84,6 @@ const DoughnutChart = ({ codigoFundo }) => {
           return context.dataset.data[context.dataIndex] >= 0;
         },
       },
-      tooltip: {
-        enabled: true,
-      },
-      datalabels: { //nivel
-        anchor: "end", 
-        align: "end",
-        formatter: (value) => value,
-        color: "#000",
-        font: {
-          weight: "bold",
-          size: 12,
-        },
-        display: (context) => {
-          return context.dataset.data[context.dataIndex] >= 0;
-        }
-      },
     },
     layout: {
       padding: {
