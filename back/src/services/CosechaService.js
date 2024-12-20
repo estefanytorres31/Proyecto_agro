@@ -184,14 +184,7 @@ export const getCantidadFrutosTotal = async () => {
     const db = await connect();
     try {
         const [results] = await db.query('CALL sp_cantidadFrutosTotal()');
-        const data = results[0][0];
-        const respuesta = {
-            total_pequeños: parseInt(data.total_pequeños),
-            total_medianos: parseInt(data.total_medianos),
-            total_grandes: parseInt(data.total_grandes),
-            total_sin_frutos: parseInt(data.total_sin_frutos)
-        };
-        return respuesta;
+        return results[0][0];
     } catch (error) {
         throw new Error("Error al obtener la cantidad de frutos: " + error.message);
     } finally {
