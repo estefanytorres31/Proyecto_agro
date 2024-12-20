@@ -146,3 +146,33 @@ export const getLastCosecha = async (req, res) =>{
     }
 }
 
+export const get3LastCosecha=async(req, res) => {
+    const {codigo_planta}=req.params;
+    if (!codigo_planta){
+        return res.status(400).json({message: "Falta el código de la planta"});  // Añadir un mensaje de error personalizado según el contexto del proyecto. Ej: "Faltan parámetros en la solicitud. Se requiere el código de la planta."  // Utilizar una función de utilidad para generar estos mensajes.  // Revisar la seguridad del código para evitar ataques de inyección SQL o XSS.  // Utilizar una biblioteca de sanitización o un middleware específico para manejar estas características.  // Revisar la seguridad del código para evitar ataques de inyección SQL o XSS.  // Utilizar una biblioteca de sanitización o un middleware específico para manejar estas características.  // Revisar la seguridad del código para evitar ataques de
+    }
+    try{
+        const cosechas = await CosechaService.get3LastCosecha(codigo_planta);
+        if(!cosechas){
+            return res.status(404).json({message: "No se encontraron las 3 últimas cosechas por planta"});
+        }
+
+        res.status(200).json(cosechas);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener las 3 últimas cosechas", error});
+    }
+}
+
+export const totalFrutos=async(req, res)=>{
+    try{
+        const cantidadFrutos = await CosechaService.getCantidadFrutosTotal();
+        if (!cantidadFrutos) {
+            return res.status(404).json({ message: "No se encontraron datos" });
+        }
+        res.status(200).json(cantidadFrutos);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener el total de frutos"});
+    }
+}

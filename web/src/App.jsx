@@ -7,10 +7,9 @@ function App() {
   return (
     <Router>
       <CosechaProvider>
-        <div className="flex h-screen">
-          {/* Sidebar ocupa una parte fija o proporcional del ancho */}
+      <div className="flex h-screen overflow-hidden">
           <Nav />
-          <main className="flex-1 transition-all duration-0 ml-0 md:ml-0 overflow-auto h-screen">
+          <main className="flex-1 overflow-y-auto md:h-screen h-[calc(100vh-4rem)] mt-16 md:mt-0">
             <AppRoutes />
           </main>
         </div>

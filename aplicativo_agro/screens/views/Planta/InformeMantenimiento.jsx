@@ -1,103 +1,155 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import React, { useState } from "react"; 
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import QRCode from 'react-native-qrcode-svg'; 
 import useMantenimiento from "../../hooks/Mantenimiento/useMantenimiento";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import Historial from "../../components/Historial";
+import Button from "../../components/Buttons";
+import CustomAlert from "../../components/Alerta";
 
 const Mantenimiento = ({ route }) => {
   const { qrData } = route.params; 
-  const { addMantenimiento } = useMantenimiento();
+  const { addMantenimiento, obtener3registros } = useMantenimiento();
+  const navigation = useNavigation();
   const [mantenimientoSeleccionado, setMantenimientoSeleccionado] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalStyle, setModalStyle] = useState(estilos.modalSuccess);
+  const [alertConfig, setAlertConfig] = useState({
+    visible: false,
+    type: 'SUCCESS',
+    message: '',
+  });
 
   const manejarCambioMantenimiento = (mantenimiento) => {
     setMantenimientoSeleccionado(mantenimiento);
   };
 
-  const manejarGuardar = async () => {
-    if (mantenimientoSeleccionado) {
-      try {
-        const response = await addMantenimiento(qrData, mantenimientoSeleccionado); 
-        console.log(response);
-        if (response) {
-          setModalMessage("¡Mantenimiento guardado correctamente!");
-          setModalStyle(estilos.modalSuccess);
-        } else {
-          setModalMessage("Error al guardar la mantenimiento.");
-          setModalStyle(estilos.modalError);
-        }
-      } catch (error) {
-        console.log(error)
-        setModalMessage("Error interno.");
-        setModalStyle(estilos.modalError);
-      }
-      setModalVisible(true);
-    } else {
-      setModalMessage("Error: Selecciona un mantenimiento.");
-      setModalStyle(estilos.modalError);
-      setModalVisible(true);
+  const handleCloseAlert = () => {
+    setAlertConfig(prev => ({ ...prev, visible: false }));
+    if (alertConfig.type === 'SUCCESS') {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Scanner' },
+            { name: 'QRScann' }
+          ],
+        })
+      )
     }
   };
 
+  const showAlert = (message, type = 'SUCCESS') => {
+    setAlertConfig({
+      visible: true,
+      type,
+      message
+    });
+  };
+
+  const manejarGuardar = async () => {
+    if (!mantenimientoSeleccionado) {
+      showAlert("Error: Selecciona un mantenimiento.", "ERROR");
+      return;
+    }
+
+    try {
+      const response = await addMantenimiento(qrData, mantenimientoSeleccionado);
+      if (response) {
+        showAlert("¡Mantenimiento guardado correctamente!");
+      } else {
+        showAlert("Error al guardar el mantenimiento.", "ERROR");
+      }
+    } catch (error) {
+      showAlert("Error interno.", "ERROR");
+    }
+  };
+
+  React.useEffect(() => {
+      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        if (mantenimientoSeleccionado && !alertConfig.visible) {
+          e.preventDefault();
+          
+          Alert.alert(
+            'Datos sin guardar',
+            '¿Estás seguro que deseas salir? Los cambios no guardados se perderán.',
+            [
+              { text: 'Cancelar', style: 'cancel', onPress: () => {} },
+              {
+                text: 'Salir',
+                style: 'destructive',
+                onPress: () => {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [
+                        { name: 'Scanner' },
+                        { name: 'QRScann' }
+                      ],
+                    })
+                  );
+                },
+              },
+            ]
+          );
+        }
+      });
+  
+      return unsubscribe;
+    }, [navigation, mantenimientoSeleccionado, alertConfig.visible]);
+
   return (
     <View style={estilos.contenedor}>
-      {/* Código QR */}
-      <View style={estilos.contenedorQR}>
-        <QRCode value={qrData} size={150} />
-        <Text style={estilos.textoQR}>{qrData}</Text>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={estilos.contenedorQR}>
+          <QRCode value={qrData} size={150} />
+          <Text style={estilos.textoQR}>{qrData}</Text>
+        </View>
 
-      {/* Contenedor de mantenimientos */}
-      <View style={estilos.contenedorMantenimientos}>
-        <Text style={estilos.subtitulo}>Seleccione un mantenimiento:</Text>
-        <View style={estilos.mantenimientos}>
-          {["Abono", "Poda", "Otros"].map((mantenimiento) => (
-            <TouchableOpacity
-              key={mantenimiento}
-              style={[
-                estilos.itemMantenimiento,
-                mantenimientoSeleccionado === mantenimiento && estilos.itemMantenimientoActivo,
-              ]}
-              onPress={() => manejarCambioMantenimiento(mantenimiento)}
-            >
-              <Text
-                style={
+        <Historial 
+          getData={obtener3registros} 
+          codigoPlanta={qrData} 
+          formatData={true}
+        />
+
+        <View style={estilos.contenedorMantenimientos}>
+          <Text style={estilos.subtitulo}>Seleccione un mantenimiento:</Text>
+          <View style={estilos.mantenimientos}>
+            {["Abono", "Poda", "Otros"].map((mantenimiento) => (
+              <TouchableOpacity
+                key={mantenimiento}
+                style={[
+                  estilos.itemMantenimiento,
+                  mantenimientoSeleccionado === mantenimiento && estilos.itemMantenimientoActivo,
+                ]}
+                onPress={() => manejarCambioMantenimiento(mantenimiento)}
+              >
+                <Text style={
                   mantenimientoSeleccionado === mantenimiento
                     ? estilos.textoMantenimientoActivo
                     : estilos.textoMantenimiento
-                }
-              >
-                {mantenimiento}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      {/* Botón Guardar */}
-      <TouchableOpacity style={estilos.boton} onPress={manejarGuardar}>
-        <Text style={estilos.textoBoton}>GUARDAR</Text>
-      </TouchableOpacity>
-      {/* Modal Personalizado */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={estilos.modalOverlay}>
-          <View style={[estilos.modalContent, modalStyle]}>
-            <Text style={estilos.modalText}>{modalMessage}</Text>
-            <TouchableOpacity
-              style={estilos.modalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={estilos.modalButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+                }>
+                  {mantenimiento}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
-      </Modal>
+
+        <Button 
+          icon="save" 
+          text="GUARDAR" 
+          size={24}
+          color="#fff" 
+          style={estilos.boton} 
+          onPress={manejarGuardar} 
+        />
+      </ScrollView>
+
+      <CustomAlert
+        isVisible={alertConfig.visible}
+        type={alertConfig.type}
+        message={alertConfig.message}
+        onClose={handleCloseAlert}
+      />
     </View>
   );
 };
@@ -157,54 +209,13 @@ const estilos = StyleSheet.create({
   },
   boton: {
     backgroundColor: "#30C81E",
-    paddingVertical: 14,
+    padding: 14,
+    height: 58,
     borderRadius: 8,
     alignItems: "center",
-  },
-  textoBoton: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    width: "80%",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-  },
-  modalSuccess: {
-    backgroundColor: "#d4edda",
-    borderColor: "#155724",
-    borderWidth: 2,
-  },
-  modalError: {
-    backgroundColor: "#f8d7da",
-    borderColor: "#721c24",
-    borderWidth: 2,
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  modalButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  modalButtonText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+    marginBottom: 30,
+  }
 });
-
 
 export default Mantenimiento;

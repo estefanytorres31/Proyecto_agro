@@ -1,113 +1,156 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-} from "react-native";
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import useCosecha from "../../hooks/Cosecha/useCosecha"; 
-import {useNavigation} from "@react-navigation/native"// Asegúrate de que la ruta sea correcta
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import Historial from "../../components/Historial";
+import Button from "../../components/Buttons";
+import CustomAlert from "../../components/Alerta";
 
 const QRInfo = ({ route }) => {
   const { qrData } = route.params;
-  const { addCosecha } = useCosecha(); 
+  const { addCosecha, getLastCosecha } = useCosecha(); 
   const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalStyle, setModalStyle] = useState(styles.modalSuccess);
+  const [alertConfig, setAlertConfig] = useState({
+    visible: false,
+    type: 'SUCCESS',
+    message: '',
+  });
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
 
-  const handleSave = async () => {
-    if (selectedOption) {
-      try {
-        const response = await addCosecha(qrData, selectedOption); 
-        console.log(response);
-        if (response) {
-          setModalMessage("¡Cosecha guardada correctamente!");
-          setModalStyle(styles.modalSuccess);
-          navigation.navigate("QRScann"); // Vuelve a la pantalla principal
-        } else {
-          setModalMessage("Error al guardar la cosecha.");
-          setModalStyle(styles.modalError);
-        }
-      } catch (error) {
-        console.log(error)
-        setModalMessage("Error interno.");
-        setModalStyle(styles.modalError);
-      }
-      setModalVisible(true);
-    } else {
-      setModalMessage("Error: Selecciona un tamaño de fruto.");
-      setModalStyle(styles.modalError);
-      setModalVisible(true);
+  const handleCloseAlert = () => {
+    setAlertConfig(prev => ({ ...prev, visible: false }));
+    if (alertConfig.type === 'SUCCESS') {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Scanner' },
+            { name: 'QRScann' }
+          ],
+        })
+      );
     }
   };
 
+  const showAlert = (message, type = 'SUCCESS') => {
+    setAlertConfig({
+      visible: true,
+      type,
+      message
+    });
+  };
+
+  const handleSave = async () => {
+    if (!selectedOption) {
+      showAlert("Error: Selecciona un tamaño de fruto.", "ERROR");
+      return;
+    }
+
+    try {
+      const response = await addCosecha(qrData, selectedOption);
+      if (response) {
+        showAlert("¡Cosecha guardada correctamente!");
+      } else {
+        showAlert("Error al guardar la cosecha.", "ERROR");
+      }
+    } catch (error) {
+      showAlert("Error interno.", "ERROR");
+    }
+  };
+
+  // Manejador para el botón de retroceso
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (selectedOption && !alertConfig.visible) {
+        e.preventDefault();
+        
+        Alert.alert(
+          'Datos sin guardar',
+          '¿Estás seguro que deseas salir? Los cambios no guardados se perderán.',
+          [
+            { text: 'Cancelar', style: 'cancel', onPress: () => {} },
+            {
+              text: 'Salir',
+              style: 'destructive',
+              onPress: () => {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      { name: 'Scanner' },
+                      { name: 'QRScann' }
+                    ],
+                  })
+                );
+              },
+            },
+          ]
+        );
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, selectedOption, alertConfig.visible]);
+
   return (
     <View style={styles.container}>
-      {/* Código QR */}
-      <View style={styles.qrCodeContainer}>
-        <QRCode value={qrData} size={150} />
-        <Text style={styles.qrDataText}>{qrData}</Text>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.qrCodeContainer}>
+          <QRCode value={qrData} size={150} />
+          <Text style={styles.qrDataText}>{qrData}</Text>
+        </View>
 
-      {/* Contenedor de opciones */}
-      <View style={styles.optionsContainer}>
-        <Text style={styles.subtitle}>Seleccione el tamaño de fruto:</Text>
-        <View style={styles.options}>
-          {["Grande", "Mediano", "Pequeño", "No hay fruto"].map((option) => (
-            <TouchableOpacity
-              key={option}
-              style={[
-                styles.optionItem,
-                selectedOption === option && styles.optionItemActive,
-              ]}
-              onPress={() => handleOptionChange(option)}
-            >
-              <Text
-                style={
+        <Historial 
+          getData={getLastCosecha} 
+          codigoPlanta={qrData} 
+          formatData={true}
+        />
+
+        <View style={styles.optionsContainer}>
+          <Text style={styles.subtitle}>Seleccione el tamaño de fruto:</Text>
+          <View style={styles.options}>
+            {["Grande", "Mediano", "Pequeño", "No hay fruto"].map((option) => (
+              <TouchableOpacity
+                key={option}
+                style={[
+                  styles.optionItem,
+                  selectedOption === option && styles.optionItemActive,
+                ]}
+                onPress={() => handleOptionChange(option)}
+              >
+                <Text style={
                   selectedOption === option
                     ? styles.optionTextActive
                     : styles.optionText
-                }
-              >
-                {option}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      {/* Botón Guardar */}
-      <TouchableOpacity style={styles.button} onPress={handleSave}>
-        <Text style={styles.buttonText}>GUARDAR</Text>
-      </TouchableOpacity>
-
-      {/* Modal Personalizado */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, modalStyle]}>
-            <Text style={styles.modalText}>{modalMessage}</Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+                }>
+                  {option}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
-      </Modal>
+
+        <Button 
+          icon="save" 
+          text="GUARDAR" 
+          size={24}
+          color="#fff" 
+          style={styles.saveButton} 
+          onPress={handleSave} 
+        />
+      </ScrollView>
+
+      <CustomAlert
+        isVisible={alertConfig.visible}
+        type={alertConfig.type}
+        message={alertConfig.message}
+        onClose={handleCloseAlert}
+      />
     </View>
   );
 };
@@ -165,55 +208,15 @@ const styles = StyleSheet.create({
   optionTextActive: {
     color: "#fff",
   },
-  button: {
+  saveButton: {
     backgroundColor: "#30C81E",
-    paddingVertical: 14,
+    padding: 14,
+    height: 58,
     borderRadius: 8,
     alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    width: "80%",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-  },
-  modalSuccess: {
-    backgroundColor: "#d4edda",
-    borderColor: "#155724",
-    borderWidth: 2,
-  },
-  modalError: {
-    backgroundColor: "#f8d7da",
-    borderColor: "#721c24",
-    borderWidth: 2,
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  modalButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  modalButtonText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+    marginBottom: 30,
+  }
 });
 
 export default QRInfo;

@@ -76,3 +76,17 @@ export const deleteMantenimiento = async (req, res) => {
         res.status(500).json({message: "Error al eliminar el mantenimiento"});
     }
 }
+
+export const getLast3Mante = async (req, res) => {
+    const {codigo_planta}=req.params;
+    try{
+        const mantenimientos = await MantenimientoService.getLast3Mante(codigo_planta);
+        if(!mantenimientos){
+            return res.status(404).json({ message: 'No se encontraron mantenimientos' });  
+        }
+        res.status(200).json(mantenimientos);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error al procesar la solicitud' });
+    }
+}

@@ -59,3 +59,15 @@ export const deleteCosecha = async (codigo_cosecha) => {
         return false;
     }
 }
+
+export const get3LastCosecha= async (codigo_planta)=>{
+    try{
+        const response=await apiClient.get(
+            `/api/cosecha/registros/${codigo_planta}`
+        )
+        return response.data;
+    }catch(error){
+        console.error(error);
+        return null;
+    }
+}

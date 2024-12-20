@@ -1,40 +1,48 @@
 import { useState, useEffect } from "react";
 
 const ClockTime = () => {
-  const [currentDate, setCurrentDate] = useState(getDate());
+  const [dateTime, setDateTime] = useState({
+    date: '',
+    time: ''
+  });
 
-  function getDate() {
+  function getDateTime() {
     const today = new Date();
     const month = today.getMonth() + 1;
     const year = today.getFullYear();
     const date = today.getDate();
-    const hour = today.getHours();
-    const minute = today.getMinutes();
-    const second = today.getSeconds();
-    return `${date}/${month}/${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
+    const hour = today.getHours().toString().padStart(2, "0");
+    const minute = today.getMinutes().toString().padStart(2, "0");
+    const second = today.getSeconds().toString().padStart(2, "0");
+
+    return {
+      date: `${date}/${month}/${year}`,
+      time: `${hour}:${minute}:${second}`
+    };
   }
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentDate(getDate());
+      setDateTime(getDateTime());
     }, 1000);
+
+    // Inicializar inmediatamente
+    setDateTime(getDateTime());
 
     return () => clearInterval(timer);
   }, []);
 
-  const clockStyles = {
-    fontFamily: "Arial, sans-serif",
-    fontSize: "1.5rem",
-    color: "#333",
-    backgroundColor: "#f4f4f4",
-    padding: "10px 20px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    display: "inline-block",
-    textAlign: "center",
-  };
-
-  return <p style={clockStyles}>{currentDate}</p>;
+  return (
+    <div className="font-sans bg-gray-100 p-2 rounded-xl shadow-lg inline-flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+      <div className="text-base sm:text-xl text-gray-800">
+        {dateTime.date}
+      </div>
+      <div className="hidden sm:block text-gray-400">•</div>
+      <div className="text-lg sm:text-xl text-gray-800">
+        {dateTime.time}
+      </div>
+    </div>
+  );
 };
 
 export default ClockTime;

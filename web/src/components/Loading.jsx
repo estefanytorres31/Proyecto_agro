@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const LoaderCircle = () => {
+const Loading = () => {
   const styles = {
     centerBody: {
       display: 'flex',
@@ -67,4 +67,4 @@ const LoaderCircle = () => {
   );
 };
 
-export default LoaderCircle;
+export default Loading;

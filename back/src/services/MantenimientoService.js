@@ -89,3 +89,17 @@ export const deleteMantenimiento=async(codigo_mantenimiento)=>{
         db.end();
     }
 }
+
+export const getLast3Mante=async(codigo_planta)=>{
+    const db = await connect();
+    try{
+        const [lastCosechas] = await db.execute('CALL sp_obtener3ultimosmante(?)',
+            [codigo_planta]
+        );
+        return lastCosechas[0];
+    }catch (error) {
+        throw new Error("Error al obtener las últimas 3 cosechas: " + error.message);
+    }finally{
+        await db.end();
+    }
+}

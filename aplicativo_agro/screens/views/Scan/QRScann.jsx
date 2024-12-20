@@ -9,6 +9,7 @@ const { width, height } = Dimensions.get("window");
 const QRScann = ({ navigation }) => {
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [regionOfInterest, setRegionOfInterest] = useState(null);
   const [cameraProps, setCameraProps] = useState({
     zoom: 0,
@@ -19,6 +20,29 @@ const QRScann = ({ navigation }) => {
   });
   const [permissionModalVisible, setPermissionModalVisible] = useState(false);
   const qrCodeLock = useRef(false);
+
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      setIsActive(true);
+      setScanning(false);
+      qrCodeLock.current = false;
+    });
+
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      setIsActive(false);
+      setScanning(true);
+      setCameraProps(prev => ({
+        ...prev,
+        enableTorch: false,
+        flash: 'off'
+      }));
+    });
+
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
 
   useEffect(() => {
     if (!cameraPermission) {
@@ -36,6 +60,7 @@ const QRScann = ({ navigation }) => {
   };
 
   const toggleProperty = (prop, option1, option2) => {
+    if (!isActive) return; // Prevenir cambios cuando la pantalla no está activa
     setCameraProps((current) => ({
       ...current,
       [prop]: current[prop] === option1 ? option2 : option1,
@@ -43,14 +68,10 @@ const QRScann = ({ navigation }) => {
   };
 
   const handleBarcodeScanned = ({ type, data }) => {
-    if (!qrCodeLock.current) {
+    if (!qrCodeLock.current && isActive) {
       qrCodeLock.current = true;
       setScanning(true);
       navigation.navigate('Menu', { qrData: data });
-      setTimeout(() => {
-        qrCodeLock.current = false;
-        setScanning(false);
-      }, 3000);
     }
   };
 
@@ -92,6 +113,10 @@ const QRScann = ({ navigation }) => {
     );
   }
 
+  if (!isActive) {
+    return <View style={styles.inactiveContainer} />;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topControlsContainer}>
@@ -106,27 +131,29 @@ const QRScann = ({ navigation }) => {
           accessibilityLabel={`Cambiar linterna ${cameraProps.enableTorch ? 'apagada' : 'encendida'}`}
         />
       </View>
-      <CameraView
-        style={StyleSheet.absoluteFillObject}
-        zoom={cameraProps.zoom}
-        facing={cameraProps.facing}
-        flash={cameraProps.flash}
-        enableTorch={cameraProps.enableTorch}
-        onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
-        scannerType="qr"
-        scannerOptions={{
-          region: regionOfInterest
-            ? {
-                x: regionOfInterest.x / width,
-                y: regionOfInterest.y / height,
-                width: regionOfInterest.width / width,
-                height: regionOfInterest.height / height,
-              }
-            : undefined,
-        }}
-      >
-        <Overlay onRegionOfInterest={handleRegionOfInterest} />
-      </CameraView>
+      {isActive && (
+        <CameraView
+          style={StyleSheet.absoluteFillObject}
+          zoom={cameraProps.zoom}
+          facing={cameraProps.facing}
+          flash={cameraProps.flash}
+          enableTorch={cameraProps.enableTorch}
+          onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
+          scannerType="qr"
+          scannerOptions={{
+            region: regionOfInterest
+              ? {
+                  x: regionOfInterest.x / width,
+                  y: regionOfInterest.y / height,
+                  width: regionOfInterest.width / width,
+                  height: regionOfInterest.height / height,
+                }
+              : undefined,
+          }}
+        >
+          <Overlay onRegionOfInterest={handleRegionOfInterest} />
+        </CameraView>
+      )}
     </View>
   );
 };
@@ -135,6 +162,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  inactiveContainer: {
+    flex: 1,
+    backgroundColor: '#000',
   },
   topControlsContainer: {
     height: 60,

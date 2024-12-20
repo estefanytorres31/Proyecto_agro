@@ -5,7 +5,8 @@ import {
   createCosecha, 
   getAllCosechas, 
   updateTamañoFruto, 
-  deleteCosecha 
+  deleteCosecha,
+  get3LastCosecha
 } from '../../services/CosechaService';
 
 const CosechaProvider = ({ children }) => {
@@ -86,6 +87,19 @@ const CosechaProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const getLastCosecha=async (codigo_planta)=>{
+    setLoading(true);
+    setError(null);
+    try{
+      const cosechas=await get3LastCosecha (codigo_planta);
+      return cosechas;
+    }catch(err){
+      setError('Error fetching 3 last cosechas');
+      return null;
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const fetchCosechaById = async (codigo_cosecha) => {
     setLoading(true);
@@ -101,6 +115,7 @@ const CosechaProvider = ({ children }) => {
     }
   };
 
+
   const contextValue = {
     cosechas,
     loading,
@@ -110,7 +125,8 @@ const CosechaProvider = ({ children }) => {
     updateCosechaFrutoSize,
     removeCosecha,
     fetchCosechaById,
-    setCosechas
+    setCosechas,
+    getLastCosecha,
   };
 
   return (
