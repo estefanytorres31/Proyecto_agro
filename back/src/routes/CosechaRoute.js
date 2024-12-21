@@ -22,6 +22,6 @@ FrutoRouter.get('/api/cosecha/planta/:cosecha_codigo_planta', getCosechaByPlanta
 FrutoRouter.get('/api/cosecha/ranking/:cod_fundo/:tam_fruto',rankings);
 FrutoRouter.get('/api/cosecha/ultima/:codigo_fundo', getLastCosecha);
 FrutoRouter.get('/api/cosecha/registros/:codigo_planta',get3LastCosecha);
-FrutoRouter.get('/api/cosecha/ranking/global/:tam_fruto',rankingGlobal);
+FrutoRouter.get('/api/ranking/global/:tam_fruto',rankingGlobal);
 
 export default FrutoRouter;
