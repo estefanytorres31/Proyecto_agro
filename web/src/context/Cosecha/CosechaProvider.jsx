@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useCallback, useMemo } from "react";
 import CosechaContext from "./CosechaContext";
-import { cantidadPorFundo, calculoPorSector, rankings, getLastCosecha, getResumenFundos } from "../../services/CosechaService";
+import { cantidadPorFundo, calculoPorSector, rankings, getLastCosecha } from "../../services/CosechaService";
 
 const CosechaProvider = ({ children }) => {
   // Estado para datos generales de cosecha
@@ -178,48 +178,11 @@ const CosechaProvider = ({ children }) => {
   }, []);
 
    // Función para cargar datos generales de cosecha
-  const fetchResumendatos = useCallback(async () => {
-    setCosechaData((prev) => ({
-      ...prev,
-      isLoading: true,
-      error: null
-    }));
-
-    try {
-      const data = await getResumenFundos();
-      if (data && data.length > 0) {
-        const fundo = data[0][0];
-        setCosechaData({
-          fundo: {
-            codigo: fundo.codigo_fundo,
-            nombre: fundo.nombre_fundo
-          },
-          frutos: {
-            pequeños: fundo.cantidad_pequeños,
-            medianos: fundo.cantidad_medianos,
-            grandes: fundo.cantidad_grandes,
-            sinFrutos: fundo.cantidad_sin_frutos
-          },
-          isLoading: false,
-          error: null
-        });
-      } else {
-        throw new Error("No se encontraron datos");
-      }
-    } catch (error) {
-      setCosechaData((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error.message || "Error desconocido"
-      }));
-    }
-  }, []);
 
   // Valor del contexto
   const contextValue = useMemo(
     () => ({
       cosechaData,
-      fetchResumendatos,
       fetchCosechaData,
       getTotalFrutos: () =>
         cosechaData.frutos.pequeños +

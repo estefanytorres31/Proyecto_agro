@@ -36,17 +36,18 @@ const FundoGrid = ({ fundoCodigo, sectores }) => {
 
   const handleMouseMove = (e, planta) => {
     if (gridRef.current) {
-      const gridRect = gridRef.current.getBoundingClientRect();
-      let x = e.clientX - gridRect.left;
-      let y = e.clientY - gridRect.top - 10;
-  
-      // Asegura que la ventana no se salga del contenedor
-      x = Math.max(0, Math.min(x, gridRect.width - 150)); // Ajusta 150 según el ancho de la ventana flotante.
-      y = Math.max(0, Math.min(y, gridRect.height - 100)); // Ajusta 100 según la altura de la ventana flotante.
-  
+      // Get cursor position relative to the grid
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left + 5; // Add small offset
+      const y = e.clientY - rect.top - 40; // Position above cursor
+      
       setHoverPosition({ x, y });
+      setHoverPlant(planta);
     }
-    setHoverPlant(planta);
+  };
+
+  const handleTouchStart = (planta) => {
+    setHoverPlant(hoverPlant?.codigo_planta === planta.codigo_planta ? null : planta);
   };
   
   const getPlantDetails = (size) => {
@@ -95,22 +96,26 @@ const FundoGrid = ({ fundoCodigo, sectores }) => {
     return (
       <div 
         key={sector} 
-        className={`
+        className="
           border-2 rounded-lg shadow-md transition-all duration-100 mb-8
-          ${selectedSector === sector 
-            ? 'border-green-500 scale-105' 
-            : 'border-gray-300 hover:border-green-300'}
-        `}
+          w-full max-w-[95vw] mx-auto
+          md:max-w-none
+          overflow-hidden
+        "
       >
         <div 
-          className="flex items-center justify-between p-4 cursor-pointer bg-gray-50"
+          className="
+            flex items-center justify-between p-4 cursor-pointer bg-gray-50
+            sticky top-16 z-10 md:static
+            border-b border-gray-200
+          "
           onClick={() => setSelectedSector(selectedSector === sector ? null : sector)}
         >
-          <h3 className="text-lg font-semibold text-gray-700 flex-shrink-0">
+          <h3 className="text-base md:text-lg font-semibold text-gray-700 truncate mr-2">
             Sector {sector}
           </h3>
-          <div className="flex items-center space-x-3 ml-4">
-            <FaLeaf className="text-green-500 flex-shrink-0" />
+          <div className="flex items-center space-x-2 md:space-x-3 flex-shrink-0">
+            <FaLeaf className="text-green-500" />
             <span className="text-sm text-gray-600 whitespace-nowrap">
               {sectorData.length} Plantas
             </span>
@@ -118,12 +123,21 @@ const FundoGrid = ({ fundoCodigo, sectores }) => {
         </div>
 
         {(selectedSector === sector || sectores.length === 1) && (
-          <div ref={gridRef} className="p-4 bg-gray-50 relative mt-2">
+          <div 
+            ref={gridRef} 
+            className="
+              p-2 md:p-4 bg-gray-50 relative
+              min-h-[200px]
+            "
+          >
             <div 
               className="
-                grid grid-flow-row auto-rows-max 
-                grid-cols-[repeat(auto-fit,_minmax(45px,_1fr))] 
-                gap-3
+                grid grid-flow-row auto-rows-max
+                grid-cols-[repeat(auto-fill,minmax(35px,1fr))]
+                sm:grid-cols-[repeat(auto-fill,minmax(40px,1fr))]
+                md:grid-cols-[repeat(auto-fill,minmax(45px,1fr))]
+                gap-2 md:gap-3
+                w-full
               "
             >
               {sectorData.map((planta, index) => {
@@ -131,69 +145,51 @@ const FundoGrid = ({ fundoCodigo, sectores }) => {
                 return (
                   <div 
                     key={`${planta.codigo_planta}-${index}`}
-                    className="relative group"
+                    className="relative group touch-manipulation"
                     onMouseMove={(e) => handleMouseMove(e, planta)}
                     onMouseLeave={() => setHoverPlant(null)}
+                    onTouchStart={() => handleTouchStart(planta)}
                   >
                     <div 
                       className={`
-                        w-full aspect-square rounded-lg 
+                        w-full aspect-square rounded-lg
                         ${plantDetails.bg} ${plantDetails.border}
-                        border-2 shadow-md
+                        border-2 shadow-sm md:shadow-md
                         flex items-center justify-center
-                        transition-transform duration-200 
-                        group-hover:scale-110
+                        transition-transform duration-200
+                        group-hover:scale-105 md:group-hover:scale-110
                       `}
                     >
                       {plantDetails.icon}
                     </div>
-                    <div 
-                      className="
-                        absolute top-0 left-0 w-full h-full 
-                        opacity-0 group-hover:opacity-100 
-                        bg-black bg-opacity-50 
-                        flex items-center justify-center 
-                        text-white text-xs text-center 
-                        transition-opacity duration-100 
-                        rounded-lg
-                      "
-                    >
-                      {plantDetails.text}
-                    </div>
+                    
+                    {hoverPlant?.codigo_planta === planta.codigo_planta && (
+                      <div 
+                        className="
+                          absolute z-50
+                          bg-white/95 backdrop-blur-sm
+                          shadow-lg 
+                          rounded-lg 
+                          py-1 px-2
+                          border border-gray-200
+                          text-xs
+                          text-gray-700
+                          whitespace-nowrap
+                          pointer-events-none
+                        "
+                        style={{
+                          left: `${hoverPosition.x}px`,
+                          top: `${hoverPosition.y}px`,
+                        }}
+                      >
+                        <div className="font-medium">{planta.codigo_planta}</div>
+                        <div>{plantDetails.text}</div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
-
-            {hoverPlant && (
-              <div 
-                className="
-                  absolute 
-                  z-50 
-                  bg-white 
-                  shadow-lg 
-                  rounded-lg 
-                  p-3 
-                  border 
-                  border-gray-300
-                  text-sm
-                  text-gray-700
-                  min-w-[150px]
-                  whitespace-nowrap
-                "
-                style={{
-                  transform: 'translate(-50%, -110%)', 
-                  left: `${hoverPosition.x}px`,
-                  top: `${hoverPosition.y}px`,
-                }}
-              >
-                <div className="font-bold mb-1">Código de Planta</div>
-                <div>{hoverPlant.codigo_planta}</div>
-                <div className="text-xs text-gray-500 mt-1">
-                  Sector {hoverPlant.planta_codigo_sector}
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -221,8 +217,19 @@ const FundoGrid = ({ fundoCodigo, sectores }) => {
   }
 
   return (
-    <div className="space-y-6 p-6 bg-white rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+    <div className="
+      space-y-4 md:space-y-6 
+      p-4 md:p-6 
+      bg-white rounded-lg shadow-sm
+      mt-16 md:mt-0
+    ">
+      <h2 className="
+        text-xl md:text-2xl 
+        font-bold 
+        text-center 
+        text-gray-800 
+        mb-4
+      ">
         Mapa de Plantas - Fundo {fundoCodigo}
       </h2>
       {sectores.map(renderSectorGrid)}

@@ -58,7 +58,7 @@ const RankingChart = ({ data, tamañoFruto }) => {
       title: {
         display: true, // Muestra el título
         text: `Ranking de plantas por cantidad de frutas ${tamañoFruto.toLowerCase()}`, // Texto del título
-        color: '#333333', // Color del título
+        color: '#000', // Color del título
         font: {
           size: 16, // Tamaño de fuente del título
           weight: 'bold', // Negrita

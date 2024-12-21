@@ -37,14 +37,17 @@ const Scorpius1 = () => {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#c4c4c4f1] via-[#c8c8c8ea] to-[#dadadaf1]">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#434e61] via-[#2c3e50] to-[#374151] bg-opacity-90">
       {/* Fondo de contenedor */}
       <div className="p-3 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-[80px] xl:ml-[80px]">
         {/* Encabezado con título y reloj */}
         <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-semibold">
-            {cosechaData?.fundo?.nombre || "Cargando..."}
-          </h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-white font-modern">
+        {cosechaData?.fundo?.nombre || "Cargando..."}
+      </h1>
+
+
+
           <div className="flex-shrink-0">
             <ClockTime /> {/* Reloj en el extremo derecho */}
           </div>
@@ -78,9 +81,10 @@ const Scorpius1 = () => {
 
             {/* Rankings section */}
             <div className="mt-8">
-              <h2 className="text-xl sm:text-2xl font-semibold text-center mb-6">
-                Rankings por Tamaño de Fruto
-              </h2>
+            <h2 className="text-xl sm:text-2xl font-semibold text-center mb-6 text-white font-modern">
+              Rankings por Tamaño de Fruto
+            </h2>
+
 
               {rankingData.isLoading ? (
                 <div className="flex justify-center items-center h-[200px] sm:h-[300px] lg:h-[400px]">

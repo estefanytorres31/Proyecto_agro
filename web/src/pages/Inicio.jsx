@@ -11,7 +11,6 @@ const Inicio = () => {
   const sectores = ["S00001", "S00002", "S00003", "S00004"];
 
   useEffect(() => {
-    fetchResumendatos();
     fetchAllRankings(codigoFundo);
     console.log("ESTOS SON LOS DATOS:");
     console.log(cosechaData);
