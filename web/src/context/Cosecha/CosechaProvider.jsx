@@ -15,7 +15,7 @@ const INITIAL_LOADING_STATE = {
   error: null
 };
 
-// Custom hook para manejo de estado
+// Custom hooks para manejo de estado
 const useLoadingState = (initialData) => {
   const [state, setState] = useState({
     ...INITIAL_LOADING_STATE,
@@ -23,7 +23,7 @@ const useLoadingState = (initialData) => {
   });
 
   const setLoading = () => setState(prev => ({ ...prev, isLoading: true, error: null }));
-  const setError = (error) => setState(prev => ({
+  const setError = (error) => setState(prev => ({ 
     ...prev, 
     isLoading: false, 
     error: error?.message || "Error desconocido"
@@ -38,73 +38,6 @@ const useLoadingState = (initialData) => {
   return [state, { setLoading, setError, setData }];
 };
 
-// Función para manejar errores en peticiones API
-const handleApiError = (error, endpoint) => {
-  console.error(`Error en ${endpoint}:`, error);
-  throw new Error(`Error en ${endpoint}: ${error.message || 'Desconocido'}`);
-};
-
-// Utilidad para realizar peticiones API
-const apiRequest = async (method, endpoint, options = {}) => {
-  try {
-    const response = await apiClient[method](endpoint, options);
-    console.log(`Respuesta de ${endpoint}:`, response.data);
-    return response.data;
-  } catch (error) {
-    handleApiError(error, endpoint);
-    return null; // Aunque el error es lanzado, por si acaso
-  }
-};
-
-// Transformadores de datos
-const transformFundoData = (data) => {
-  if (!data || data.length === 0) throw new Error("No se encontraron datos");
-  const fundo = data[0];
-  return {
-    fundo: fundo.codigo_fundo ? { 
-      codigo: fundo.codigo_fundo, 
-      nombre: fundo.nombre_fundo 
-    } : null,
-    frutos: {
-      pequeños: fundo.cantidad_pequeños || 0,
-      medianos: fundo.cantidad_medianos || 0,
-      grandes: fundo.cantidad_grandes || 0,
-      sinFrutos: fundo.cantidad_sin_frutos || 0
-    }
-  };
-};
-
-const transformSectorData = (data, codigoSector) => {
-  if (!data || data.length === 0) throw new Error("No se encontraron datos");
-  const sector = data[0];
-  return {
-    [codigoSector]: {
-      sector: {
-        codigo: sector.codigo_sector,
-        nombre: sector.nombre_sector
-      },
-      frutos: {
-        pequeños: sector.cantidad_pequeños || 0,
-        medianos: sector.cantidad_medianos || 0,
-        grandes: sector.cantidad_grandes || 0,
-        sinFrutos: sector.cantidad_sin_frutos || 0
-      }
-    }
-  };
-};
-
-// Función general para peticiones
-const fetchWithHandler = async (fetchFn, actions, transformFn = (data) => data) => {
-  actions.setLoading();
-  try {
-    const data = await fetchFn();
-    if (data === null) throw new Error("Error en la petición");
-    actions.setData(transformFn(data));
-  } catch (error) {
-    actions.setError(error);
-  }
-};
-
 const CosechaProvider = ({ children }) => {
   // Estados usando custom hook
   const [cosechaData, cosechaActions] = useLoadingState({
@@ -113,15 +46,66 @@ const CosechaProvider = ({ children }) => {
   });
 
   const [sectorData, sectorActions] = useLoadingState({});
+
   const [rankingData, rankingActions] = useLoadingState({
     grande: [],
     mediano: [],
     pequeño: [],
     noHayFruto: []
   });
+
   const [lastCosechaData, lastCosechaActions] = useLoadingState({
     data: []
   });
+
+  // Transformadores de datos
+  const transformFundoData = (data) => {
+    if (!data?.length) throw new Error("No se encontraron datos");
+    const fundo = data[0];
+    return {
+      fundo: fundo.codigo_fundo ? {
+        codigo: fundo.codigo_fundo,
+        nombre: fundo.nombre_fundo
+      } : null,
+      frutos: {
+        pequeños: fundo.cantidad_pequeños,
+        medianos: fundo.cantidad_medianos,
+        grandes: fundo.cantidad_grandes,
+        sinFrutos: fundo.cantidad_sin_frutos
+      }
+    };
+  };
+
+  const transformSectorData = (data, codigoSector) => {
+    if (!data?.length) throw new Error("No se encontraron datos");
+    const sector = data[0];
+    return {
+      [codigoSector]: {
+        sector: {
+          codigo: sector.codigo_sector,
+          nombre: sector.nombre_sector
+        },
+        frutos: {
+          pequeños: sector.cantidad_pequeños,
+          medianos: sector.cantidad_medianos,
+          grandes: sector.cantidad_grandes,
+          sinFrutos: sector.cantidad_sin_frutos
+        }
+      }
+    };
+  };
+
+  // Funciones fetch refactorizadas
+  const fetchWithHandler = async (fetchFn, actions, transformFn = (data) => data) => {
+    actions.setLoading();
+    try {
+      const data = await fetchFn();
+      if (data === null) throw new Error("Error en la petición");
+      actions.setData(transformFn(data));
+    } catch (error) {
+      actions.setError(error);
+    }
+  };
 
   // Funciones principales
   const fetchCosechaData = useCallback(async (codigoFundo) => {

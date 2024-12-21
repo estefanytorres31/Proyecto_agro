@@ -23,15 +23,7 @@ const SectorBarChart = ({ codigoFundo = null, codigoSector = null, nombreSector 
       fetchSectorTotalData(nombreSector);
     }
   }, [codigoFundo, codigoSector, nombreSector, fetchSectorData, fetchSectorTotalData]);
-
-  if (sectorData.isLoading) {
-    return <div>Cargando datos...</div>;
-  }
-
-  if (sectorData.error) {
-    console.log(sectorData.error)
-    return <div>Error: {sectorData.error}</div>;
-  }
+  
 
   useEffect(() => {
     if (sector && sector.frutos && (

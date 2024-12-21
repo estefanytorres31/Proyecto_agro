@@ -17,43 +17,32 @@ const apiRequest = async (method, endpoint, options = {}) => {
   }
 };
 
+// Endpoints relacionados con Fundo
 export const fundoAPI = {
-    // Se mantiene igual ya que sigue funcionando por codigoFundo
-    getCantidad: (codigoFundo) => 
-      apiRequest('get', `/api/fundo/cantidad/${codigoFundo}`),
-    
-    // Método para obtener el total sin considerar el fundo
-    getTotal: () => 
-      apiRequest('post', '/api/fundo/total')
-  };
+  getCantidad: (codigoFundo) => 
+    apiRequest('get', `/api/fundo/cantidad/${codigoFundo}`),
   
-  // Endpoints relacionados con Sector
-  export const sectorAPI = {
-    // Método para obtener el cálculo de un sector, pero aquí se puede usar el nombre del sector para filtrarlo
-    getCalculo: (codigoFundo, nombreSector) => {
-      if (nombreSector) {
-        // Si se pasa el nombre del sector, se filtra por nombre
-        return apiRequest('get', `/api/sector/calculo/nombre/${nombreSector}`);
-      } else {
-        // Si no se pasa el nombre, filtra por código de fundo
-        return apiRequest('get', `/api/sector/calculo/${codigoFundo}`);
-      }
-    },
-    
-    // Método para obtener el total filtrado por el nombre del sector
-    getTotal: (nombreSector) =>
-      apiRequest('get', `/api/sector/total/${nombreSector}`)
-  };
+  getTotal: () => 
+    apiRequest('post', '/api/fundo/total')
+};
+
+// Endpoints relacionados con Sector
+export const sectorAPI = {
+  getCalculo: (codigoFundo, codigoSector) =>
+    apiRequest('get', `/api/sector/calculo/${codigoFundo}/${codigoSector}`),
   
-  // Endpoints relacionados con Cosecha y Rankings
-  export const cosechaAPI = {
-    getRanking: (tamFruto, codFundo) =>
-      apiRequest('get', `/api/cosecha/ranking/${codFundo}/${tamFruto}`),
-    
-    getUltima: (codigoFundo) =>
-      apiRequest('get', `/api/cosecha/ultima/${codigoFundo}`),
-    
-    getRankingGlobal: (tamFruto) =>
-      apiRequest('get', `/api/ranking/global/${tamFruto}`)
-  };
+  getTotal: (nombreSector) =>
+    apiRequest('get', `/api/sector/total/${nombreSector}`)
+};
+
+// Endpoints relacionados con Cosecha y Rankings
+export const cosechaAPI = {
+  getRanking: (tamFruto, codFundo) =>
+    apiRequest('get', `/api/cosecha/ranking/${codFundo}/${tamFruto}`),
   
+  getUltima: (codigoFundo) =>
+    apiRequest('get', `/api/cosecha/ultima/${codigoFundo}`),
+  
+  getRankingGlobal: (tamFruto) =>
+    apiRequest('get', `/api/ranking/global/${tamFruto}`)
+};
