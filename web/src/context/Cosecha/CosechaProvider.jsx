@@ -1,200 +1,221 @@
-/* eslint-disable react/prop-types */
 import { useState, useCallback, useMemo } from "react";
 import CosechaContext from "./CosechaContext";
-import { cantidadPorFundo, calculoPorSector, rankings, getLastCosecha } from "../../services/CosechaService";
+import { fundoAPI, sectorAPI, cosechaAPI } from "../../services/CosechaService";
+
+// Estados iniciales
+const INITIAL_FRUTOS_STATE = {
+  pequeños: 0,
+  medianos: 0,
+  grandes: 0,
+  sinFrutos: 0
+};
+
+const INITIAL_LOADING_STATE = {
+  isLoading: false,
+  error: null
+};
+
+// Custom hook para manejo de estado
+const useLoadingState = (initialData) => {
+  const [state, setState] = useState({
+    ...INITIAL_LOADING_STATE,
+    ...initialData
+  });
+
+  const setLoading = () => setState(prev => ({ ...prev, isLoading: true, error: null }));
+  const setError = (error) => setState(prev => ({
+    ...prev, 
+    isLoading: false, 
+    error: error?.message || "Error desconocido"
+  }));
+  const setData = (data) => setState(prev => ({ 
+    ...prev, 
+    ...data, 
+    isLoading: false, 
+    error: null 
+  }));
+
+  return [state, { setLoading, setError, setData }];
+};
+
+// Función para manejar errores en peticiones API
+const handleApiError = (error, endpoint) => {
+  console.error(`Error en ${endpoint}:`, error);
+  throw new Error(`Error en ${endpoint}: ${error.message || 'Desconocido'}`);
+};
+
+// Utilidad para realizar peticiones API
+const apiRequest = async (method, endpoint, options = {}) => {
+  try {
+    const response = await apiClient[method](endpoint, options);
+    console.log(`Respuesta de ${endpoint}:`, response.data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, endpoint);
+    return null; // Aunque el error es lanzado, por si acaso
+  }
+};
+
+// Transformadores de datos
+const transformFundoData = (data) => {
+  if (!data || data.length === 0) throw new Error("No se encontraron datos");
+  const fundo = data[0];
+  return {
+    fundo: fundo.codigo_fundo ? { 
+      codigo: fundo.codigo_fundo, 
+      nombre: fundo.nombre_fundo 
+    } : null,
+    frutos: {
+      pequeños: fundo.cantidad_pequeños || 0,
+      medianos: fundo.cantidad_medianos || 0,
+      grandes: fundo.cantidad_grandes || 0,
+      sinFrutos: fundo.cantidad_sin_frutos || 0
+    }
+  };
+};
+
+const transformSectorData = (data, codigoSector) => {
+  if (!data || data.length === 0) throw new Error("No se encontraron datos");
+  const sector = data[0];
+  return {
+    [codigoSector]: {
+      sector: {
+        codigo: sector.codigo_sector,
+        nombre: sector.nombre_sector
+      },
+      frutos: {
+        pequeños: sector.cantidad_pequeños || 0,
+        medianos: sector.cantidad_medianos || 0,
+        grandes: sector.cantidad_grandes || 0,
+        sinFrutos: sector.cantidad_sin_frutos || 0
+      }
+    }
+  };
+};
+
+// Función general para peticiones
+const fetchWithHandler = async (fetchFn, actions, transformFn = (data) => data) => {
+  actions.setLoading();
+  try {
+    const data = await fetchFn();
+    if (data === null) throw new Error("Error en la petición");
+    actions.setData(transformFn(data));
+  } catch (error) {
+    actions.setError(error);
+  }
+};
 
 const CosechaProvider = ({ children }) => {
-  // Estado para datos generales de cosecha
-  const [cosechaData, setCosechaData] = useState({
+  // Estados usando custom hook
+  const [cosechaData, cosechaActions] = useLoadingState({
     fundo: null,
-    frutos: {
-      pequeños: 0,
-      medianos: 0,
-      grandes: 0,
-      sinFrutos: 0
-    },
-    isLoading: false,
-    error: null
+    frutos: { ...INITIAL_FRUTOS_STATE }
   });
 
-  // Estado para datos por sector
-  const [sectorData, setSectorData] = useState({
-    sector: null,
-    frutos: {
-      pequeños: 0,
-      medianos: 0,
-      grandes: 0,
-      sinFrutos: 0
-    },
-    isLoading: false,
-    error: null
-  });
-
-  // Estado para rankings
-  const [rankingData, setRankingData] = useState({
+  const [sectorData, sectorActions] = useLoadingState({});
+  const [rankingData, rankingActions] = useLoadingState({
     grande: [],
     mediano: [],
     pequeño: [],
-    noHayFruto: [],
-    isLoading: false,
-    error: null
+    noHayFruto: []
+  });
+  const [lastCosechaData, lastCosechaActions] = useLoadingState({
+    data: []
   });
 
-  const [lastCosechaData, setLastCosechaData] = useState({
-    data: [],
-    isLoading: false,
-    error: null,
-  });
-
-  // Función para cargar datos generales de cosecha
+  // Funciones principales
   const fetchCosechaData = useCallback(async (codigoFundo) => {
-    setCosechaData((prev) => ({
-      ...prev,
-      isLoading: true,
-      error: null
-    }));
-
-    try {
-      const data = await cantidadPorFundo(codigoFundo);
-      if (data && data.length > 0) {
-        const fundo = data[0];
-        setCosechaData({
-          fundo: {
-            codigo: fundo.codigo_fundo,
-            nombre: fundo.nombre_fundo
-          },
-          frutos: {
-            pequeños: fundo.cantidad_pequeños,
-            medianos: fundo.cantidad_medianos,
-            grandes: fundo.cantidad_grandes,
-            sinFrutos: fundo.cantidad_sin_frutos
-          },
-          isLoading: false,
-          error: null
-        });
-      } else {
-        throw new Error("No se encontraron datos");
-      }
-    } catch (error) {
-      setCosechaData((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error.message || "Error desconocido"
-      }));
-    }
+    await fetchWithHandler(
+      () => fundoAPI.getCantidad(codigoFundo),
+      cosechaActions,
+      transformFundoData
+    );
   }, []);
 
-  // Función para cargar datos por sector
   const fetchSectorData = useCallback(async (codigoFundo, codigoSector) => {
-    setSectorData((prev) => ({
-      ...prev,
-      [codigoSector]: {
-        isLoading: true,
-        error: null
-      }
-    }));
-  
+    await fetchWithHandler(
+      () => sectorAPI.getCalculo(codigoFundo, codigoSector),
+      sectorActions,
+      (data) => transformSectorData(data, codigoSector)
+    );
+  }, []);
+
+  const fetchAllRankings = useCallback(async (codigoFundo) => {
+    rankingActions.setLoading();
     try {
-      const data = await calculoPorSector(codigoFundo, codigoSector);
-      if (data && data.length > 0) {
-        const sector = data[0];
-        setSectorData((prev) => ({
-          ...prev,
-          [codigoSector]: {
-            sector: {
-              codigo: sector.codigo_sector,
-              nombre: sector.nombre_sector
-            },
-            frutos: {
-              pequeños: sector.cantidad_pequeños,
-              medianos: sector.cantidad_medianos,
-              grandes: sector.cantidad_grandes,
-              sinFrutos: sector.cantidad_sin_frutos
-            },
-            isLoading: false,
-            error: null
-          }
-        }));
-      } else {
-        throw new Error("No se encontraron datos");
-      }
+      const [grande, mediano, pequeño, noHayFruto] = await Promise.all([
+        cosechaAPI.getRanking('Grande', codigoFundo),
+        cosechaAPI.getRanking('Mediano', codigoFundo),
+        cosechaAPI.getRanking('Pequeño', codigoFundo),
+        cosechaAPI.getRanking('No hay fruto', codigoFundo)
+      ]);
+      rankingActions.setData({ grande, mediano, pequeño, noHayFruto });
     } catch (error) {
-      setSectorData((prev) => ({
-        ...prev,
-        [codigoSector]: {
-          isLoading: false,
-          error: error.message || "Error desconocido"
-        }
-      }));
+      rankingActions.setError(error);
     }
   }, []);
-  
 
-  // Función para cargar rankings
-  const fetchAllRankings = useCallback(async (codigoFundo) => {
-    setRankingData((prev) => ({
-      ...prev,
-      isLoading: true,
-      error: null
-    }));
+  const fetchCosechaTotalData = useCallback(async () => {
+    await fetchWithHandler(
+      () => fundoAPI.getTotal(),
+      cosechaActions,
+      transformFundoData
+    );
+  }, []);
 
+  const fetchSectorTotalData = useCallback(async (nombreSector) => {
+    await fetchWithHandler(
+      () => sectorAPI.getTotal(nombreSector),
+      sectorActions,
+      (data) => transformSectorData(data, nombreSector)
+    );
+  }, []);
+
+  const fetchRankingGlobal = useCallback(async () => {
+    rankingActions.setLoading();
     try {
-      const [grandeData, medianoData, pequeñoData, noHayFrutoData] = await Promise.all([
-        rankings('Grande', codigoFundo),
-        rankings('Mediano', codigoFundo),
-        rankings('Pequeño', codigoFundo),
-        rankings('No hay fruto', codigoFundo)
+      const [grande, mediano, pequeño, noHayFruto] = await Promise.all([
+        cosechaAPI.getRankingGlobal('Grande'),
+        cosechaAPI.getRankingGlobal('Mediano'),
+        cosechaAPI.getRankingGlobal('Pequeño'),
+        cosechaAPI.getRankingGlobal('No hay fruto')
       ]);
-
-      setRankingData({
-        grande: grandeData,
-        mediano: medianoData,
-        pequeño: pequeñoData,
-        noHayFruto: noHayFrutoData,
-        isLoading: false,
-        error: null
-      });
+      rankingActions.setData({ grande, mediano, pequeño, noHayFruto });
     } catch (error) {
-      setRankingData((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error.message || "Error desconocido"
-      }));
+      rankingActions.setError(error);
     }
   }, []);
 
   const fetchLastCosechaData = useCallback(async (codigoFundo) => {
-    setLastCosechaData((prev) => ({ ...prev, isLoading: true, error: null }));
-    try {
-      const data = await getLastCosecha(codigoFundo);
-      setLastCosechaData({ data, isLoading: false, error: null });
-    } catch (error) {
-      setLastCosechaData((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error.message || "Error desconocido",
-      }));
-    }
+    await fetchWithHandler(
+      () => cosechaAPI.getUltima(codigoFundo),
+      lastCosechaActions,
+      (data) => ({ data })
+    );
   }, []);
 
-  // Valor del contexto
+  // Cálculos derivados
+  const getTotalFrutos = useCallback(() => {
+    const { pequeños, medianos, grandes, sinFrutos } = cosechaData.frutos;
+    return pequeños + medianos + grandes + sinFrutos;
+  }, [cosechaData.frutos]);
+
   const contextValue = useMemo(
     () => ({
       cosechaData,
-      fetchCosechaData,
-      getTotalFrutos: () =>
-        cosechaData.frutos.pequeños +
-        cosechaData.frutos.medianos +
-        cosechaData.frutos.grandes +
-        cosechaData.frutos.sinFrutos,
       sectorData,
-      fetchSectorData,
       rankingData,
-      fetchAllRankings,
       lastCosechaData,
+      getTotalFrutos,
+      fetchCosechaData,
+      fetchSectorData,
+      fetchAllRankings,
       fetchLastCosechaData,
+      fetchCosechaTotalData,
+      fetchSectorTotalData,
+      fetchRankingGlobal,
     }),
-    [cosechaData, sectorData, rankingData]
+    [cosechaData, sectorData, rankingData, lastCosechaData]
   );
 
   return (

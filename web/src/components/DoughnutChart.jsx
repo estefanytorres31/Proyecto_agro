@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js";
@@ -6,22 +5,36 @@ import useCosecha from "../hooks/Cosecha/useCosecha";
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-const DoughnutChart = ({ codigoFundo }) => {
-  const { cosechaData, fetchCosechaData } = useCosecha();
+const DoughnutChart = ({ codigoFundo = null }) => {
+  const { 
+    cosechaData, 
+    fetchCosechaData, 
+    fetchCosechaTotalData 
+  } = useCosecha();
 
   useEffect(() => {
-    fetchCosechaData(codigoFundo);
-  }, [codigoFundo, fetchCosechaData]);
+    if (codigoFundo) {
+      fetchCosechaData(codigoFundo);
+    } else {
+      fetchCosechaTotalData();
+    }
+  }, [codigoFundo, fetchCosechaData, fetchCosechaTotalData]);
 
   if (cosechaData.isLoading) {
-    return <p style={{ textAlign: "center", marginTop: "20px" }}>Cargando datos...</p>;
+    return <div>Cargando datos...</div>;
   }
 
   if (cosechaData.error) {
-    return <p style={{ textAlign: "center", color: "red", marginTop: "20px" }}>Error: {cosechaData.error}</p>;
+    console.log(cosechaData.error)
+    return <div>Error: {cosechaData.error}</div>;
   }
 
-  const frutos = cosechaData?.frutos || { pequeños: 0, medianos: 0, grandes: 0, sinFrutos: 0 };
+  const frutos = cosechaData?.frutos || { 
+    pequeños: 0, 
+    medianos: 0, 
+    grandes: 0, 
+    sinFrutos: 0 
+  };
 
   const doughnutData = {
     labels: ["Pequeños", "Medianos", "Grandes", "No hay fruto"],
@@ -56,7 +69,9 @@ const DoughnutChart = ({ codigoFundo }) => {
       },
       title: {
         display: true,
-        text: "Distribución de Frutos",
+        text: codigoFundo 
+          ? `Distribución de Frutos - Fundo ${cosechaData.fundo?.nombre || codigoFundo}`
+          : "Distribución Total de Frutos",
         font: {
           size: 18,
           weight: "bold",
@@ -71,8 +86,8 @@ const DoughnutChart = ({ codigoFundo }) => {
       tooltip: {
         enabled: true,
       },
-      datalabels: { //nivel
-        anchor: "end", 
+      datalabels: {
+        anchor: "end",
         align: "end",
         formatter: (value) => value,
         color: "#000",
@@ -98,33 +113,8 @@ const DoughnutChart = ({ codigoFundo }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "150%",
-        maxWidth: "1000px",
-        margin: "0 auto",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-          height: "400px",
-          //backgroundColor: "#fff",
-          borderRadius: "12px",
-          //boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          //padding: "20px",
-          boxSizing: "border-box",
-        }}
-      >
-        <Doughnut data={doughnutData} options={options} />
-      </div>
+    <div style={{ width: "100%", height: "400px" }}>
+      <Doughnut data={doughnutData} options={options} />
     </div>
   );
 };

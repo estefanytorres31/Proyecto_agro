@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -6,17 +5,41 @@ import { Chart } from "chart.js";
 import useCosecha from '../hooks/Cosecha/useCosecha';
 
 Chart.register(ChartDataLabels);
-const SectorBarChart = ({ codigoFundo, codigoSector }) => {
-  const { sectorData, fetchSectorData } = useCosecha();
-  const sector = sectorData[codigoSector];
+
+const SectorBarChart = ({ codigoFundo = null, codigoSector = null, nombreSector = null }) => {
+  const { sectorData, fetchSectorData, fetchSectorTotalData } = useCosecha();
   const [hasData, setHasData] = useState(false);
 
-  useEffect(() => {
-    fetchSectorData(codigoFundo, codigoSector);
-  }, [codigoFundo, codigoSector, fetchSectorData]);
+  // Determinar qué sector usar basado en los props
+  const sectorKey = codigoSector || nombreSector;
+  console.log(sectorKey);
+  const sector = sectorData[sectorKey];
+  console.log(sector);
 
   useEffect(() => {
-    if (sector && sector.frutos && (sector.frutos.pequeños || sector.frutos.medianos || sector.frutos.grandes || sector.frutos.sinFrutos)) {
+    if (codigoFundo && codigoSector) {
+      fetchSectorData(codigoFundo, codigoSector);
+    } else if (nombreSector) {
+      fetchSectorTotalData(nombreSector);
+    }
+  }, [codigoFundo, codigoSector, nombreSector, fetchSectorData, fetchSectorTotalData]);
+
+  if (sectorData.isLoading) {
+    return <div>Cargando datos...</div>;
+  }
+
+  if (sectorData.error) {
+    console.log(sectorData.error)
+    return <div>Error: {sectorData.error}</div>;
+  }
+
+  useEffect(() => {
+    if (sector && sector.frutos && (
+      sector.frutos.pequeños || 
+      sector.frutos.medianos || 
+      sector.frutos.grandes || 
+      sector.frutos.sinFrutos
+    )) {
       setHasData(true);
     } else {
       setHasData(false);
@@ -82,12 +105,19 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
     },
   };
 
+  const getTituloGrafico = () => {
+    if (codigoFundo && codigoSector) {
+      return `Gráfico del Sector ${sector?.sector?.nombre || "Cargando..."}`;
+    }
+    return `Gráfico Total del Sector ${sector?.sector?.nombre || "Cargando..."}`;
+  };
+
   return (
     <div className="bg-white rounded-lg p-5 shadow-md max-w-full w-full flex flex-col items-center justify-center">
       <div className="text-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">{`Gráfico del Sector ${
-          sector?.sector?.nombre || "Cargando..."
-        }`}</h2>
+        <h2 className="text-lg font-semibold text-gray-800">
+          {getTituloGrafico()}
+        </h2>
       </div>
       <div className="w-full h-full p-4 bg-gray-100 rounded-lg shadow-sm mt-2">
         <Bar data={data} options={options} />
@@ -97,4 +127,3 @@ const SectorBarChart = ({ codigoFundo, codigoSector }) => {
 };
 
 export default SectorBarChart;
-
