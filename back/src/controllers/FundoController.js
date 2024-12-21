@@ -50,12 +50,26 @@ export const updateFundo = async(req, res)=>{
     }
 }
 
-export const getResumenFundos= async (req, res) =>{
-    try {
-        const fundos = await FundoService.getResumenFundos();
-        res.status(200).json(fundos);
-    } catch (error) {
+export const cantidadPorFundo=async(req,res)=>{
+    const { codigo_fundo} = req.params;
+    try{
+        const cantidad=await FundoService.cantidadPorFundo(codigo_fundo);
+        res.status(200).json(cantidad);
+    }catch(error){
         console.error(error);
-        res.status(500).json({message: "Error al obtener los fundos"});
+        res.status(500).json({message: "Error al obtener la cantidad de frutos por fundo"});
     }
-};
+}
+
+export const totalFrutos=async(req, res)=>{
+    try{
+        const cantidadFrutos = await FundoService.getCantidadFrutosTotal();
+        if (!cantidadFrutos) {
+            return res.status(404).json({ message: "No se encontraron datos" });
+        }
+        res.status(200).json(cantidadFrutos);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener el total de frutos"});
+    }
+}

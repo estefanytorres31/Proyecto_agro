@@ -83,29 +83,6 @@ export const getCosechaByPlanta = async (req, res) => {
     }
 }
 
-export const cantidadPorFundo=async(req,res)=>{
-    const { codigo_fundo} = req.params;
-    try{
-        const cantidad=await CosechaService.cantidadPorFundo(codigo_fundo);
-        res.status(200).json(cantidad);
-    }catch(error){
-        console.error(error);
-        res.status(500).json({message: "Error al obtener la cantidad de frutos por fundo"});
-    }
-}
-
-
-export const calculoPorSector=async(req, res)=>{
-    const { codigo_fundo, codigo_sector} = req.params;
-    try{
-        const calculo=await CosechaService.calculoPorSector(codigo_fundo, codigo_sector);
-        res.status(200).json(calculo);
-    }catch(error){
-        console.error(error);
-        res.status(500).json({message: "Error al obtener el calculo por sector"});
-    }
-}
-
 export const rankings = async (req, res) => {
     const { tam_fruto, cod_fundo } = req.params;
     if (!tam_fruto || !cod_fundo) {
@@ -149,7 +126,7 @@ export const getLastCosecha = async (req, res) =>{
 export const get3LastCosecha=async(req, res) => {
     const {codigo_planta}=req.params;
     if (!codigo_planta){
-        return res.status(400).json({message: "Falta el código de la planta"});  // Añadir un mensaje de error personalizado según el contexto del proyecto. Ej: "Faltan parámetros en la solicitud. Se requiere el código de la planta."  // Utilizar una función de utilidad para generar estos mensajes.  // Revisar la seguridad del código para evitar ataques de inyección SQL o XSS.  // Utilizar una biblioteca de sanitización o un middleware específico para manejar estas características.  // Revisar la seguridad del código para evitar ataques de inyección SQL o XSS.  // Utilizar una biblioteca de sanitización o un middleware específico para manejar estas características.  // Revisar la seguridad del código para evitar ataques de
+        return res.status(400).json({message: "Falta el código de la planta"}); 
     }
     try{
         const cosechas = await CosechaService.get3LastCosecha(codigo_planta);
@@ -164,15 +141,19 @@ export const get3LastCosecha=async(req, res) => {
     }
 }
 
-export const totalFrutos=async(req, res)=>{
+export const rankingGlobal=async(req, res) => {
+    const {tam_fruto}=req.params;
+    if (!tam_fruto){
+        return res.status(400).json({message: "Falta el tamaño de fruto"}); 
+    }
     try{
-        const cantidadFrutos = await CosechaService.getCantidadFrutosTotal();
-        if (!cantidadFrutos) {
-            return res.status(404).json({ message: "No se encontraron datos" });
+        const rankings = await CosechaService.rankingGlobal(tam_fruto);
+        if(!rankings){
+            return res.status(404).json({message: "No se encontraron rankings globales para el tamaño de fruto especificado"});
         }
-        res.status(200).json(cantidadFrutos);
+        res.status(200).json(rankings);
     }catch(error){
         console.error(error);
-        res.status(500).json({message: "Error al obtener el total de frutos"});
+        res.status(500).json({message: "Error al obtener los rankings globales", error});
     }
 }
