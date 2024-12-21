@@ -8,7 +8,7 @@ export const getAllFundos=async()=>{
     } catch (error) {
         throw new Error("Error al obtener plantas: " + error.message);
     } finally {
-        db.end();
+        await db.end();
     }
 }
 
@@ -23,7 +23,7 @@ export const getFundoById=async(codigo_fundo)=>{
     } catch (error) {
         throw new Error("Error al obtener planta: " + error.message);
     } finally {
-        db.end();
+        await db.end();
     }
 }
 
@@ -37,7 +37,7 @@ export const createFundo = async (codigo_fundo, nombre_fundo, hectarea)=>{
     } catch (error) {
         throw new Error("Error al crear el fondo: " + error.message);
     } finally {
-        db.end();
+        await db.end();
     }
 }
 
@@ -57,7 +57,7 @@ export const updateFundo = async (codigo_fundo, nombre_fundo, hectarea)=>{
     } catch (error) {
         throw new Error("Error al actualizar el fondo: " + error.message);
     } finally {
-        db.end();
+       await db.end();
     }
 }
 
@@ -71,6 +71,32 @@ export const deleteFundo = async (codigo_fundo)=>{
     } catch (error) {
         throw new Error("Error al eliminar el fondo: " + error.message);
     } finally {
-        db.end();
+        await db.end();
+    }
+}
+
+export const cantidadPorFundo = async (codigo_fundo) => {
+    const db = await connect();
+    try {
+        const [cantidades] = await db.execute('CALL sp_cantidadFrutosPorFundo(?)',
+            [codigo_fundo]
+        );
+        return cantidades[0]; 
+    } catch (e) {
+        throw new Error("Error al obtener cantidad por fundo: " + e.message);
+    } finally {
+        await db.end();
+    }
+}
+
+export const getCantidadFrutosTotal = async () => {
+    const db = await connect();
+    try {
+        const [results] = await db.query('CALL sp_cantidadFrutosTotal()');
+        return results[0][0];
+    } catch (error) {
+        throw new Error("Error al obtener la cantidad de frutos: " + error.message);
+    } finally {
+        await db.end();
     }
 }

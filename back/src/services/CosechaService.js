@@ -109,33 +109,6 @@ export const getAllCosechas = async ({ tamaño_fruto = '', fecha_registro = '', 
     }
 };
 
-export const cantidadPorFundo = async (codigo_fundo) => {
-    const db = await connect();
-    try {
-        const [cantidades] = await db.execute('CALL sp_cantidadFrutosPorFundo(?)',
-            [codigo_fundo]
-        );
-        return cantidades[0]; 
-    } catch (e) {
-        throw new Error("Error al obtener cantidad por fundo: " + e.message);
-    } finally {
-        await db.end();
-    }
-}
-
-export const calculoPorSector=async(codigo_fundo, codigo_sector)=>{
-    const db = await connect();
-    try{
-        const [calculo]=await db.execute('CALL sp_calculoPorSector(?,?)',
-        [codigo_fundo, codigo_sector]);
-        return calculo[0];
-    }catch(error){
-        throw new Error("Error al calcular por sector: " + error.message);
-    }finally{
-        await db.end();
-    }
-}
-
 export const getRanking = async ( cod_fundo,tam_fruto) => {
     const db = await connect();
     try {
@@ -177,17 +150,5 @@ export const get3LastCosecha=async (codigo_planta)=>{
         throw new Error("Error al obtener las últimas 3 cosechas: " + error.message);
     }finally{
         await db.end();
-    }
-}
-
-export const getCantidadFrutosTotal = async () => {
-    const db = await connect();
-    try {
-        const [results] = await db.query('CALL sp_cantidadFrutosTotal()');
-        return results[0][0];
-    } catch (error) {
-        throw new Error("Error al obtener la cantidad de frutos: " + error.message);
-    } finally {
-        db.end();
     }
 }

@@ -11,3 +11,16 @@ export const getSumaFrutosSector= async(nombre_sector)=>{
         await db.end();
     }
 }
+
+export const calculoPorSector=async(codigo_fundo, codigo_sector)=>{
+    const db = await connect();
+    try{
+        const [calculo]=await db.execute('CALL sp_calculoPorSector(?,?)',
+        [codigo_fundo, codigo_sector]);
+        return calculo[0];
+    }catch(error){
+        throw new Error("Error al calcular por sector: " + error.message);
+    }finally{
+        await db.end();
+    }
+}
