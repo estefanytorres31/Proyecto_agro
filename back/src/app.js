@@ -6,6 +6,7 @@ import Plantarouter from './routes/PlantaRoute.js';
 import CosechaRouter from './routes/CosechaRoute.js';
 import FundoRouter from './routes/FundoRoute.js';
 import MantenimientoRouter from './routes/MantenimientoRouter.js';
+import sectorRouter from "./routes/SectorRoute.js";
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(Plantarouter);
 app.use(CosechaRouter);
 app.use(FundoRouter);
 app.use(MantenimientoRouter);
+app.use(sectorRouter);
 
 export default app
