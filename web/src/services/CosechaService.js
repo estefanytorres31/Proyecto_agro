@@ -43,11 +43,35 @@ export const getLastCosecha= async (codigo_fundo)=>{
     }
 }
 
-export const rankingGlobal=async(tam_fruto)=>{
+export const RankingGlobal=async(tam_fruto)=>{
     try{
-        
-
+        const response=await apiClient.get(`/api/ranking/global/${tam_fruto}`)
+        console.log(response.data);
+        return response.data
     }catch(error){
+        console.error(error);
+        return null;
+    }
+}
 
+export const TotalFrutosSector=async(nombre_sector)=>{
+    try{
+        const response=await apiClient.get(`/api/sector/total/${nombre_sector}`)
+        console.log(response.data);
+        return response.data
+    }catch(error){
+        console.error(error);
+        return null;
+    }
+}
+
+export const TotalFrutos=async()=>{
+    try{
+        const response=await apiClient.post(`/api/fundo/total`)
+        console.log(response.data);
+        return response.data
+    }catch(error){
+        console.error(error);
+        return null;
     }
 }
