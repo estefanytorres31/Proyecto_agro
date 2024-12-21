@@ -2,7 +2,7 @@ import apiClient from "../API/apiClient";
 
 export const cantidadPorFundo=async(codigo_fundo)=>{
     try{
-        const response=await apiClient.get(`/api/cosecha/fundo/cantidad/${codigo_fundo}`)
+        const response=await apiClient.get(`/api/fundo/cantidad/${codigo_fundo}`)
         return response.data
     }catch(error){
         console.error(error);
@@ -13,7 +13,7 @@ export const cantidadPorFundo=async(codigo_fundo)=>{
 
 export const calculoPorSector = async(codigo_fundo, codigo_sector)=>{
     try{
-        const response=await apiClient.get(`/api/cosecha/calculo/${codigo_fundo}/${codigo_sector}`)
+        const response=await apiClient.get(`/api/sector/calculo/${codigo_fundo}/${codigo_sector}`)
         return response.data
     }catch(error){
         console.error(error);
@@ -40,5 +40,14 @@ export const getLastCosecha= async (codigo_fundo)=>{
     }catch(error){
         console.error(error);
         return null;
+    }
+}
+
+export const rankingGlobal=async(tam_fruto)=>{
+    try{
+        
+
+    }catch(error){
+
     }
 }

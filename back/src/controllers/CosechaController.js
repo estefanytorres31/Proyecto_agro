@@ -140,3 +140,20 @@ export const get3LastCosecha=async(req, res) => {
         res.status(500).json({message: "Error al obtener las 3 últimas cosechas", error});
     }
 }
+
+export const rankingGlobal=async(req, res) => {
+    const {tam_fruto}=req.params;
+    if (!tam_fruto){
+        return res.status(400).json({message: "Falta el tamaño de fruto"}); 
+    }
+    try{
+        const rankings = await CosechaService.rankingGlobal(tam_fruto);
+        if(!rankings){
+            return res.status(404).json({message: "No se encontraron rankings globales para el tamaño de fruto especificado"});
+        }
+        res.status(200).json(rankings);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Error al obtener los rankings globales", error});
+    }
+}

@@ -152,3 +152,17 @@ export const get3LastCosecha=async (codigo_planta)=>{
         await db.end();
     }
 }
+
+export const rankingGlobal=async(tam_fruto)=>{
+    const db = await connect();
+    try{
+        const [rankingGlobal] = await db.execute('CALL sp_getRankingGlobal(?)',
+            [tam_fruto]
+        );
+        return rankingGlobal[0];
+    }catch (error) {
+        throw new Error("Error al obtener el ranking global: " + error.message);
+    }finally{
+        await db.end();
+    }
+}
